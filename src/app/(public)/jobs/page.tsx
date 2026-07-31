@@ -1,0 +1,65 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
+
+import Container from "@/components/layout/Container";
+import JobsResults from "@/features/jobs/components/JobsResults";
+import JobsSearchBar from "@/features/jobs/components/JobsSearchBar";
+
+export const metadata: Metadata = {
+    title: "Find Jobs | JobsSpot",
+    description:
+        "Search job opportunities by title, company, location, workplace type, and experience level.",
+};
+
+function JobsPageLoading() {
+    return (
+        <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+            <div className="hidden h-150 animate-pulse rounded-2xl bg-slate-100 lg:block" />
+
+            <div>
+                <div className="h-16 animate-pulse rounded-2xl bg-slate-100" />
+
+                <div className="mt-6 h-125 animate-pulse rounded-2xl bg-slate-100" />
+            </div>
+        </div>
+    );
+}
+
+export default function JobsPage() {
+    return (
+        <>
+            <section className="border-b border-slate-200 bg-slate-50 py-14 sm:py-16">
+                <Container>
+                    <div className="mx-auto max-w-3xl text-center">
+                        <h1 className="text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
+                            Find Your Next Opportunity
+                        </h1>
+
+                        <p className="mt-4 text-lg leading-8 text-slate-600">
+                            Search available roles from employers across New York and the United
+                            States.
+                        </p>
+                    </div>
+
+                    <div className="mx-auto mt-9 max-w-6xl">
+                        <Suspense
+                            fallback={
+                                <div className="h-20 animate-pulse rounded-2xl bg-slate-200" />
+                            }
+                        >
+                            <JobsSearchBar />
+                        </Suspense>
+                    </div>
+                </Container>
+            </section>
+
+            <section className="bg-slate-50/60 py-12 sm:py-16">
+                <Container>
+                    <Suspense fallback={<JobsPageLoading />}>
+                        <JobsResults />
+                    </Suspense>
+                </Container>
+            </section>
+        </>
+    );
+}

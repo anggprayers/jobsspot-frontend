@@ -17,6 +17,10 @@ import { googleLogin } from "../api/googleLogin";
 import { useAuthStore } from "../store/authStore";
 import { publishAuthTabEvent } from "../utils/authTabSync";
 import { getDefaultRedirectPath } from "../utils/getDefaultRedirectPath";
+import {
+    clearRememberedAuthReturnUrl,
+    getAuthDestination,
+} from "../utils/authReturnUrl";
 
 const GOOGLE_IDENTITY_SCRIPT_ID =
     "google-identity-services";
@@ -161,16 +165,6 @@ type GoogleSignInButtonProps = Readonly<{
     onSuccess?: () => void;
 }>;
 
-function isSafeInternalPath(
-    value: string | null | undefined,
-): value is string {
-    return Boolean(
-        value &&
-            value.startsWith("/") &&
-            !value.startsWith("//"),
-    );
-}
-
 function getGoogleErrorMessage(
     error: unknown,
 ): string {
@@ -285,15 +279,15 @@ export default function GoogleSignInButton({
                     );
 
                     const destination =
-                        isSafeInternalPath(
+                        getAuthDestination({
                             returnUrl,
-                        )
-                            ? returnUrl
-                            : isSafeInternalPath(
-                                    defaultRedirectPath,
-                                )
-                              ? defaultRedirectPath
-                              : getDefaultRedirectPath();
+                            defaultPath:
+                                defaultRedirectPath,
+                            fallbackPath:
+                                getDefaultRedirectPath(),
+                        });
+
+                    clearRememberedAuthReturnUrl();
 
                     const isEmployerDestination =
                         destination ===

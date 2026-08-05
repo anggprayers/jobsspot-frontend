@@ -4,8 +4,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
     addCompanyMember,
+    cancelCompanyInvitation,
+    createCompanyInvitation,
+    getCompanyInvitations,
     getCompanyMembers,
     removeCompanyMember,
+    resendCompanyInvitation,
     searchCompanyMemberCandidates,
     transferCompanyOwnership,
     updateCompanyMemberRole,
@@ -13,11 +17,15 @@ import {
 
 import type {
     AddCompanyMemberRequest,
+    CreateCompanyInvitationRequest,
     TransferCompanyOwnershipRequest,
     UpdateCompanyMemberRoleRequest,
 } from "../types/team";
 
 const companyMembersQueryKey = (companyId: string) => ["company-members", companyId] as const;
+
+const companyInvitationsQueryKey = (companyId: string) =>
+    ["company-invitations", companyId] as const;
 
 const memberCandidatesQueryKey = (companyId: string, query: string) =>
     ["company-member-candidates", companyId, query] as const;
@@ -133,6 +141,86 @@ export function useRemoveCompanyMember(companyId: string) {
 
                 queryClient.invalidateQueries({
                     queryKey: ["company-member-candidates", companyId],
+                }),
+            ]);
+        },
+    });
+}
+
+type UseCompanyInvitationsParameters = {
+    companyId: string;
+    enabled?: boolean;
+};
+
+export function useCompanyInvitations({
+    companyId,
+    enabled = true,
+}: UseCompanyInvitationsParameters) {
+    return useQuery({
+        queryKey: companyInvitationsQueryKey(companyId),
+
+        queryFn: () => getCompanyInvitations(companyId),
+
+        enabled: enabled && Boolean(companyId),
+
+        staleTime: 15_000,
+    });
+}
+
+export function useCreateCompanyInvitation(companyId: string) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: CreateCompanyInvitationRequest) =>
+            createCompanyInvitation(companyId, data),
+
+        onSuccess: async () => {
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: companyInvitationsQueryKey(companyId),
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ["company-activity", companyId],
+                }),
+            ]);
+        },
+    });
+}
+
+export function useResendCompanyInvitation(companyId: string) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (invitationId: string) =>
+            resendCompanyInvitation(companyId, invitationId),
+
+        onSuccess: async () => {
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: companyInvitationsQueryKey(companyId),
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ["company-activity", companyId],
+                }),
+            ]);
+        },
+    });
+}
+
+export function useCancelCompanyInvitation(companyId: string) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (invitationId: string) =>
+            cancelCompanyInvitation(companyId, invitationId),
+
+        onSuccess: async () => {
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: companyInvitationsQueryKey(companyId),
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ["company-activity", companyId],
                 }),
             ]);
         },

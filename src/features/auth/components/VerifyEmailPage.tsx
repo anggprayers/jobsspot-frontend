@@ -15,15 +15,28 @@ import {
 import {
     useEffect,
     useRef,
+    useSyncExternalStore,
 } from "react";
 import { toast } from "sonner";
 
 import { useAuth } from "../hooks/useAuth";
 import { useVerifyEmail } from "../hooks/useEmailVerification";
+import {
+    clearRememberedAuthReturnUrl,
+    getRememberedAuthReturnUrl,
+} from "../utils/authReturnUrl";
 
 type ApiErrorResponse = {
     message?: string;
 };
+
+function subscribeToRememberedReturnUrl(): () => void {
+    return () => undefined;
+}
+
+function getServerRememberedReturnUrl(): null {
+    return null;
+}
 
 function getVerificationErrorMessage(
     error: unknown,
@@ -54,6 +67,12 @@ export default function VerifyEmailPage() {
         useSearchParams();
     const hasAttemptedVerification =
         useRef(false);
+    const rememberedReturnUrl =
+        useSyncExternalStore(
+            subscribeToRememberedReturnUrl,
+            getRememberedAuthReturnUrl,
+            getServerRememberedReturnUrl,
+        );
 
     const {
         isAuthenticated,
@@ -99,16 +118,26 @@ export default function VerifyEmailPage() {
                     if (
                         response.authenticated
                     ) {
+                        const rememberedReturnUrl =
+                            getRememberedAuthReturnUrl();
+                        const destination =
+                            rememberedReturnUrl ??
+                            response.redirectTo;
+
+                        clearRememberedAuthReturnUrl();
+
                         toast.success(
                             `Email verified. Welcome to JobsSpot, ${response.user.firstName}!`,
                             {
                                 description:
-                                    "Your account is ready. Start exploring available jobs.",
+                                    rememberedReturnUrl
+                                        ? "Your account is ready. Returning you to where you left off."
+                                        : "Your account is ready. Start exploring available jobs.",
                             },
                         );
 
                         router.replace(
-                            response.redirectTo,
+                            destination,
                         );
                     }
                 },
@@ -120,10 +149,9 @@ export default function VerifyEmailPage() {
         token,
     ]);
 
-    const destination =
-        isAuthenticated
-            ? "/jobs"
-            : "/login?returnUrl=%2Fjobs";
+    const destination = isAuthenticated
+        ? rememberedReturnUrl ?? "/jobs"
+        : `/login?returnUrl=${encodeURIComponent(rememberedReturnUrl ?? "/jobs")}`;
 
     let icon = (
         <LoaderCircle className="size-7 animate-spin" />
@@ -170,7 +198,9 @@ export default function VerifyEmailPage() {
         heading =
             "Email verified";
         description =
-            "Your account is ready. Redirecting you to available jobs.";
+            rememberedReturnUrl
+                ? "Your account is ready. Returning you to where you left off."
+                : "Your account is ready. Redirecting you to available jobs.";
     } else if (isError) {
         icon = (
             <AlertCircle className="size-7" />

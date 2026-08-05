@@ -26,9 +26,10 @@ import {
     getTeamMemberInitials,
 } from "../utils/teamFormatters";
 
-import AddMemberDialog from "./AddMemberDialog";
+import CompanyInvitationsCard from "./CompanyInvitationsCard";
 import EditMemberRoleDialog from "./EditMemberRoleDialog";
 import RemoveMemberDialog from "./RemoveMemberDialog";
+import InviteMemberDialog from "./InviteMemberDialog";
 import TeamStats from "./TeamStats";
 import TransferOwnershipDialog from "./TransferOwnershipDialog";
 
@@ -46,7 +47,7 @@ export default function EmployerTeamPage() {
 
     const [searchValue, setSearchValue] = useState("");
 
-    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
     const [memberBeingEdited, setMemberBeingEdited] = useState<CompanyMember | null>(null);
 
@@ -136,18 +137,25 @@ export default function EmployerTeamPage() {
                     <h1 className="mt-1 text-3xl font-bold tracking-tight">Team</h1>
 
                     <p className="mt-2 max-w-2xl text-muted-foreground">
-                        Manage the registered JobsSpot users who can access{" "}
+                        Invite people and manage who can access{" "}
                         {activeMembership?.companyName ?? "your company"} workspace.
                     </p>
                 </div>
 
-                <Button type="button" onClick={() => setIsAddDialogOpen(true)}>
+                <Button type="button" onClick={() => setIsInviteDialogOpen(true)}>
                     <UserPlus />
-                    Add member
+                    Invite member
                 </Button>
             </section>
 
             <TeamStats members={members} isLoading={membersQuery.isLoading} />
+
+            <CompanyInvitationsCard
+                companyId={companyId}
+                isOwner={isOwner}
+                enabled={!isInitializing && hasTeamManagementAccess}
+                onInvite={() => setIsInviteDialogOpen(true)}
+            />
 
             {isOwner && (
                 <Card className="border-amber-200 bg-amber-50/40">
@@ -194,8 +202,8 @@ export default function EmployerTeamPage() {
                         <CardTitle>Company members</CardTitle>
 
                         <CardDescription className="mt-1">
-                            Owners and administrators can add, update, or remove eligible team
-                            members.
+                            Owners and administrators can update or remove active team members after
+                            they accept an invitation.
                         </CardDescription>
                     </div>
 
@@ -237,7 +245,7 @@ export default function EmployerTeamPage() {
                             <h3 className="font-semibold">No team members found</h3>
 
                             <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-                                Add a registered JobsSpot user to begin building your company team.
+                                Invite a teammate to begin building your company team.
                             </p>
                         </div>
                     )}
@@ -376,11 +384,12 @@ export default function EmployerTeamPage() {
                 onOpenChange={setIsTransferOwnershipDialogOpen}
             />
 
-            <AddMemberDialog
+            <InviteMemberDialog
                 companyId={companyId}
+                companyName={activeMembership?.companyName ?? "your company"}
                 isOwner={isOwner}
-                open={isAddDialogOpen}
-                onOpenChange={setIsAddDialogOpen}
+                open={isInviteDialogOpen}
+                onOpenChange={setIsInviteDialogOpen}
             />
 
             {memberBeingEdited && (

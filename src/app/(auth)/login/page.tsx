@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import AuthPageShell from "@/features/auth/components/AuthPageShell";
-import GuestOnlyAuthPage from "@/features/auth/components/GuestOnlyAuthPage";
 import LoginPageContent from "@/features/auth/components/LoginPageContent";
 
 export const metadata: Metadata = {
@@ -29,14 +28,12 @@ function LoginPageLoading() {
 
 export default function LoginPage() {
     return (
-        <GuestOnlyAuthPage>
-            <Suspense
-                fallback={
-                    <LoginPageLoading />
-                }
-            >
-                <LoginPageContent />
-            </Suspense>
-        </GuestOnlyAuthPage>
+        <Suspense
+            fallback={
+                <LoginPageLoading />
+            }
+        >
+            <LoginPageContent />
+        </Suspense>
     );
 }

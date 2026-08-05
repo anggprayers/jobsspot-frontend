@@ -282,6 +282,7 @@ export default function JobSeekerSettingsPage() {
 
     async function handleSendVerificationEmail() {
         if (
+            !user ||
             user.isEmailVerified ||
             sendVerificationMutation.isPending
         ) {

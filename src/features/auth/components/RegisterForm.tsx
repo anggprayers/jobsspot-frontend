@@ -17,6 +17,7 @@ import {
 
 import { register } from "../api/register";
 import type { RegisterResponse } from "../types/auth";
+import { rememberAuthReturnUrl } from "../utils/authReturnUrl";
 import GoogleSignInButton from "./GoogleSignInButton";
 
 type ApiErrorResponse = {
@@ -39,6 +40,10 @@ const initialFields: RegistrationFields = {
     password: "",
     confirmPassword: "",
 };
+
+type RegisterFormProps = Readonly<{
+    returnUrl?: string | null;
+}>;
 
 function getRegistrationErrorMessage(
     error: unknown,
@@ -102,7 +107,9 @@ function RequirementItem({
     );
 }
 
-export default function RegisterForm() {
+export default function RegisterForm({
+    returnUrl,
+}: RegisterFormProps) {
     const [
         fields,
         setFields,
@@ -219,6 +226,7 @@ export default function RegisterForm() {
                         fields.confirmPassword,
                 });
 
+            rememberAuthReturnUrl(returnUrl);
             setRegistrationResult(response);
         } catch (error) {
             setErrorMessage(
@@ -230,6 +238,10 @@ export default function RegisterForm() {
             setIsSubmitting(false);
         }
     }
+
+    const loginHref = returnUrl
+        ? `/login?returnUrl=${encodeURIComponent(returnUrl)}`
+        : "/login";
 
     if (registrationResult) {
         return (
@@ -273,7 +285,7 @@ export default function RegisterForm() {
 
                 <div className="mt-7 grid gap-3 sm:grid-cols-2">
                     <Link
-                        href="/login"
+                        href={loginHref}
                         className="inline-flex min-h-12 items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
                     >
                         Continue to sign in
@@ -299,6 +311,7 @@ export default function RegisterForm() {
     return (
         <div className="space-y-5">
             <GoogleSignInButton
+                returnUrl={returnUrl}
                 defaultRedirectPath="/jobs"
             />
 
@@ -609,7 +622,7 @@ export default function RegisterForm() {
             <p className="text-center text-sm text-slate-600">
                 Already have an account?{" "}
                 <Link
-                    href="/login"
+                    href={loginHref}
                     className="font-semibold text-blue-600 hover:text-blue-700"
                 >
                     Sign in

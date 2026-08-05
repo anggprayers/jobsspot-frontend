@@ -1,4 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
+import { Suspense } from "react";
 
 import Container from "@/components/layout/Container";
 import CommunitySection from "@/features/home/components/CommunitySection";
@@ -33,7 +34,16 @@ export default function HomePage() {
                             for skills like yours.
                         </p>
 
-                        <JobSearchForm />
+                        <Suspense
+                            fallback={
+                                <div
+                                    aria-hidden="true"
+                                    className="mx-auto mt-10 h-22 max-w-5xl animate-pulse rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-200/40"
+                                />
+                            }
+                        >
+                            <JobSearchForm />
+                        </Suspense>
 
                         <PopularSearchLinks />
                     </div>

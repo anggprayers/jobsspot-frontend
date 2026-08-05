@@ -72,3 +72,60 @@ export type RemoveCompanyMemberResponse = {
     success: boolean;
     message: string;
 };
+
+export type CompanyInvitationStatus = "PENDING" | "EXPIRED" | "ACCEPTED" | "CANCELLED";
+
+export type CompanyInvitationSender = {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatarUrl: string | null;
+};
+
+export type CompanyInvitation = {
+    id: string;
+    companyId: string;
+    email: string;
+    role: AssignableCompanyMemberRole;
+    expiresAt: string;
+    lastSentAt: string | null;
+    sendCount: number;
+    acceptedAt: string | null;
+    cancelledAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    invitedBy: CompanyInvitationSender;
+    status: CompanyInvitationStatus;
+};
+
+export type GetCompanyInvitationsResponse = {
+    success: true;
+    message: string;
+    invitations: CompanyInvitation[];
+};
+
+export type CreateCompanyInvitationRequest = {
+    email: string;
+    role: AssignableCompanyMemberRole;
+};
+
+export type CompanyInvitationMutationResponse = {
+    success: true;
+    message: string;
+    invitation: CompanyInvitation;
+};
+
+export type CompanyInvitationRateLimitType =
+    | "RESEND_COOLDOWN"
+    | "RECIPIENT_DAILY_LIMIT"
+    | "COMPANY_DAILY_LIMIT";
+
+export type CompanyInvitationApiError = {
+    success?: false;
+    message?: string;
+    errors?: Record<string, string[]>;
+    rateLimitType?: CompanyInvitationRateLimitType;
+    retryAfterSeconds?: number;
+    retryAfterAt?: string;
+};

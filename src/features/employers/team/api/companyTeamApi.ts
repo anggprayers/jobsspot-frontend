@@ -3,6 +3,9 @@ import apiClient from "@/lib/apiClient";
 import type {
     AddCompanyMemberRequest,
     AddCompanyMemberResponse,
+    CompanyInvitationMutationResponse,
+    CreateCompanyInvitationRequest,
+    GetCompanyInvitationsResponse,
     GetCompanyMembersResponse,
     RemoveCompanyMemberResponse,
     SearchCompanyMemberCandidatesResponse,
@@ -16,7 +19,7 @@ import type {
 // Retrieve all active members of the company.
 export async function getCompanyMembers(companyId: string): Promise<GetCompanyMembersResponse> {
     const response = await apiClient.get<GetCompanyMembersResponse>(
-        `/companies/${companyId}/members`,
+        `/companies/${encodeURIComponent(companyId)}/members`,
     );
 
     return response.data;
@@ -29,7 +32,7 @@ export async function searchCompanyMemberCandidates(
     query: string,
 ): Promise<SearchCompanyMemberCandidatesResponse> {
     const response = await apiClient.get<SearchCompanyMemberCandidatesResponse>(
-        `/companies/${companyId}/members/search-users`,
+        `/companies/${encodeURIComponent(companyId)}/members/search-users`,
         {
             params: {
                 query,
@@ -47,7 +50,7 @@ export async function addCompanyMember(
     data: AddCompanyMemberRequest,
 ): Promise<AddCompanyMemberResponse> {
     const response = await apiClient.post<AddCompanyMemberResponse>(
-        `/companies/${companyId}/members`,
+        `/companies/${encodeURIComponent(companyId)}/members`,
         data,
     );
 
@@ -62,7 +65,7 @@ export async function updateCompanyMemberRole(
     data: UpdateCompanyMemberRoleRequest,
 ): Promise<UpdateCompanyMemberRoleResponse> {
     const response = await apiClient.patch<UpdateCompanyMemberRoleResponse>(
-        `/companies/${companyId}/members/${memberId}`,
+        `/companies/${encodeURIComponent(companyId)}/members/${encodeURIComponent(memberId)}`,
         data,
     );
 
@@ -90,7 +93,59 @@ export async function removeCompanyMember(
     memberId: string,
 ): Promise<RemoveCompanyMemberResponse> {
     const response = await apiClient.delete<RemoveCompanyMemberResponse>(
-        `/companies/${companyId}/members/${memberId}`,
+        `/companies/${encodeURIComponent(companyId)}/members/${encodeURIComponent(memberId)}`,
+    );
+
+    return response.data;
+}
+
+// GET /api/companies/:companyId/invitations
+// Retrieve pending and expired company invitations.
+export async function getCompanyInvitations(
+    companyId: string,
+): Promise<GetCompanyInvitationsResponse> {
+    const response = await apiClient.get<GetCompanyInvitationsResponse>(
+        `/companies/${encodeURIComponent(companyId)}/invitations`,
+    );
+
+    return response.data;
+}
+
+// POST /api/companies/:companyId/invitations
+// Send an invitation to an email address, including people without a JobsSpot account yet.
+export async function createCompanyInvitation(
+    companyId: string,
+    data: CreateCompanyInvitationRequest,
+): Promise<CompanyInvitationMutationResponse> {
+    const response = await apiClient.post<CompanyInvitationMutationResponse>(
+        `/companies/${encodeURIComponent(companyId)}/invitations`,
+        data,
+    );
+
+    return response.data;
+}
+
+// POST /api/companies/:companyId/invitations/:invitationId/resend
+// Rotate the invitation token and send a fresh email.
+export async function resendCompanyInvitation(
+    companyId: string,
+    invitationId: string,
+): Promise<CompanyInvitationMutationResponse> {
+    const response = await apiClient.post<CompanyInvitationMutationResponse>(
+        `/companies/${encodeURIComponent(companyId)}/invitations/${encodeURIComponent(invitationId)}/resend`,
+    );
+
+    return response.data;
+}
+
+// DELETE /api/companies/:companyId/invitations/:invitationId
+// Cancel an invitation so its token can no longer be accepted.
+export async function cancelCompanyInvitation(
+    companyId: string,
+    invitationId: string,
+): Promise<CompanyInvitationMutationResponse> {
+    const response = await apiClient.delete<CompanyInvitationMutationResponse>(
+        `/companies/${encodeURIComponent(companyId)}/invitations/${encodeURIComponent(invitationId)}`,
     );
 
     return response.data;

@@ -10,6 +10,10 @@ import { login } from "../api/login";
 import GoogleSignInButton from "./GoogleSignInButton";
 import { useAuthStore } from "../store/authStore";
 import { getDefaultRedirectPath } from "../utils/getDefaultRedirectPath";
+import {
+    clearRememberedAuthReturnUrl,
+    getAuthDestination,
+} from "../utils/authReturnUrl";
 import { publishAuthTabEvent } from "../utils/authTabSync";
 
 type ApiErrorResponse = {
@@ -20,10 +24,6 @@ type LoginFormProps = Readonly<{
     onSuccess?: () => void;
     defaultRedirectPath?: string;
 }>;
-
-function isSafeInternalPath(value: string | null | undefined): value is string {
-    return Boolean(value && value.startsWith("/") && !value.startsWith("//"));
-}
 
 export default function LoginForm({
     onSuccess,
@@ -74,11 +74,16 @@ export default function LoginForm({
 
             const returnUrl = searchParams.get("returnUrl");
 
-            const destination = isSafeInternalPath(returnUrl)
-                ? returnUrl
-                : isSafeInternalPath(defaultRedirectPath)
-                  ? defaultRedirectPath
-                  : getDefaultRedirectPath();
+            const destination =
+                getAuthDestination({
+                    returnUrl,
+                    defaultPath:
+                        defaultRedirectPath,
+                    fallbackPath:
+                        getDefaultRedirectPath(),
+                });
+
+            clearRememberedAuthReturnUrl();
 
             const isEmployerDestination =
                 destination === "/employers" ||

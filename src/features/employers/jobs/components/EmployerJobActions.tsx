@@ -2,7 +2,17 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { Archive, Edit3, Eye, MoreHorizontal, Pause, Play, RotateCcw, Trash2 } from "lucide-react";
+import {
+    Archive,
+    CalendarPlus,
+    Edit3,
+    Eye,
+    MoreHorizontal,
+    Pause,
+    Play,
+    RotateCcw,
+    Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -18,6 +28,7 @@ import { canManageJobs } from "@/features/employers/utils/employerPermissions";
 
 import { useArchiveJob } from "../hooks/useArchiveJob";
 import { usePublishJob } from "../hooks/usePublishJob";
+import { useRenewJob } from "../hooks/useRenewJob";
 import { useRestoreJob } from "../hooks/useRestoreJob";
 import { useUnpublishJob } from "../hooks/useUnpublishJob";
 import type { CompanyJob } from "../types/companyJob";
@@ -64,11 +75,16 @@ export default function EmployerJobActions({
         companyId,
     });
 
+    const renewMutation = useRenewJob({
+        companyId,
+    });
+
     const isMutating =
         publishMutation.isPending ||
         unpublishMutation.isPending ||
         archiveMutation.isPending ||
-        restoreMutation.isPending;
+        restoreMutation.isPending ||
+        renewMutation.isPending;
 
     function handlePublish() {
         if (!hasJobManagementAccess) {
@@ -100,6 +116,63 @@ export default function EmployerJobActions({
                 toast.error(message, {
                     id: toastId,
                     description: axios.isAxiosError(error) ? undefined : "Please try again.",
+                });
+            },
+        });
+    }
+
+    function handleRenew() {
+        if (!hasJobManagementAccess) {
+            return;
+        }
+
+        const toastId = toast.loading(
+            "Renewing job posting...",
+        );
+
+        renewMutation.mutate(job.id, {
+            onSuccess: (response) => {
+                const expirationDate =
+                    response.job.expiresAt
+                        ? new Intl.DateTimeFormat(
+                              "en-US",
+                              {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                              },
+                          ).format(
+                              new Date(
+                                  response.job.expiresAt,
+                              ),
+                          )
+                        : null;
+
+                toast.success(
+                    "Job renewed successfully.",
+                    {
+                        id: toastId,
+                        description: expirationDate
+                            ? `${job.title} is visible until ${expirationDate}.`
+                            : `${job.title} is visible to job seekers again.`,
+                    },
+                );
+            },
+
+            onError: (error) => {
+                const message =
+                    axios.isAxiosError(error)
+                        ? (error.response?.data
+                              ?.message ??
+                          "Unable to renew the job.")
+                        : "Unable to renew the job.";
+
+                toast.error(message, {
+                    id: toastId,
+                    description:
+                        axios.isAxiosError(error)
+                            ? undefined
+                            : "Please try again.",
                 });
             },
         });
@@ -231,11 +304,29 @@ export default function EmployerJobActions({
                                 </DropdownMenuItem>
                             )}
 
+                            {job.isExpired && (
+                                <DropdownMenuItem
+                                    disabled={isMutating}
+                                    onSelect={handleRenew}
+                                >
+                                    <CalendarPlus className="size-4" />
+
+                                    {renewMutation.isPending
+                                        ? "Renewing..."
+                                        : "Renew posting"}
+                                </DropdownMenuItem>
+                            )}
+
                             {job.status === "PUBLISHED" && (
-                                <DropdownMenuItem disabled={isMutating} onSelect={handlePause}>
+                                <DropdownMenuItem
+                                    disabled={isMutating}
+                                    onSelect={handlePause}
+                                >
                                     <Pause className="size-4" />
 
-                                    {unpublishMutation.isPending ? "Pausing..." : "Pause"}
+                                    {unpublishMutation.isPending
+                                        ? "Pausing..."
+                                        : "Pause"}
                                 </DropdownMenuItem>
                             )}
 

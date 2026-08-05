@@ -11,6 +11,7 @@ import {
     ChevronLeft,
     ChevronRight,
     CirclePause,
+    Crown,
     FilePlus2,
     History,
     Image as ImageIcon,
@@ -258,6 +259,65 @@ function MemberRoleChangedDescription({ activity }: { activity: CompanyActivityI
     );
 }
 
+function OwnershipTransferredDescription({
+    activity,
+}: {
+    activity: CompanyActivityItem;
+}) {
+    const companyName = getMetadataString(activity.metadata, "companyName") ?? "the company";
+    const previousOwnerDisplayName =
+        getMetadataString(activity.metadata, "previousOwnerDisplayName") ?? activity.actorDisplayName;
+    const previousOwnerEmail = getMetadataString(activity.metadata, "previousOwnerEmail");
+    const newOwnerDisplayName =
+        getMetadataString(activity.metadata, "newOwnerDisplayName") ?? "another team member";
+    const newOwnerEmail = getMetadataString(activity.metadata, "newOwnerEmail");
+    const newOwnerPreviousRole = getMetadataString(activity.metadata, "newOwnerPreviousRole");
+
+    return (
+        <div className="space-y-3">
+            <div className="flex items-start gap-3">
+                <div className="mt-0.5 rounded-lg bg-amber-50 p-2 text-amber-700">
+                    <Crown className="size-4" />
+                </div>
+
+                <p className="text-sm leading-6 text-muted-foreground">
+                    <span className="font-semibold text-foreground">
+                        {previousOwnerDisplayName}
+                    </span>{" "}
+                    transferred ownership of{" "}
+                    <span className="font-semibold text-foreground">
+                        &ldquo;{companyName}&rdquo;
+                    </span>{" "}
+                    to{" "}
+                    <span className="font-semibold text-foreground">
+                        {newOwnerDisplayName}
+                    </span>
+                    .
+                </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+                <span className="rounded-full border bg-muted px-2.5 py-1 font-medium">
+                    {formatEnumLabel(newOwnerPreviousRole)}
+                </span>
+
+                <ArrowRight className="size-4 text-muted-foreground" />
+
+                <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 font-semibold text-amber-700">
+                    Owner
+                </span>
+            </div>
+
+            <div className="space-y-1 text-xs text-muted-foreground">
+                {newOwnerEmail && <p className="truncate">New owner: {newOwnerEmail}</p>}
+                {previousOwnerEmail && (
+                    <p className="truncate">Previous owner is now Admin: {previousOwnerEmail}</p>
+                )}
+            </div>
+        </div>
+    );
+}
+
 function MemberRemovedDescription({ activity }: { activity: CompanyActivityItem }) {
     const targetDisplayName =
         getMetadataString(activity.metadata, "targetDisplayName") ?? "a team member";
@@ -330,6 +390,12 @@ const jobStatusActionConfiguration: Partial<
         verb: "restored",
         Icon: RotateCcw,
         iconClassName: "bg-cyan-50 text-cyan-700",
+    },
+
+    JOB_RENEWED: {
+        verb: "renewed",
+        Icon: RefreshCw,
+        iconClassName: "bg-blue-50 text-blue-700",
     },
 };
 
@@ -696,12 +762,16 @@ function ActivityDescription({ activity }: ActivityDescriptionProps) {
         case "COMPANY_MEMBER_REMOVED":
             return <MemberRemovedDescription activity={activity} />;
 
+        case "COMPANY_OWNERSHIP_TRANSFERRED":
+            return <OwnershipTransferredDescription activity={activity} />;
+
         case "JOB_CREATED":
         case "JOB_UPDATED":
         case "JOB_PUBLISHED":
         case "JOB_PAUSED":
         case "JOB_ARCHIVED":
         case "JOB_RESTORED":
+        case "JOB_RENEWED":
         case "JOB_DELETED":
             return <JobActivityDescription activity={activity} />;
 

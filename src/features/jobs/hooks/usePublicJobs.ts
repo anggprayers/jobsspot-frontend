@@ -2,21 +2,17 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { getPublicJobs } from "../api/getPublicJobs";
+import {
+    getPublicJobs,
+    type GetPublicJobsParams,
+} from "../api/getPublicJobs";
 
-export type UsePublicJobsParams = {
-    page?: number;
-    limit?: number;
-    sort?: "newest" | "oldest" | "salary_high" | "salary_low";
-    search?: string;
-    category?: string;
-    location?: string;
-    employmentType?: string;
-    workplaceType?: string;
-    experienceLevel?: string;
-};
+export type UsePublicJobsParams =
+    GetPublicJobsParams;
 
-export function publicJobsQueryKey(params: UsePublicJobsParams = {}) {
+export function publicJobsQueryKey(
+    params: UsePublicJobsParams = {},
+) {
     return [
         "public-jobs",
         {
@@ -26,14 +22,27 @@ export function publicJobsQueryKey(params: UsePublicJobsParams = {}) {
             search: params.search ?? "",
             category: params.category ?? "",
             location: params.location ?? "",
-            employmentType: params.employmentType ?? "",
-            workplaceType: params.workplaceType ?? "",
-            experienceLevel: params.experienceLevel ?? "",
+            employmentType:
+                params.employmentType ?? "",
+            workplaceType:
+                params.workplaceType ?? "",
+            experienceLevel:
+                params.experienceLevel ?? "",
+            salaryPeriod:
+                params.salaryPeriod ?? "",
+            salaryMin: params.salaryMin ?? "",
+            salaryMax: params.salaryMax ?? "",
+            salaryCurrency:
+                params.salaryCurrency ?? "",
+            publishedWithinDays:
+                params.publishedWithinDays ?? "",
         },
     ] as const;
 }
 
-export function usePublicJobs(params: UsePublicJobsParams = {}) {
+export function usePublicJobs(
+    params: UsePublicJobsParams = {},
+) {
     return useQuery({
         queryKey: publicJobsQueryKey(params),
         queryFn: () => getPublicJobs(params),

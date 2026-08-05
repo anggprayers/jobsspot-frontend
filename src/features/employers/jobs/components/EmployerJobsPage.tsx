@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Archive, BriefcaseBusiness, FilePenLine, PauseCircle, Search, Send } from "lucide-react";
+import {
+    Archive,
+    BriefcaseBusiness,
+    FilePenLine,
+    PauseCircle,
+    Search,
+    Send,
+    TimerOff,
+} from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -68,6 +76,7 @@ export default function EmployerJobsPage() {
     const summary = jobsData?.summary ?? {
         totalJobs: 0,
         publishedJobs: 0,
+        expiredJobs: 0,
         draftJobs: 0,
         pausedJobs: 0,
         closedJobs: 0,
@@ -91,9 +100,14 @@ export default function EmployerJobsPage() {
             icon: BriefcaseBusiness,
         },
         {
-            label: "Published",
+            label: "Active",
             value: summary.publishedJobs,
             icon: Send,
+        },
+        {
+            label: "Expired",
+            value: summary.expiredJobs,
+            icon: TimerOff,
         },
         {
             label: "Draft",
@@ -137,7 +151,7 @@ export default function EmployerJobsPage() {
             </div>
 
             {!isLoading && !isError && summary.totalJobs > 0 && (
-                <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                     {statCards.map((stat) => (
                         <article
                             key={stat.label}
@@ -154,7 +168,13 @@ export default function EmployerJobsPage() {
                                     </p>
                                 </div>
 
-                                <div className="rounded-xl bg-blue-50 p-2.5 text-blue-600">
+                                <div
+                                    className={`rounded-xl p-2.5 ${
+                                        stat.label === "Expired"
+                                            ? "bg-red-50 text-red-600"
+                                            : "bg-blue-50 text-blue-600"
+                                    }`}
+                                >
                                     <stat.icon className="size-5" />
                                 </div>
                             </div>

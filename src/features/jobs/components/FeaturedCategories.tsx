@@ -11,6 +11,7 @@ import {
     Landmark,
     Megaphone,
     Palette,
+    RefreshCw,
     ShoppingBag,
     Users,
 } from "lucide-react";
@@ -56,7 +57,13 @@ function FeaturedCategoriesSkeleton() {
 }
 
 export default function FeaturedCategories() {
-    const { data, isLoading, isError } = useJobCategories();
+    const {
+        data,
+        isLoading,
+        isError,
+        isFetching,
+        refetch,
+    } = useJobCategories();
 
     const categories = data?.categories ?? [];
 
@@ -92,14 +99,35 @@ export default function FeaturedCategories() {
                     {isLoading && <FeaturedCategoriesSkeleton />}
 
                     {isError && (
-                        <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-5">
-                            <p className="font-medium text-red-700">
-                                Unable to load job categories.
+                        <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-6">
+                            <p className="font-semibold text-red-800">
+                                Job categories are temporarily unavailable
                             </p>
 
-                            <p className="mt-1 text-sm text-red-600">
-                                Please check that the JobsSpot backend is running and try again.
+                            <p className="mt-1 text-sm leading-6 text-red-600">
+                                We could not load the categories right now.
+                                Please try again shortly.
                             </p>
+
+                            <button
+                                type="button"
+                                disabled={isFetching}
+                                onClick={() => void refetch()}
+                                className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                                <RefreshCw
+                                    size={16}
+                                    className={
+                                        isFetching
+                                            ? "animate-spin"
+                                            : undefined
+                                    }
+                                />
+
+                                {isFetching
+                                    ? "Trying again..."
+                                    : "Try again"}
+                            </button>
                         </div>
                     )}
 

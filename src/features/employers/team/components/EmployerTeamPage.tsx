@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LoaderCircle, Search, ShieldCheck, Trash2, UserCog, UserPlus, Users } from "lucide-react";
+import { Crown, LoaderCircle, Search, ShieldCheck, Trash2, UserCog, UserPlus, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,6 +30,7 @@ import AddMemberDialog from "./AddMemberDialog";
 import EditMemberRoleDialog from "./EditMemberRoleDialog";
 import RemoveMemberDialog from "./RemoveMemberDialog";
 import TeamStats from "./TeamStats";
+import TransferOwnershipDialog from "./TransferOwnershipDialog";
 
 const EMPTY_MEMBERS: CompanyMember[] = [];
 
@@ -51,12 +52,19 @@ export default function EmployerTeamPage() {
 
     const [memberBeingRemoved, setMemberBeingRemoved] = useState<CompanyMember | null>(null);
 
+    const [isTransferOwnershipDialogOpen, setIsTransferOwnershipDialogOpen] = useState(false);
+
     const membersQuery = useCompanyMembers({
         companyId,
         enabled: !isInitializing && hasTeamManagementAccess,
     });
 
     const members = membersQuery.data?.members ?? EMPTY_MEMBERS;
+
+    const eligibleOwnershipRecipients = useMemo(
+        () => members.filter((member) => member.role !== "OWNER" && member.user.id !== user?.id),
+        [members, user?.id],
+    );
 
     const filteredMembers = useMemo(() => {
         const normalizedSearch = searchValue.trim().toLowerCase();
@@ -140,6 +148,45 @@ export default function EmployerTeamPage() {
             </section>
 
             <TeamStats members={members} isLoading={membersQuery.isLoading} />
+
+            {isOwner && (
+                <Card className="border-amber-200 bg-amber-50/40">
+                    <CardHeader className="gap-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex items-start gap-4">
+                            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+                                <Crown className="size-5" />
+                            </div>
+
+                            <div>
+                                <CardTitle>Company ownership</CardTitle>
+
+                                <CardDescription className="mt-1 max-w-2xl">
+                                    Transfer ownership to another active member when the person who
+                                    created this workspace is not the long-term company owner.
+                                </CardDescription>
+                            </div>
+                        </div>
+
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled={eligibleOwnershipRecipients.length === 0}
+                            onClick={() => setIsTransferOwnershipDialogOpen(true)}
+                            className="border-amber-300 bg-white text-amber-800 hover:bg-amber-100 hover:text-amber-900"
+                        >
+                            <Crown />
+                            Transfer ownership
+                        </Button>
+                    </CardHeader>
+
+                    {eligibleOwnershipRecipients.length === 0 && (
+                        <CardContent className="pt-0 text-sm text-muted-foreground">
+                            Add another registered JobsSpot user to the team before transferring
+                            ownership.
+                        </CardContent>
+                    )}
+                </Card>
+            )}
 
             <Card>
                 <CardHeader className="gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -320,6 +367,14 @@ export default function EmployerTeamPage() {
                         )}
                 </CardContent>
             </Card>
+
+            <TransferOwnershipDialog
+                companyId={companyId}
+                companyName={activeMembership?.companyName ?? "your company"}
+                eligibleMembers={eligibleOwnershipRecipients}
+                open={isTransferOwnershipDialogOpen}
+                onOpenChange={setIsTransferOwnershipDialogOpen}
+            />
 
             <AddMemberDialog
                 companyId={companyId}

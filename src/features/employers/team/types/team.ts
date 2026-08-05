@@ -52,6 +52,22 @@ export type UpdateCompanyMemberRoleResponse = {
     member: CompanyMember;
 };
 
+export type TransferCompanyOwnershipRequest = {
+    targetMemberId: string;
+    confirmationCompanyName: string;
+};
+
+export type TransferCompanyOwnershipResponse = {
+    success: true;
+    message: string;
+    company: {
+        id: string;
+        name: string;
+    };
+    previousOwner: CompanyMember;
+    newOwner: CompanyMember;
+};
+
 export type RemoveCompanyMemberResponse = {
     success: boolean;
     message: string;

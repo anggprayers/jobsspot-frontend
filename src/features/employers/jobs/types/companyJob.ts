@@ -29,6 +29,8 @@ export type CompanyJob = {
 
     publishedAt: string | null;
     expiresAt: string | null;
+    isExpired: boolean;
+    daysUntilExpiration: number | null;
 
     createdAt: string;
     updatedAt: string;
@@ -58,6 +60,7 @@ export type CompanyJobsQueryParams = {
 export type CompanyJobsSummary = {
     totalJobs: number;
     publishedJobs: number;
+    expiredJobs: number;
     draftJobs: number;
     pausedJobs: number;
     closedJobs: number;

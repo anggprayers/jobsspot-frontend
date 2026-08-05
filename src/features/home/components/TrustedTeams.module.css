@@ -1,0 +1,176 @@
+.carouselViewport {
+    overflow-x: auto;
+    cursor: grab;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    touch-action: pan-y;
+    user-select: none;
+    mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 6%,
+        black 94%,
+        transparent
+    );
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 6%,
+        black 94%,
+        transparent
+    );
+}
+
+.carouselViewport::-webkit-scrollbar {
+    display: none;
+}
+
+.isDragging {
+    cursor: grabbing;
+}
+
+.carouselTrack {
+    display: flex;
+    width: max-content;
+}
+
+.carouselGroup {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
+    padding-right: clamp(2rem, 5vw, 5rem);
+}
+
+.companyLogoLink {
+    display: flex;
+    min-height: 8.5rem;
+    width: 13rem;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.8rem;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    text-align: center;
+    opacity: 1;
+    transition:
+        transform 180ms ease,
+        background-color 180ms ease;
+}
+
+.companyLogoLink:hover {
+    background: rgb(255 255 255 / 0.72);
+    transform: scale(1.025);
+}
+
+.companyLogoLink:focus-visible {
+    background: white;
+    outline: 4px solid rgb(219 234 254);
+    outline-offset: 2px;
+}
+
+.companyVisual {
+    display: flex;
+    height: 5rem;
+    width: 10rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: rgb(255 255 255 / 0.65);
+    padding: 0.45rem;
+}
+
+.companyLogoImage {
+    max-height: 4.5rem;
+    width: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.companyInitials {
+    display: flex;
+    height: 3.5rem;
+    width: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background: rgb(219 234 254);
+    color: rgb(37 99 235);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.companyName {
+    display: -webkit-box;
+    width: 100%;
+    max-width: 12rem;
+    overflow: hidden;
+    color: rgb(30 41 59);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.25rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.staticLogoGrid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(11rem, 13rem)
+    );
+    align-items: start;
+    justify-content: center;
+    gap: 1.5rem 2.5rem;
+    margin-top: 2.5rem;
+}
+
+@media (max-width: 640px) {
+    .carouselViewport {
+        mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 3%,
+            black 97%,
+            transparent
+        );
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 3%,
+            black 97%,
+            transparent
+        );
+    }
+
+    .carouselGroup {
+        gap: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .companyLogoLink {
+        width: 10.5rem;
+    }
+
+    .companyVisual {
+        width: 9rem;
+    }
+
+    .staticLogoGrid {
+        grid-template-columns: repeat(
+            2,
+            minmax(0, 1fr)
+        );
+        gap: 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .companyLogoLink {
+        transition: none;
+    }
+}

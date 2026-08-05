@@ -2,6 +2,8 @@
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
+import EmailVerificationBanner from "@/features/auth/components/EmailVerificationBanner";
+
 import EmployerHeader from "./EmployerHeader";
 import EmployerSidebar from "./EmployerSidebar";
 
@@ -16,6 +18,8 @@ export default function EmployerLayout({ children }: EmployerLayoutProps) {
 
             <SidebarInset>
                 <EmployerHeader />
+
+                <EmailVerificationBanner variant="employer" />
 
                 <main className="flex-1 bg-linear-to-br from-background via-background to-primary/5 p-4 md:p-6 lg:p-8">
                     {children}

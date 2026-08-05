@@ -19,7 +19,7 @@ const jobSeekerLinks = [
     },
     {
         label: "Saved Jobs",
-        href: "/saved-jobs",
+        href: "/account/saved-jobs",
     },
 ] as const;
 
@@ -30,11 +30,11 @@ const employerLinks = [
     },
     {
         label: "Pricing",
-        href: "/pricing",
+        href: "/#pricing",
     },
     {
         label: "Employer Dashboard",
-        href: "/employers/dashboard",
+        href: "/employers",
     },
 ] as const;
 
@@ -45,11 +45,11 @@ const companyLinks = [
     },
     {
         label: "Contact",
-        href: "/contact",
+        href: "/#contact",
     },
     {
         label: "Community",
-        href: "#",
+        href: "/#community",
     },
     {
         label: "Privacy Policy",
@@ -69,7 +69,7 @@ export default function Footer() {
             <Container className="py-20 sm:py-24">
                 <div className="grid gap-14 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] lg:gap-20">
                     <div>
-                        <Logo className="text-white" />
+                        <Logo textClassName="text-white" />
 
                         <p className="mt-7 max-w-lg text-base leading-8 text-slate-400">
                             Connecting talented professionals with companies looking for their next
@@ -85,10 +85,10 @@ export default function Footer() {
 
                         <ul className="mt-7 space-y-4">
                             {jobSeekerLinks.map((link) => (
-                                <li key={link.href}>
+                                <li key={`${link.label}-${link.href}`}>
                                     <Link
                                         href={link.href}
-                                        className="inline-block text-base leading-7 text-slate-400 transition-all hover:translate-x-1 hover:text-white"
+                                        className="inline-block text-base leading-7 text-slate-400 decoration-blue-400 decoration-2 underline-offset-4 transition-colors hover:text-blue-300 hover:underline focus-visible:rounded-sm focus-visible:text-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/70"
                                     >
                                         {link.label}
                                     </Link>
@@ -104,10 +104,10 @@ export default function Footer() {
 
                         <ul className="mt-7 space-y-4">
                             {employerLinks.map((link) => (
-                                <li key={link.href}>
+                                <li key={`${link.label}-${link.href}`}>
                                     <Link
                                         href={link.href}
-                                        className="inline-block text-base leading-7 text-slate-400 transition-all hover:translate-x-1 hover:text-white"
+                                        className="inline-block text-base leading-7 text-slate-400 decoration-blue-400 decoration-2 underline-offset-4 transition-colors hover:text-blue-300 hover:underline focus-visible:rounded-sm focus-visible:text-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/70"
                                     >
                                         {link.label}
                                     </Link>
@@ -123,10 +123,10 @@ export default function Footer() {
 
                         <ul className="mt-7 space-y-4">
                             {companyLinks.map((link) => (
-                                <li key={link.href}>
+                                <li key={`${link.label}-${link.href}`}>
                                     <Link
                                         href={link.href}
-                                        className="inline-block text-base leading-7 text-slate-400 transition-all hover:translate-x-1 hover:text-white"
+                                        className="inline-block text-base leading-7 text-slate-400 decoration-blue-400 decoration-2 underline-offset-4 transition-colors hover:text-blue-300 hover:underline focus-visible:rounded-sm focus-visible:text-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/70"
                                     >
                                         {link.label}
                                     </Link>

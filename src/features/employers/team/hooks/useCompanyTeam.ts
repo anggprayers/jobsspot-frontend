@@ -7,10 +7,15 @@ import {
     getCompanyMembers,
     removeCompanyMember,
     searchCompanyMemberCandidates,
+    transferCompanyOwnership,
     updateCompanyMemberRole,
 } from "../api/companyTeamApi";
 
-import type { AddCompanyMemberRequest, UpdateCompanyMemberRoleRequest } from "../types/team";
+import type {
+    AddCompanyMemberRequest,
+    TransferCompanyOwnershipRequest,
+    UpdateCompanyMemberRoleRequest,
+} from "../types/team";
 
 const companyMembersQueryKey = (companyId: string) => ["company-members", companyId] as const;
 
@@ -90,6 +95,26 @@ export function useUpdateCompanyMemberRole(companyId: string) {
             await queryClient.invalidateQueries({
                 queryKey: companyMembersQueryKey(companyId),
             });
+        },
+    });
+}
+
+export function useTransferCompanyOwnership(companyId: string) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: TransferCompanyOwnershipRequest) =>
+            transferCompanyOwnership(companyId, data),
+
+        onSuccess: async () => {
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: companyMembersQueryKey(companyId),
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ["company-activity", companyId],
+                }),
+            ]);
         },
     });
 }

@@ -1,4 +1,33 @@
-export type JobsSortOption = "newest" | "oldest" | "salary_high" | "salary_low";
+export type JobsSortOption =
+    | "newest"
+    | "oldest"
+    | "salary_high"
+    | "salary_low";
+
+export type EmploymentTypeFilter =
+    | "FULL_TIME"
+    | "PART_TIME"
+    | "CONTRACT"
+    | "TEMPORARY"
+    | "INTERNSHIP";
+
+export type WorkplaceTypeFilter =
+    | "ONSITE"
+    | "REMOTE"
+    | "HYBRID";
+
+export type ExperienceLevelFilter =
+    | "ENTRY_LEVEL"
+    | "JUNIOR"
+    | "MID_LEVEL"
+    | "SENIOR"
+    | "LEAD"
+    | "EXECUTIVE";
+
+export type SalaryPeriodFilter =
+    | "HOURLY"
+    | "MONTHLY"
+    | "YEARLY";
 
 export type JobFilters = {
     search: string;
@@ -7,6 +36,11 @@ export type JobFilters = {
     employmentType: string;
     workplaceType: string;
     experienceLevel: string;
+    salaryPeriod: string;
+    salaryMin: string;
+    salaryMax: string;
+    salaryCurrency: string;
+    publishedWithinDays: string;
     sort: JobsSortOption;
     page: number;
     limit: number;
@@ -33,7 +67,32 @@ export const employmentTypeOptions = [
         label: "Internship",
         value: "INTERNSHIP",
     },
-] as const;
+] as const satisfies ReadonlyArray<{
+    label: string;
+    value: EmploymentTypeFilter;
+}>;
+
+export const employmentTypeFilterGroups = [
+    {
+        label: "Full time",
+        values: ["FULL_TIME"],
+    },
+    {
+        label: "Part time",
+        values: ["PART_TIME"],
+    },
+    {
+        label: "Contract/Temporary",
+        values: ["CONTRACT", "TEMPORARY"],
+    },
+    {
+        label: "Internship",
+        values: ["INTERNSHIP"],
+    },
+] as const satisfies ReadonlyArray<{
+    label: string;
+    values: readonly EmploymentTypeFilter[];
+}>;
 
 export const workplaceTypeOptions = [
     {
@@ -41,14 +100,17 @@ export const workplaceTypeOptions = [
         value: "ONSITE",
     },
     {
-        label: "Remote",
-        value: "REMOTE",
-    },
-    {
         label: "Hybrid",
         value: "HYBRID",
     },
-] as const;
+    {
+        label: "Remote",
+        value: "REMOTE",
+    },
+] as const satisfies ReadonlyArray<{
+    label: string;
+    value: WorkplaceTypeFilter;
+}>;
 
 export const experienceLevelOptions = [
     {
@@ -56,20 +118,72 @@ export const experienceLevelOptions = [
         value: "ENTRY_LEVEL",
     },
     {
+        label: "Junior",
+        value: "JUNIOR",
+    },
+    {
         label: "Mid Level",
         value: "MID_LEVEL",
     },
     {
-        label: "Senior Level",
-        value: "SENIOR_LEVEL",
+        label: "Senior",
+        value: "SENIOR",
     },
     {
         label: "Lead",
         value: "LEAD",
     },
     {
-        label: "Manager",
-        value: "MANAGER",
+        label: "Executive",
+        value: "EXECUTIVE",
+    },
+] as const satisfies ReadonlyArray<{
+    label: string;
+    value: ExperienceLevelFilter;
+}>;
+
+export const salaryPeriodOptions = [
+    {
+        label: "Yearly",
+        value: "YEARLY",
+    },
+    {
+        label: "Monthly",
+        value: "MONTHLY",
+    },
+    {
+        label: "Hourly",
+        value: "HOURLY",
+    },
+] as const satisfies ReadonlyArray<{
+    label: string;
+    value: SalaryPeriodFilter;
+}>;
+
+export const listingTimeOptions = [
+    {
+        label: "Any time",
+        value: "",
+    },
+    {
+        label: "Today",
+        value: "1",
+    },
+    {
+        label: "Last 3 days",
+        value: "3",
+    },
+    {
+        label: "Last 7 days",
+        value: "7",
+    },
+    {
+        label: "Last 14 days",
+        value: "14",
+    },
+    {
+        label: "Last 30 days",
+        value: "30",
     },
 ] as const;
 

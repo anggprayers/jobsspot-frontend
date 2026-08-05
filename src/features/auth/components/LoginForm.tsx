@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, type SubmitEvent } from "react";
 import { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState, type SubmitEvent } from "react";
+import { toast } from "sonner";
 
 import { getCurrentUser } from "../api/getCurrentUser";
 import { login } from "../api/login";
+import GoogleSignInButton from "./GoogleSignInButton";
 import { useAuthStore } from "../store/authStore";
-
 import { getDefaultRedirectPath } from "../utils/getDefaultRedirectPath";
+import { publishAuthTabEvent } from "../utils/authTabSync";
 
 type ApiErrorResponse = {
     message?: string;
@@ -16,13 +18,25 @@ type ApiErrorResponse = {
 
 type LoginFormProps = Readonly<{
     onSuccess?: () => void;
+    defaultRedirectPath?: string;
 }>;
 
-export default function LoginForm({ onSuccess }: LoginFormProps) {
+function isSafeInternalPath(value: string | null | undefined): value is string {
+    return Boolean(value && value.startsWith("/") && !value.startsWith("//"));
+}
+
+export default function LoginForm({
+    onSuccess,
+    defaultRedirectPath,
+}: LoginFormProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
     const setSession = useAuthStore((state) => state.setSession);
+
+    const passwordResetSucceeded =
+        searchParams.get("passwordReset") ===
+        "success";
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -45,26 +59,55 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
                 password,
             });
 
-            const currentUserResponse = await getCurrentUser(loginResponse.accessToken);
+            const currentUserResponse = await getCurrentUser(
+                loginResponse.accessToken,
+            );
 
-            setSession(currentUserResponse.user, loginResponse.accessToken);
+            setSession(
+                currentUserResponse.user,
+                loginResponse.accessToken,
+            );
 
-            onSuccess?.();
+            publishAuthTabEvent(
+                "session-updated",
+            );
 
             const returnUrl = searchParams.get("returnUrl");
 
-            const destination =
-                returnUrl?.startsWith("/") && !returnUrl.startsWith("//")
-                    ? returnUrl
-                    : getDefaultRedirectPath(currentUserResponse.user);
+            const destination = isSafeInternalPath(returnUrl)
+                ? returnUrl
+                : isSafeInternalPath(defaultRedirectPath)
+                  ? defaultRedirectPath
+                  : getDefaultRedirectPath();
+
+            const isEmployerDestination =
+                destination === "/employers" ||
+                destination.startsWith(
+                    "/employers/",
+                );
+
+            toast.success(
+                `Welcome back, ${currentUserResponse.user.firstName}!`,
+                {
+                    description:
+                        isEmployerDestination
+                            ? "Opening your employer workspace."
+                            : "You’re signed in and ready to continue.",
+                },
+            );
+
+            onSuccess?.();
 
             router.replace(destination);
         } catch (error) {
             if (error instanceof AxiosError) {
-                const responseData = error.response?.data as ApiErrorResponse | undefined;
+                const responseData = error.response?.data as
+                    | ApiErrorResponse
+                    | undefined;
 
                 setErrorMessage(
-                    responseData?.message ?? "Unable to sign in. Please check your credentials.",
+                    responseData?.message ??
+                        "Unable to sign in. Please check your credentials.",
                 );
             } else {
                 setErrorMessage("Something went wrong. Please try again.");
@@ -75,7 +118,40 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-5">
+            <GoogleSignInButton
+                returnUrl={
+                    searchParams.get(
+                        "returnUrl",
+                    )
+                }
+                defaultRedirectPath={
+                    defaultRedirectPath
+                }
+                onSuccess={onSuccess}
+            />
+
+            <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-slate-200" />
+
+                <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                    Or continue with email
+                </span>
+
+                <div className="h-px flex-1 bg-slate-200" />
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+            {passwordResetSucceeded && !errorMessage && (
+                <div
+                    role="status"
+                    className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-700"
+                >
+                    Your password was reset successfully.
+                    Sign in using your new password.
+                </div>
+            )}
+
             {errorMessage && (
                 <div
                     role="alert"
@@ -136,6 +212,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
             >
                 {isSubmitting ? "Signing in..." : "Sign In"}
             </button>
-        </form>
+            </form>
+        </div>
     );
 }

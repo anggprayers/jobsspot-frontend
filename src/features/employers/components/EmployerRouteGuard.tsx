@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import {
+    usePathname,
+    useRouter,
+} from "next/navigation";
 
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
@@ -9,11 +12,17 @@ type EmployerRouteGuardProps = Readonly<{
     children: React.ReactNode;
 }>;
 
-export default function EmployerRouteGuard({ children }: EmployerRouteGuardProps) {
+export default function EmployerRouteGuard({
+    children,
+}: EmployerRouteGuardProps) {
     const pathname = usePathname();
     const router = useRouter();
 
-    const { isInitializing, isAuthenticated, isEmployer } = useAuth();
+    const {
+        isInitializing,
+        isAuthenticated,
+        isEmployer,
+    } = useAuth();
 
     useEffect(() => {
         if (isInitializing) {
@@ -21,17 +30,28 @@ export default function EmployerRouteGuard({ children }: EmployerRouteGuardProps
         }
 
         if (!isAuthenticated) {
-            const returnUrl = encodeURIComponent(pathname);
+            const returnUrl =
+                encodeURIComponent(pathname);
 
-            router.replace(`/login?returnUrl=${returnUrl}`);
+            router.replace(
+                `/login?returnUrl=${returnUrl}`,
+            );
 
             return;
         }
 
         if (!isEmployer) {
-            router.replace("/");
+            router.replace(
+                "/employers/get-started",
+            );
         }
-    }, [isAuthenticated, isEmployer, isInitializing, pathname, router]);
+    }, [
+        isAuthenticated,
+        isEmployer,
+        isInitializing,
+        pathname,
+        router,
+    ]);
 
     if (isInitializing) {
         return (
@@ -47,7 +67,10 @@ export default function EmployerRouteGuard({ children }: EmployerRouteGuardProps
         );
     }
 
-    if (!isAuthenticated || !isEmployer) {
+    if (
+        !isAuthenticated ||
+        !isEmployer
+    ) {
         return null;
     }
 

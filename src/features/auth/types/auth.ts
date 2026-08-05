@@ -18,6 +18,8 @@ export type AuthUser = {
     email: string;
     phone: string | null;
     avatarUrl: string | null;
+    isEmailVerified: boolean;
+    hasPassword: boolean;
     isAdmin: boolean;
     createdAt: string;
     memberships: AuthMembership[];
@@ -94,4 +96,96 @@ export type ChangePasswordResponse = {
     message: string;
     requiresReauthentication: boolean;
     revokedSessions: number;
+};
+
+export type SendVerificationEmailResponse = {
+    success: boolean;
+    message: string;
+    emailSent: boolean;
+    alreadyVerified: boolean;
+    expiresAt: string | null;
+};
+
+export type VerifyEmailRequest = {
+    token: string;
+};
+
+export type AuthenticatedVerifyEmailResponse = {
+    success: true;
+    message: string;
+    isEmailVerified: true;
+    alreadyVerified: false;
+    authenticated: true;
+    accessToken: string;
+    user: AuthUser;
+    redirectTo: "/jobs";
+};
+
+export type AlreadyVerifiedEmailResponse = {
+    success: true;
+    message: string;
+    isEmailVerified: true;
+    alreadyVerified: true;
+    authenticated: false;
+    accessToken: null;
+    user: null;
+    redirectTo: null;
+};
+
+export type VerifyEmailResponse =
+    | AuthenticatedVerifyEmailResponse
+    | AlreadyVerifiedEmailResponse;
+
+export type RegisterRequest = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+};
+
+export type RegisterResponse = {
+    success: boolean;
+    message: string;
+    verificationEmailSent: boolean;
+    user: SessionUser;
+};
+
+
+export type ForgotPasswordRequest = {
+    email: string;
+};
+
+export type ForgotPasswordResponse = {
+    success: true;
+    message: string;
+};
+
+export type ResetPasswordRequest = {
+    token: string;
+    newPassword: string;
+    confirmNewPassword: string;
+};
+
+export type ResetPasswordResponse = {
+    success: true;
+    message: string;
+    requiresReauthentication: true;
+    revokedSessions: number;
+    redirectTo: "/login?passwordReset=success";
+};
+
+
+export type GoogleLoginRequest = {
+    credential: string;
+};
+
+export type GoogleLoginResponse = {
+    success: true;
+    message: string;
+    provider: "GOOGLE";
+    isNewUser: boolean;
+    accountLinked: boolean;
+    user: AuthUser;
+    accessToken: string;
 };

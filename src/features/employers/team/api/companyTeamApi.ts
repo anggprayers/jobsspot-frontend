@@ -6,6 +6,8 @@ import type {
     GetCompanyMembersResponse,
     RemoveCompanyMemberResponse,
     SearchCompanyMemberCandidatesResponse,
+    TransferCompanyOwnershipRequest,
+    TransferCompanyOwnershipResponse,
     UpdateCompanyMemberRoleRequest,
     UpdateCompanyMemberRoleResponse,
 } from "../types/team";
@@ -61,6 +63,20 @@ export async function updateCompanyMemberRole(
 ): Promise<UpdateCompanyMemberRoleResponse> {
     const response = await apiClient.patch<UpdateCompanyMemberRoleResponse>(
         `/companies/${companyId}/members/${memberId}`,
+        data,
+    );
+
+    return response.data;
+}
+
+// POST /api/companies/:companyId/members/transfer-ownership
+// Transfer ownership to another active company member.
+export async function transferCompanyOwnership(
+    companyId: string,
+    data: TransferCompanyOwnershipRequest,
+): Promise<TransferCompanyOwnershipResponse> {
+    const response = await apiClient.post<TransferCompanyOwnershipResponse>(
+        `/companies/${encodeURIComponent(companyId)}/members/transfer-ownership`,
         data,
     );
 

@@ -3,6 +3,7 @@ import type { CompanyJob } from "../types/companyJob";
 import {
     formatEmploymentType,
     formatJobDate,
+    formatJobExpiration,
     formatJobStatus,
     formatWorkplaceType,
     getJobStatusBadgeClasses,
@@ -21,15 +22,53 @@ type EmployerJobsTableProps = {
     categories: JobCategoryOption[];
 };
 
-function JobStatusBadge({ status }: { status: CompanyJob["status"] }) {
+function JobStatusBadge({
+    job,
+}: {
+    job: CompanyJob;
+}) {
     return (
         <span
             className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${getJobStatusBadgeClasses(
-                status,
+                job,
             )}`}
         >
-            {formatJobStatus(status)}
+            {formatJobStatus(job)}
         </span>
+    );
+}
+
+function JobExpiration({
+    job,
+}: {
+    job: CompanyJob;
+}) {
+    const expiration = formatJobExpiration(job);
+
+    return (
+        <div>
+            <div
+                className={
+                    job.isExpired
+                        ? "font-semibold text-red-700"
+                        : "font-medium text-slate-800"
+                }
+            >
+                {expiration.dateLabel}
+            </div>
+
+            {expiration.detailLabel && (
+                <div
+                    className={`mt-1 text-xs ${
+                        job.isExpired
+                            ? "font-semibold text-red-600"
+                            : "text-slate-500"
+                    }`}
+                >
+                    {expiration.detailLabel}
+                </div>
+            )}
+        </div>
     );
 }
 
@@ -52,7 +91,7 @@ export default function EmployerJobsTable({ jobs, companyId, categories }: Emplo
                                 <p className="mt-1 text-sm text-slate-500">{job.category.name}</p>
                             </div>
 
-                            <JobStatusBadge status={job.status} />
+                            <JobStatusBadge job={job} />
                         </div>
 
                         <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-slate-100 pt-4">
@@ -76,7 +115,17 @@ export default function EmployerJobsTable({ jobs, companyId, categories }: Emplo
                                 </dd>
                             </div>
 
-                            <div className="col-span-2">
+                            <div>
+                                <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                                    Expiration
+                                </dt>
+
+                                <dd className="mt-1 text-sm">
+                                    <JobExpiration job={job} />
+                                </dd>
+                            </div>
+
+                            <div>
                                 <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">
                                     Updated
                                 </dt>
@@ -121,7 +170,7 @@ export default function EmployerJobsTable({ jobs, companyId, categories }: Emplo
                                 </th>
 
                                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
-                                    Updated
+                                    Expiration
                                 </th>
 
                                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
@@ -144,7 +193,7 @@ export default function EmployerJobsTable({ jobs, companyId, categories }: Emplo
                                     </td>
 
                                     <td className="px-6 py-5">
-                                        <JobStatusBadge status={job.status} />
+                                        <JobStatusBadge job={job} />
                                     </td>
 
                                     <td className="whitespace-nowrap px-6 py-5 text-sm text-slate-700">
@@ -155,8 +204,8 @@ export default function EmployerJobsTable({ jobs, companyId, categories }: Emplo
                                         {formatWorkplaceType(job.workplaceType)}
                                     </td>
 
-                                    <td className="whitespace-nowrap px-6 py-5 text-sm text-slate-600">
-                                        {formatJobDate(job.updatedAt)}
+                                    <td className="whitespace-nowrap px-6 py-5 text-sm">
+                                        <JobExpiration job={job} />
                                     </td>
 
                                     <td className="px-6 py-5">

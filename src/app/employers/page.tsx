@@ -296,10 +296,10 @@ export default function EmployerDashboardPage() {
 
                                         <span
                                             className={`w-fit rounded-full border px-2.5 py-1 text-xs font-semibold ${getJobStatusBadgeClasses(
-                                                job.status,
+                                                job,
                                             )}`}
                                         >
-                                            {formatJobStatus(job.status)}
+                                            {formatJobStatus(job)}
                                         </span>
                                     </Link>
                                 ))}

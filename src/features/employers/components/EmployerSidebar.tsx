@@ -9,6 +9,7 @@ import {
     History,
     LayoutDashboard,
     Settings,
+    UserRound,
     UserRoundCog,
     Users,
 } from "lucide-react";
@@ -89,9 +90,7 @@ export default function EmployerSidebar() {
     const { activeCompanyRole } = useAuth();
 
     const hasCompanyManagementAccess = canManageCompany(activeCompanyRole);
-
     const hasTeamManagementAccess = canManageTeam(activeCompanyRole);
-
     const hasActivityAccess = canViewActivity(activeCompanyRole);
 
     const navigationItems = [
@@ -128,7 +127,9 @@ export default function EmployerSidebar() {
                                 </div>
 
                                 <div className="grid flex-1 text-left leading-tight">
-                                    <span className="truncate font-semibold">JobsSpot</span>
+                                    <span className="truncate font-semibold">
+                                        JobsSpot
+                                    </span>
 
                                     <span className="truncate text-xs text-muted-foreground">
                                         Employer Portal
@@ -147,7 +148,10 @@ export default function EmployerSidebar() {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {navigationItems.map((item) => {
-                                const isActive = isNavigationItemActive(pathname, item.href);
+                                const isActive = isNavigationItemActive(
+                                    pathname,
+                                    item.href,
+                                );
 
                                 return (
                                     <SidebarMenuItem key={item.href}>
@@ -159,7 +163,6 @@ export default function EmployerSidebar() {
                                         >
                                             <Link href={item.href}>
                                                 <item.icon />
-
                                                 <span>{item.title}</span>
                                             </Link>
                                         </SidebarMenuButton>
@@ -172,6 +175,20 @@ export default function EmployerSidebar() {
             </SidebarContent>
 
             <SidebarFooter className="border-t">
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton
+                            asChild
+                            tooltip="Job seeker account"
+                        >
+                            <Link href="/account/profile">
+                                <UserRound />
+                                <span>Job seeker account</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+
                 <p className="px-2 text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
                     JobsSpot Employer Portal
                 </p>

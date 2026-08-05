@@ -7,6 +7,7 @@ import {
     BriefcaseBusiness,
     CalendarDays,
     CircleDollarSign,
+    Clock3,
     ExternalLink,
     MapPin,
     Monitor,
@@ -22,6 +23,7 @@ import type { CompanyJob } from "../types/companyJob";
 import {
     formatEmploymentType,
     formatJobDate,
+    formatJobExpiration,
     formatJobStatus,
     formatWorkplaceType,
     getJobStatusBadgeClasses,
@@ -155,7 +157,8 @@ export default function EmployerJobDetailsPage() {
                     </Link>
                 </Button>
 
-                {job.status === "PUBLISHED" && (
+                {job.status === "PUBLISHED" &&
+                    !job.isExpired && (
                     <Button variant="outline" size="sm" asChild>
                         <Link href={`/jobs/${job.slug}`} target="_blank" rel="noreferrer">
                             <ExternalLink />
@@ -171,10 +174,10 @@ export default function EmployerJobDetailsPage() {
                         <div className="flex flex-wrap items-center gap-3">
                             <span
                                 className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${getJobStatusBadgeClasses(
-                                    job.status,
+                                    job,
                                 )}`}
                             >
-                                {formatJobStatus(job.status)}
+                                {formatJobStatus(job)}
                             </span>
 
                             <span className="text-sm font-medium text-blue-600">
@@ -251,7 +254,7 @@ export default function EmployerJobDetailsPage() {
                         <dd className="mt-2 font-semibold text-slate-900">{formatSalary(job)}</dd>
                     </div>
 
-                    <div className="rounded-xl bg-slate-50 p-4 sm:col-span-2">
+                    <div className="rounded-xl bg-slate-50 p-4">
                         <dt className="flex items-center gap-2 text-sm font-medium text-slate-500">
                             <CalendarDays className="size-4" />
                             Application deadline
@@ -262,6 +265,51 @@ export default function EmployerJobDetailsPage() {
                                 ? formatJobDate(job.applicationDeadline)
                                 : "No deadline"}
                         </dd>
+                    </div>
+
+                    <div
+                        className={`rounded-xl p-4 ${
+                            job.isExpired
+                                ? "bg-red-50"
+                                : "bg-slate-50"
+                        }`}
+                    >
+                        <dt
+                            className={`flex items-center gap-2 text-sm font-medium ${
+                                job.isExpired
+                                    ? "text-red-600"
+                                    : "text-slate-500"
+                            }`}
+                        >
+                            <Clock3 className="size-4" />
+                            Posting expiration
+                        </dt>
+
+                        <dd
+                            className={`mt-2 font-semibold ${
+                                job.isExpired
+                                    ? "text-red-700"
+                                    : "text-slate-900"
+                            }`}
+                        >
+                            {formatJobExpiration(job).dateLabel}
+                        </dd>
+
+                        {formatJobExpiration(job)
+                            .detailLabel && (
+                            <p
+                                className={`mt-1 text-sm ${
+                                    job.isExpired
+                                        ? "font-semibold text-red-600"
+                                        : "text-slate-500"
+                                }`}
+                            >
+                                {
+                                    formatJobExpiration(job)
+                                        .detailLabel
+                                }
+                            </p>
+                        )}
                     </div>
                 </dl>
             </section>

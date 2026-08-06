@@ -117,7 +117,7 @@ export default function EmployerSidebar() {
                             <Link href="/employers">
                                 <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary/10">
                                     <Image
-                                        src="/logo.jpeg"
+                                        src="/logo.png"
                                         alt="JobsSpot"
                                         width={32}
                                         height={32}

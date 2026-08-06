@@ -12,7 +12,6 @@ import {
     Mail,
     Phone,
     RotateCcw,
-    SearchCheck,
     ShieldBan,
     ShieldCheck,
     UserRound,
@@ -220,8 +219,6 @@ export default function AdminUserDetailsPage({ userId }: AdminUserDetailsPagePro
                             {([
                                 ["Applications", user.counts.applications, FileText],
                                 ["Resumes", user.counts.resumes, UserRound],
-                                ["Saved jobs", user.counts.savedJobs, BriefcaseBusiness],
-                                ["Saved searches", user.counts.savedSearches, SearchCheck],
                                 ["Created jobs", user.counts.createdJobs, BriefcaseBusiness],
                             ] satisfies Array<[string, number, LucideIcon]>).map(([label, value, Icon]) => (
                                 <div key={String(label)} className="rounded-xl border bg-muted/30 p-4">

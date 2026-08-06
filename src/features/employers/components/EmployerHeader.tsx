@@ -28,6 +28,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 
 import { logout } from "@/features/auth/api/logout";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import NotificationBell from "@/features/notifications/components/NotificationBell";
 
 import type { AuthMembership, CompanyMemberRole } from "@/features/auth/types/auth";
 
@@ -38,6 +39,7 @@ const routeLabels: Record<string, string> = {
     "/employers/applicants": "Applicants",
     "/employers/team": "Team",
     "/employers/activity": "Activity",
+    "/employers/notifications": "Notifications",
     "/employers/settings": "Settings",
 };
 
@@ -276,6 +278,11 @@ export default function EmployerHeader() {
                                 <CompanyIdentity membership={activeMembership} />
                             </div>
                         ))}
+
+                    <NotificationBell
+                        audience="EMPLOYER"
+                        viewAllHref="/employers/notifications"
+                    />
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

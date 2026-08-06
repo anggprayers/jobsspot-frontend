@@ -106,11 +106,23 @@ export type EmployerApplicationDetails = {
     resume: {
         id: string;
         name: string;
-        fileUrl: string | null;
         mimeType: string;
         fileSize: number;
         createdAt: string;
     } | null;
+};
+
+export type GetCompanyApplicationResumeDownloadResponse = {
+    success: true;
+    message: string;
+    resume: {
+        id: string;
+        name: string;
+        mimeType: string;
+        fileSize: number;
+    };
+    downloadUrl: string;
+    expiresInSeconds: number;
 };
 
 export type EmployerApplicationsQueryParams = {

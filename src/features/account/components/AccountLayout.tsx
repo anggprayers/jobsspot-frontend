@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+    Bell,
     Bookmark,
     BriefcaseBusiness,
     ChevronDown,
@@ -48,6 +49,11 @@ const availableLinks = [
         label: "Saved searches",
         href: "/account/saved-searches",
         icon: SearchCheck,
+    },
+    {
+        label: "Notifications",
+        href: "/notifications",
+        icon: Bell,
     },
     {
         label: "Settings",

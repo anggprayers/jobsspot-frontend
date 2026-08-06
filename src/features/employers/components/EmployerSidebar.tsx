@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+    Bell,
     BriefcaseBusiness,
     Building2,
     History,
@@ -70,6 +71,12 @@ const activityNavigationItem = {
     icon: History,
 };
 
+const notificationsNavigationItem = {
+    title: "Notifications",
+    href: "/employers/notifications",
+    icon: Bell,
+};
+
 const settingsNavigationItem = {
     title: "Settings",
     href: "/employers/settings",
@@ -105,6 +112,7 @@ export default function EmployerSidebar() {
 
         ...(hasActivityAccess ? [activityNavigationItem] : []),
 
+        notificationsNavigationItem,
         settingsNavigationItem,
     ];
 

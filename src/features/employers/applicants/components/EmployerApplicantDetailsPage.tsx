@@ -7,8 +7,10 @@ import {
     ArrowLeft,
     BriefcaseBusiness,
     CalendarDays,
+    Download,
     ExternalLink,
     FileText,
+    LoaderCircle,
     Mail,
     MapPin,
     Phone,
@@ -29,6 +31,7 @@ import {
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
 import { useCompanyApplication } from "../hooks/useCompanyApplication";
+import { useCompanyApplicationResumeDownload } from "../hooks/useCompanyApplicationResumeDownload";
 import { useUpdateCompanyApplicationStatus } from "../hooks/useUpdateCompanyApplicationStatus";
 import type { ManageableEmployerApplicationStatus } from "../types/employerApplication";
 import {
@@ -79,12 +82,24 @@ function formatEnumValue(value: string): string {
         .join(" ");
 }
 
-function getErrorMessage(error: unknown): string {
+function getErrorMessage(error: unknown, fallback = "Unable to load this application."): string {
     if (axios.isAxiosError<{ message?: string }>(error)) {
-        return error.response?.data?.message ?? "Unable to load this application.";
+        return error.response?.data?.message ?? fallback;
     }
 
-    return "Unable to load this application.";
+    return fallback;
+}
+
+function openSecureResume(downloadUrl: string) {
+    const link = document.createElement("a");
+
+    link.href = downloadUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
 }
 
 export default function EmployerApplicantDetailsPage() {
@@ -107,6 +122,11 @@ export default function EmployerApplicantDetailsPage() {
     });
 
     const updateStatusMutation = useUpdateCompanyApplicationStatus({
+        companyId,
+        applicationId,
+    });
+
+    const resumeDownloadMutation = useCompanyApplicationResumeDownload({
         companyId,
         applicationId,
     });
@@ -150,6 +170,30 @@ export default function EmployerApplicantDetailsPage() {
                 },
             },
         );
+    }
+
+    async function handleOpenResume() {
+        if (!applicationQuery.data?.application.resume || resumeDownloadMutation.isPending) {
+            return;
+        }
+
+        const toastId = toast.loading("Preparing secure resume link...");
+
+        try {
+            const response = await resumeDownloadMutation.mutateAsync();
+
+            openSecureResume(response.downloadUrl);
+
+            toast.success("Resume opened securely.", {
+                id: toastId,
+                description: "The private link expires in five minutes.",
+            });
+        } catch (error) {
+            toast.error(getErrorMessage(error, "Unable to open the submitted resume."), {
+                id: toastId,
+                description: "Confirm your account is verified and still has access to this company.",
+            });
+        }
     }
 
     if (applicationQuery.isLoading) {
@@ -501,22 +545,29 @@ export default function EmployerApplicantDetailsPage() {
                                         </div>
                                     </div>
 
-                                    {application.resume.fileUrl ? (
-                                        <Button variant="outline" className="w-full" asChild>
-                                            <Link
-                                                href={application.resume.fileUrl}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                            >
-                                                Open resume
-                                                <ExternalLink className="size-4" />
-                                            </Link>
-                                        </Button>
-                                    ) : (
-                                        <p className="text-sm text-slate-500">
-                                            The resume file is not currently available.
-                                        </p>
-                                    )}
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="w-full"
+                                        disabled={resumeDownloadMutation.isPending}
+                                        onClick={() => void handleOpenResume()}
+                                    >
+                                        {resumeDownloadMutation.isPending ? (
+                                            <>
+                                                <LoaderCircle className="size-4 animate-spin" />
+                                                Preparing resume...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Download className="size-4" />
+                                                Open submitted resume
+                                            </>
+                                        )}
+                                    </Button>
+
+                                    <p className="text-xs leading-5 text-slate-500">
+                                        Access is private and the secure link expires after five minutes.
+                                    </p>
                                 </div>
                             ) : (
                                 <p className="text-sm text-slate-500">

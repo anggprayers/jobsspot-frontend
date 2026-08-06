@@ -27,6 +27,8 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { logout } from "@/features/auth/api/logout";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import NotificationBell from "@/features/notifications/components/NotificationBell";
+
 import { getAdminInitials } from "../utils/adminFormatters";
 
 function getPageLabel(pathname: string): string {
@@ -52,6 +54,10 @@ function getPageLabel(pathname: string): string {
 
     if (pathname === "/admin/activity") {
         return "Activity";
+    }
+
+    if (pathname === "/admin/notifications") {
+        return "Notifications";
     }
 
     return "Administration";
@@ -112,8 +118,14 @@ export default function AdminHeader() {
                     </Breadcrumb>
                 </div>
 
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                <div className="flex items-center gap-2">
+                    <NotificationBell
+                        audience="ADMIN"
+                        viewAllHref="/admin/notifications"
+                    />
+
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
                         <Button
                             type="button"
                             variant="ghost"
@@ -176,8 +188,9 @@ export default function AdminHeader() {
                             <LogOut />
                             {isLoggingOut ? "Logging out..." : "Log out"}
                         </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             </div>
         </header>
     );

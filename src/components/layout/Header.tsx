@@ -19,6 +19,7 @@ import Logo from "@/components/common/Logo";
 import { logout } from "@/features/auth/api/logout";
 import SignInModal from "@/features/auth/components/SignInModal";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import NotificationBell from "@/features/notifications/components/NotificationBell";
 
 import Container from "./Container";
 import Navigation from "./Navigation";
@@ -97,6 +98,14 @@ export default function Header() {
                             <Navigation />
 
                             <div className="flex items-center gap-3">
+                                {isAuthenticated && user && (
+                                    <NotificationBell
+                                        audience="JOB_SEEKER"
+                                        viewAllHref="/notifications"
+                                        visualStyle="public"
+                                    />
+                                )}
+
                                 {isInitializing ? (
                                     <div
                                         aria-hidden="true"
@@ -157,28 +166,39 @@ export default function Header() {
                             </div>
                         </div>
 
-                        <button
-                            type="button"
-                            aria-label={
-                                isMobileMenuOpen
-                                    ? "Close navigation menu"
-                                    : "Open navigation menu"
-                            }
-                            aria-expanded={isMobileMenuOpen}
-                            aria-controls="mobile-navigation"
-                            onClick={() =>
-                                setIsMobileMenuOpen(
-                                    (current) => !current,
-                                )
-                            }
-                            className="inline-flex size-11 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-800 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200 lg:hidden"
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="size-5" />
-                            ) : (
-                                <Menu className="size-5" />
+                        <div className="flex items-center gap-2 lg:hidden">
+                            {isAuthenticated && user && (
+                                <NotificationBell
+                                    audience="JOB_SEEKER"
+                                    viewAllHref="/notifications"
+                                    visualStyle="public"
+                                    className="size-11"
+                                />
                             )}
-                        </button>
+
+                            <button
+                                type="button"
+                                aria-label={
+                                    isMobileMenuOpen
+                                        ? "Close navigation menu"
+                                        : "Open navigation menu"
+                                }
+                                aria-expanded={isMobileMenuOpen}
+                                aria-controls="mobile-navigation"
+                                onClick={() =>
+                                    setIsMobileMenuOpen(
+                                        (current) => !current,
+                                    )
+                                }
+                                className="inline-flex size-11 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-800 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200"
+                            >
+                                {isMobileMenuOpen ? (
+                                    <X className="size-5" />
+                                ) : (
+                                    <Menu className="size-5" />
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </Container>
             </header>

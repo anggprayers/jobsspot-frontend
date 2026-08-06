@@ -23,6 +23,114 @@ import {
 } from "../../shared/utils/adminFormatters";
 import { usePlatformActivity } from "../hooks/usePlatformActivity";
 
+type ActivityDetail = {
+    label: string;
+    value: string;
+};
+
+const activityMetadataLabels: Record<string, string> = {
+    companyName: "Company",
+    targetDisplayName: "User",
+    targetEmail: "Email",
+    reason: "Reason",
+    previousSuspensionReason: "Previous suspension reason",
+    revokedSessions: "Sessions signed out",
+    activeMembers: "Members affected",
+    jobs: "Jobs affected",
+    jobStatusesPreserved: "Existing job records preserved",
+    verified: "Verification status",
+};
+
+const hiddenActivityMetadataKeys = new Set([
+    "companyId",
+    "companySlug",
+    "userId",
+    "targetUserId",
+]);
+
+function isMetadataRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function formatMetadataLabel(key: string) {
+    return (
+        activityMetadataLabels[key] ??
+        key
+            .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+            .replace(/[_-]+/g, " ")
+            .replace(/^./, (character) => character.toUpperCase())
+    );
+}
+
+function formatMetadataValue(key: string, value: unknown): string | null {
+    if (value === null || value === undefined || value === "") {
+        return null;
+    }
+
+    if (key === "verified" && typeof value === "boolean") {
+        return value ? "Verified" : "Unverified";
+    }
+
+    if (key === "jobStatusesPreserved" && typeof value === "boolean") {
+        return value ? "Yes — jobs and their statuses were kept" : "No";
+    }
+
+    if (typeof value === "boolean") {
+        return value ? "Yes" : "No";
+    }
+
+    if (typeof value === "string" || typeof value === "number") {
+        return String(value);
+    }
+
+    if (Array.isArray(value)) {
+        const simpleValues = value.filter(
+            (item): item is string | number =>
+                typeof item === "string" || typeof item === "number",
+        );
+
+        return simpleValues.length === value.length
+            ? simpleValues.join(", ")
+            : `${value.length} recorded item${value.length === 1 ? "" : "s"}`;
+    }
+
+    return null;
+}
+
+function getActivityDetails(metadata: unknown): ActivityDetail[] {
+    if (!isMetadataRecord(metadata)) {
+        return [];
+    }
+
+    const preferredKeys = [
+        "companyName",
+        "targetDisplayName",
+        "targetEmail",
+        "reason",
+        "previousSuspensionReason",
+        "revokedSessions",
+        "activeMembers",
+        "jobs",
+        "jobStatusesPreserved",
+        "verified",
+    ];
+
+    const orderedKeys = [
+        ...preferredKeys.filter((key) => key in metadata),
+        ...Object.keys(metadata).filter(
+            (key) => !preferredKeys.includes(key) && !hiddenActivityMetadataKeys.has(key),
+        ),
+    ];
+
+    return orderedKeys.flatMap((key) => {
+        const value = formatMetadataValue(key, metadata[key]);
+
+        return value === null
+            ? []
+            : [{ label: formatMetadataLabel(key), value }];
+    });
+}
+
 export default function AdminActivityPage() {
     const [page, setPage] = useState(1);
     const [action, setAction] = useState("ALL");
@@ -149,57 +257,66 @@ export default function AdminActivityPage() {
                     )}
 
                     <div className="space-y-3">
-                        {activity.map((item) => (
-                            <article key={item.id} className="rounded-2xl border p-4 sm:p-5">
-                                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                                    <div className="flex min-w-0 items-start gap-3">
-                                        <Avatar className="size-10 shrink-0">
-                                            <AvatarImage src={item.actorUser.avatarUrl ?? undefined} alt={item.actorDisplayName} />
-                                            <AvatarFallback>
-                                                {getAdminInitials(
-                                                    item.actorDisplayName.split(" ")[0] ?? "A",
-                                                    item.actorDisplayName.split(" ").slice(1).join(" ") || "D",
-                                                )}
-                                            </AvatarFallback>
-                                        </Avatar>
+                        {activity.map((item) => {
+                            const details = getActivityDetails(item.metadata);
+                            const hasActionDetails = details.length > 0;
 
-                                        <div className="min-w-0">
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <p className="font-semibold text-foreground">
-                                                    {formatAdminLabel(item.action)}
+                            return (
+                                <article key={item.id} className="rounded-2xl border p-4 sm:p-5">
+                                    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                                        <div className="flex min-w-0 items-start gap-3">
+                                            <Avatar className="size-10 shrink-0">
+                                                <AvatarImage src={item.actorUser.avatarUrl ?? undefined} alt={item.actorDisplayName} />
+                                                <AvatarFallback>
+                                                    {getAdminInitials(
+                                                        item.actorDisplayName.split(" ")[0] ?? "A",
+                                                        item.actorDisplayName.split(" ").slice(1).join(" ") || "D",
+                                                    )}
+                                                </AvatarFallback>
+                                            </Avatar>
+
+                                            <div className="min-w-0">
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <p className="font-semibold text-foreground">
+                                                        {formatAdminLabel(item.action)}
+                                                    </p>
+                                                    <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                                                        {formatAdminLabel(item.entityType)}
+                                                    </span>
+                                                </div>
+                                                <p className="mt-1 truncate text-sm text-muted-foreground">
+                                                    Performed by {item.actorDisplayName} · {item.actorEmail}
                                                 </p>
-                                                <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                                                    {formatAdminLabel(item.entityType)}
-                                                </span>
                                             </div>
-                                            <p className="mt-1 truncate text-sm text-muted-foreground">
-                                                {item.actorDisplayName} · {item.actorEmail}
-                                            </p>
-                                            {item.entityId && (
-                                                <p className="mt-2 text-xs text-muted-foreground">
-                                                    Target ID: <code className="rounded bg-muted px-1.5 py-0.5">{item.entityId}</code>
-                                                </p>
-                                            )}
                                         </div>
+
+                                        <time className="shrink-0 text-xs text-muted-foreground">
+                                            {formatAdminDate(item.createdAt)}
+                                        </time>
                                     </div>
 
-                                    <time className="shrink-0 text-xs text-muted-foreground">
-                                        {formatAdminDate(item.createdAt)}
-                                    </time>
-                                </div>
-
-                                {item.metadata !== null && item.metadata !== undefined && (
-                                    <details className="mt-4 rounded-xl bg-muted/30 p-3 text-sm">
-                                        <summary className="cursor-pointer font-medium text-foreground">
-                                            View recorded metadata
-                                        </summary>
-                                        <pre className="mt-3 overflow-x-auto whitespace-pre-wrap break-words text-xs leading-5 text-muted-foreground">
-                                            {JSON.stringify(item.metadata, null, 2)}
-                                        </pre>
-                                    </details>
-                                )}
-                            </article>
-                        ))}
+                                    {hasActionDetails && (
+                                        <details className="mt-4 rounded-xl bg-muted/30 p-3 text-sm">
+                                            <summary className="cursor-pointer font-medium text-foreground">
+                                                View action details
+                                            </summary>
+                                            <dl className="mt-3 grid gap-3 border-t pt-3 sm:grid-cols-2">
+                                                {details.map((detail) => (
+                                                    <div key={`${item.id}-${detail.label}`} className="min-w-0">
+                                                        <dt className="text-xs font-medium text-muted-foreground">
+                                                            {detail.label}
+                                                        </dt>
+                                                        <dd className="mt-1 break-words text-sm text-foreground">
+                                                            {detail.value}
+                                                        </dd>
+                                                    </div>
+                                                ))}
+                                            </dl>
+                                        </details>
+                                    )}
+                                </article>
+                            );
+                        })}
                     </div>
 
                     {pagination && pagination.totalPages > 1 && (

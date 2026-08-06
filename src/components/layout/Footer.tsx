@@ -10,13 +10,17 @@ const jobSeekerLinks = [
         href: "/jobs",
     },
     {
-        label: "Create Account",
-        href: "/register",
-    },
-    {
         label: "Browse Categories",
         href: "/categories",
     },
+    {
+        label: "Create Account",
+        href: "/register",
+    },
+    // {
+    //     label: "Saved Jobs",
+    //     href: "/account/saved-jobs",
+    // },
 ] as const;
 
 const employerLinks = [
@@ -35,6 +39,10 @@ const employerLinks = [
 ] as const;
 
 const companyLinks = [
+    // {
+    //     label: "About",
+    //     href: "/#how-it-works",
+    // },
     {
         label: "Contact",
         href: "/#contact",

@@ -412,7 +412,7 @@ export default function EmployerGetStartedPage() {
                         className="inline-flex items-center gap-3"
                     >
                         <Image
-                            src="/logo.jpeg"
+                            src="/logo.png"
                             alt="JobsSpot"
                             width={42}
                             height={42}

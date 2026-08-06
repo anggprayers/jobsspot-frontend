@@ -8,6 +8,7 @@ import {
     LogIn,
     LogOut,
     Menu,
+    ShieldCheck,
     UserRound,
     X,
 } from "lucide-react";
@@ -136,6 +137,16 @@ export default function Header() {
                                     </button>
                                 )}
 
+                                {user?.isAdmin && (
+                                    <Link
+                                        href="/admin"
+                                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-100 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200"
+                                    >
+                                        <ShieldCheck size={18} />
+                                        Admin
+                                    </Link>
+                                )}
+
                                 <Link
                                     href={employerHref}
                                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-base font-semibold text-white shadow-sm shadow-blue-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md hover:shadow-blue-600/25 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200"
@@ -254,6 +265,17 @@ export default function Header() {
                                             <UserRound className="size-5" />
                                             My account
                                         </Link>
+
+                                        {user?.isAdmin && (
+                                            <Link
+                                                href="/admin"
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+                                            >
+                                                <ShieldCheck className="size-5" />
+                                                Platform admin
+                                            </Link>
+                                        )}
 
                                         <button
                                             type="button"

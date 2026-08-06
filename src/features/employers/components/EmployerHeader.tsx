@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Check, ChevronDown, ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
+import { Check, ChevronDown, ChevronsUpDown, LogOut, Settings, ShieldCheck, User } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -325,6 +325,15 @@ export default function EmployerHeader() {
                                     Settings
                                 </Link>
                             </DropdownMenuItem>
+
+                            {user?.isAdmin && (
+                                <DropdownMenuItem asChild>
+                                    <Link href="/admin">
+                                        <ShieldCheck />
+                                        Platform admin
+                                    </Link>
+                                </DropdownMenuItem>
+                            )}
 
                             <DropdownMenuSeparator />
 

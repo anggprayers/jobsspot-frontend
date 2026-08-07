@@ -68,8 +68,15 @@ export default function NotificationBell({
                 await markReadMutation.mutateAsync(notification.id);
             }
 
-            if (notification.actionUrl) {
-                router.push(notification.actionUrl);
+            const isJobSeekerReportUpdate =
+                notification.audience === "JOB_SEEKER" &&
+                notification.entityType === "JOB_REPORT";
+            const destination = isJobSeekerReportUpdate
+                ? viewAllHref
+                : notification.actionUrl;
+
+            if (destination) {
+                router.push(destination);
             }
         } catch {
             toast.error("Unable to update this notification.");

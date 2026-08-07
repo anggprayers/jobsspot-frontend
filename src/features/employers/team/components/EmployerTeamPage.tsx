@@ -154,7 +154,6 @@ export default function EmployerTeamPage() {
                 companyId={companyId}
                 isOwner={isOwner}
                 enabled={!isInitializing && hasTeamManagementAccess}
-                onInvite={() => setIsInviteDialogOpen(true)}
             />
 
             {isOwner && (

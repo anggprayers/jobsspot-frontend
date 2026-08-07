@@ -1,9 +1,11 @@
 import apiClient from "@/lib/apiClient";
 
 import type {
+    ApplicationCoverLetterDownloadResponse,
     ApplicationMutationResponse,
     ApplicationResumeDownloadResponse,
     CreateApplicationInput,
+    GetApplicationForJobResponse,
     GetApplicationResponse,
     GetApplicationsParams,
     GetApplicationsResponse,
@@ -34,8 +36,8 @@ export async function getApplicationById(
 
 export async function getApplicationForJob(
     jobId: string,
-): Promise<GetApplicationResponse> {
-    const response = await apiClient.get<GetApplicationResponse>(
+): Promise<GetApplicationForJobResponse> {
+    const response = await apiClient.get<GetApplicationForJobResponse>(
         `/applications/job/${encodeURIComponent(jobId)}`,
     );
 
@@ -45,9 +47,26 @@ export async function getApplicationForJob(
 export async function createApplication(
     input: CreateApplicationInput,
 ): Promise<ApplicationMutationResponse> {
+    const formData = new FormData();
+    formData.append("jobId", input.jobId);
+    formData.append("resumeId", input.resumeId);
+
+    if (input.coverLetter) {
+        formData.append("coverLetter", input.coverLetter);
+    }
+
+    if (input.coverLetterFile) {
+        formData.append("coverLetterFile", input.coverLetterFile);
+    }
+
     const response = await apiClient.post<ApplicationMutationResponse>(
         "/applications",
-        input,
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        },
     );
 
     return response.data;
@@ -70,6 +89,19 @@ export async function getApplicationResumeDownload(
             `/applications/${encodeURIComponent(
                 applicationId,
             )}/resume/download`,
+        );
+
+    return response.data;
+}
+
+export async function getApplicationCoverLetterDownload(
+    applicationId: string,
+): Promise<ApplicationCoverLetterDownloadResponse> {
+    const response =
+        await apiClient.get<ApplicationCoverLetterDownloadResponse>(
+            `/applications/${encodeURIComponent(
+                applicationId,
+            )}/cover-letter/download`,
         );
 
     return response.data;

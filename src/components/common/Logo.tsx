@@ -21,7 +21,7 @@ export default function Logo({
             className={`group inline-flex items-center gap-2.5 transition-opacity hover:opacity-90 ${className}`}
         >
             <Image
-                src="/logo.jpeg"
+                src="/logo.png"
                 alt=""
                 width={40}
                 height={40}

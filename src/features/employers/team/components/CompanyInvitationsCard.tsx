@@ -6,7 +6,6 @@ import {
     Mail,
     RefreshCw,
     RotateCw,
-    Send,
     XCircle,
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -39,7 +38,6 @@ type CompanyInvitationsCardProps = {
     companyId: string;
     isOwner: boolean;
     enabled: boolean;
-    onInvite: () => void;
 };
 
 const EMPTY_INVITATIONS: CompanyInvitation[] = [];
@@ -48,7 +46,6 @@ export default function CompanyInvitationsCard({
     companyId,
     isOwner,
     enabled,
-    onInvite,
 }: CompanyInvitationsCardProps) {
     const [invitationBeingCancelled, setInvitationBeingCancelled] =
         useState<CompanyInvitation | null>(null);
@@ -127,10 +124,6 @@ export default function CompanyInvitationsCard({
                             Refresh
                         </Button>
 
-                        <Button type="button" onClick={onInvite}>
-                            <Send />
-                            Invite member
-                        </Button>
                     </div>
                 </CardHeader>
 
@@ -179,10 +172,6 @@ export default function CompanyInvitationsCard({
                                     creating their JobsSpot account.
                                 </p>
 
-                                <Button type="button" className="mt-5" onClick={onInvite}>
-                                    <Send />
-                                    Send an invitation
-                                </Button>
                             </div>
                         )}
 

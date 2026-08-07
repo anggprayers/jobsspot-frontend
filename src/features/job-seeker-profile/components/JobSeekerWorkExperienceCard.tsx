@@ -5,6 +5,8 @@ import {
     BriefcaseBusiness,
     Building2,
     CalendarDays,
+    ChevronDown,
+    ChevronUp,
     LoaderCircle,
     MapPin,
     Pencil,
@@ -746,6 +748,7 @@ function WorkExperienceItem({
 export default function JobSeekerWorkExperienceCard() {
     const workExperiencesQuery = useWorkExperiences();
 
+    const [isExpanded, setIsExpanded] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [experienceBeingEdited, setExperienceBeingEdited] =
         useState<WorkExperience | null>(null);
@@ -775,18 +778,31 @@ export default function JobSeekerWorkExperienceCard() {
                             </div>
                         </div>
 
-                        <Button
-                            type="button"
-                            onClick={() => setIsAddDialogOpen(true)}
-                            className="w-full sm:w-auto"
-                        >
-                            <Plus />
-                            Add experience
-                        </Button>
+                        <div className="flex w-full gap-2 sm:w-auto">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                aria-expanded={isExpanded}
+                                onClick={() => setIsExpanded((value) => !value)}
+                                className="flex-1 sm:flex-none"
+                            >
+                                {isExpanded ? <ChevronUp /> : <ChevronDown />}
+                                {isExpanded ? "Hide" : "Show"}
+                            </Button>
+                            <Button
+                                type="button"
+                                onClick={() => setIsAddDialogOpen(true)}
+                                className="flex-1 sm:flex-none"
+                            >
+                                <Plus />
+                                Add experience
+                            </Button>
+                        </div>
                     </div>
                 </CardHeader>
 
-                <CardContent>
+                {isExpanded && (
+                    <CardContent>
                     {workExperiencesQuery.isPending && (
                         <div className="space-y-3">
                             <div className="h-40 animate-pulse rounded-2xl bg-slate-100" />
@@ -844,7 +860,8 @@ export default function JobSeekerWorkExperienceCard() {
                                 ))}
                             </div>
                         )}
-                </CardContent>
+                    </CardContent>
+                )}
             </Card>
 
             {isAddDialogOpen && (

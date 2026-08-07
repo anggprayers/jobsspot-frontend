@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/card";
 
 import {
+    useApplicationCoverLetterDownload,
     useApplicationResumeDownload,
     useApplications,
     useApplicationsSummary,
@@ -119,6 +120,8 @@ export default function JobSeekerApplicationsPage() {
         useState<JobSeekerApplication | null>(null);
     const [downloadingApplicationId, setDownloadingApplicationId] =
         useState<string | null>(null);
+    const [downloadingCoverLetterApplicationId, setDownloadingCoverLetterApplicationId] =
+        useState<string | null>(null);
 
     const applicationsQuery = useApplications({
         ...(status !== "ALL" && { status }),
@@ -128,6 +131,7 @@ export default function JobSeekerApplicationsPage() {
 
     const summaryQuery = useApplicationsSummary();
     const resumeDownloadMutation = useApplicationResumeDownload();
+    const coverLetterDownloadMutation = useApplicationCoverLetterDownload();
 
     const applications = applicationsQuery.data?.applications ?? [];
     const summary = summaryQuery.data?.summary;
@@ -191,6 +195,42 @@ export default function JobSeekerApplicationsPage() {
             );
         } finally {
             setDownloadingApplicationId(null);
+        }
+    }
+
+    async function handleCoverLetterDownload(
+        application: JobSeekerApplication,
+    ) {
+        if (
+            !application.coverLetterFileName ||
+            coverLetterDownloadMutation.isPending
+        ) {
+            return;
+        }
+
+        setDownloadingCoverLetterApplicationId(application.id);
+        const toastId = toast.loading("Preparing secure cover letter download...");
+
+        try {
+            const response = await coverLetterDownloadMutation.mutateAsync(application.id);
+            openSecureDownload(response.downloadUrl);
+
+            toast.success("Cover letter opened securely.", {
+                id: toastId,
+                description: `The private link expires in ${Math.round(
+                    response.expiresInSeconds / 60,
+                )} minutes.`,
+            });
+        } catch (error) {
+            toast.error(
+                getApplicationErrorMessage(
+                    error,
+                    "Unable to open the submitted cover letter.",
+                ),
+                { id: toastId },
+            );
+        } finally {
+            setDownloadingCoverLetterApplicationId(null);
         }
     }
 
@@ -522,10 +562,38 @@ export default function JobSeekerApplicationsPage() {
                                                     Cover letter
                                                 </p>
 
-                                                <p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">
-                                                    {application.coverLetter ??
-                                                        "No cover letter was included."}
-                                                </p>
+                                                {application.coverLetter ? (
+                                                    <p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">
+                                                        {application.coverLetter}
+                                                    </p>
+                                                ) : application.coverLetterFileName ? (
+                                                    <>
+                                                        <button
+                                                            type="button"
+                                                            disabled={coverLetterDownloadMutation.isPending}
+                                                            onClick={() =>
+                                                                void handleCoverLetterDownload(application)
+                                                            }
+                                                            className="mt-3 inline-flex max-w-full items-center gap-2 text-left text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 hover:underline disabled:cursor-not-allowed disabled:opacity-60"
+                                                        >
+                                                            {downloadingCoverLetterApplicationId === application.id ? (
+                                                                <LoaderCircle className="size-4 shrink-0 animate-spin" />
+                                                            ) : (
+                                                                <Download className="size-4 shrink-0" />
+                                                            )}
+                                                            <span className="truncate">
+                                                                {application.coverLetterFileName}
+                                                            </span>
+                                                        </button>
+                                                        <p className="mt-1 text-xs text-slate-500">
+                                                            Open the exact private cover letter attached to this application.
+                                                        </p>
+                                                    </>
+                                                ) : (
+                                                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                                                        No cover letter was included.
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
 

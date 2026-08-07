@@ -14,6 +14,12 @@ export type PlatformDashboard = {
     jobs: {
         total: number;
         published: number;
+        hidden: number;
+    };
+    jobReports: {
+        total: number;
+        pending: number;
+        underReview: number;
     };
     applications: {
         total: number;

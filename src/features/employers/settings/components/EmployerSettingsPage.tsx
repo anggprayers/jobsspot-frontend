@@ -27,6 +27,7 @@ import { useUpdateProfile } from "@/features/auth/hooks/useUpdateProfile";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import type { AuthUser } from "@/features/auth/types/auth";
+import NotificationPreferencesSection from "@/features/notifications/components/NotificationPreferencesSection";
 
 type ProfileFormProps = {
     user: AuthUser;
@@ -517,6 +518,11 @@ export default function EmployerSettingsPage() {
                     />
 
                     <PasswordSettingsForm />
+
+                    <NotificationPreferencesSection
+                        isEmailVerified={user.isEmailVerified}
+                        context="EMPLOYER"
+                    />
                 </div>
 
                 <aside className="space-y-6 xl:sticky xl:top-24">

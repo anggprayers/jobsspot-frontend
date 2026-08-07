@@ -1,12 +1,15 @@
 import apiClient from "@/lib/apiClient";
 
 import type {
+    ClearReadNotificationsResponse,
     MarkAllNotificationsReadResponse,
     MarkNotificationReadResponse,
     NotificationAudience,
     NotificationListParams,
     NotificationsResponse,
     NotificationUnreadCountResponse,
+    NotificationPreferencesResponse,
+    UpdateNotificationPreferencesInput,
 } from "../types/notification";
 
 export async function getNotifications(
@@ -49,6 +52,36 @@ export async function markAllNotificationsRead(
     const response = await apiClient.patch<MarkAllNotificationsReadResponse>(
         "/notifications/read-all",
         { audience },
+    );
+
+    return response.data;
+}
+
+export async function clearReadNotifications(
+    audience: Extract<NotificationAudience, "JOB_SEEKER" | "EMPLOYER">,
+): Promise<ClearReadNotificationsResponse> {
+    const response = await apiClient.patch<ClearReadNotificationsResponse>(
+        "/notifications/clear-read",
+        { audience },
+    );
+
+    return response.data;
+}
+
+export async function getNotificationPreferences(): Promise<NotificationPreferencesResponse> {
+    const response = await apiClient.get<NotificationPreferencesResponse>(
+        "/notifications/preferences",
+    );
+
+    return response.data;
+}
+
+export async function updateNotificationPreferences(
+    input: UpdateNotificationPreferencesInput,
+): Promise<NotificationPreferencesResponse> {
+    const response = await apiClient.patch<NotificationPreferencesResponse>(
+        "/notifications/preferences",
+        input,
     );
 
     return response.data;

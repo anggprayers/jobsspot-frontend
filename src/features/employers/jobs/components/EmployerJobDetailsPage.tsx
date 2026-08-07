@@ -11,6 +11,7 @@ import {
     ExternalLink,
     MapPin,
     Monitor,
+    ShieldAlert,
     UserRound,
 } from "lucide-react";
 
@@ -158,7 +159,8 @@ export default function EmployerJobDetailsPage() {
                 </Button>
 
                 {job.status === "PUBLISHED" &&
-                    !job.isExpired && (
+                    !job.isExpired &&
+                    !job.adminHiddenAt && (
                     <Button variant="outline" size="sm" asChild>
                         <Link href={`/jobs/${job.slug}`} target="_blank" rel="noreferrer">
                             <ExternalLink />
@@ -167,6 +169,26 @@ export default function EmployerJobDetailsPage() {
                     </Button>
                 )}
             </div>
+
+            {job.adminHiddenAt && (
+                <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-800">
+                    <div className="flex gap-3">
+                        <ShieldAlert className="mt-0.5 size-5 shrink-0" />
+                        <div>
+                            <p className="font-semibold">This posting is hidden by JobsSpot</p>
+                            <p className="mt-1 text-sm leading-6">
+                                It is not visible in public job search while this moderation hold is active.
+                                Editing the job or changing its employer status does not remove the hold.
+                            </p>
+                            {job.adminHiddenReason && (
+                                <div className="mt-3 rounded-xl border border-red-200 bg-white/70 p-3 text-sm">
+                                    <span className="font-semibold">Reason: </span>{job.adminHiddenReason}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
                 <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-start">

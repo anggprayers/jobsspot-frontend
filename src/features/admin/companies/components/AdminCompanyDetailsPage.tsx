@@ -281,9 +281,9 @@ export default function AdminCompanyDetailsPage({ companyId }: AdminCompanyDetai
                                         </div>
                                         <p className="mt-1 text-sm text-muted-foreground">{job.category.name} · {job.applicationsCount} applications · Updated {formatAdminDate(job.updatedAt)}</p>
                                     </div>
-                                    {job.status === "PUBLISHED" && company.status === "ACTIVE" && (
-                                        <Button asChild variant="outline" size="sm"><Link href={`/jobs/${job.slug}`}><ExternalLink /> View public job</Link></Button>
-                                    )}
+                                    <Button asChild variant="outline" size="sm">
+                                        <Link href={`/admin/jobs/${job.id}`}><BriefcaseBusiness /> Review job</Link>
+                                    </Button>
                                 </div>
                             ))}
                         </div>

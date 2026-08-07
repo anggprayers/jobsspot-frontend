@@ -91,13 +91,9 @@ export default function SignInModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="sign-in-title"
-            onMouseDown={onClose}
         >
             <div
                 className="relative grid max-h-[calc(100vh-3rem)] w-full max-w-3xl overflow-y-auto rounded-3xl border border-white/15 bg-white shadow-2xl md:grid-cols-[250px_minmax(0,1fr)]"
-                onMouseDown={(event) =>
-                    event.stopPropagation()
-                }
             >
                 <aside className="relative hidden overflow-hidden bg-slate-950 p-7 text-white md:flex md:flex-col md:justify-between">
                     <div

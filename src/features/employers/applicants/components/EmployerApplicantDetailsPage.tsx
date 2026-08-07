@@ -31,6 +31,7 @@ import {
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
 import { useCompanyApplication } from "../hooks/useCompanyApplication";
+import { useCompanyApplicationCoverLetterDownload } from "../hooks/useCompanyApplicationCoverLetterDownload";
 import { useCompanyApplicationResumeDownload } from "../hooks/useCompanyApplicationResumeDownload";
 import { useUpdateCompanyApplicationStatus } from "../hooks/useUpdateCompanyApplicationStatus";
 import type { ManageableEmployerApplicationStatus } from "../types/employerApplication";
@@ -131,6 +132,11 @@ export default function EmployerApplicantDetailsPage() {
         applicationId,
     });
 
+    const coverLetterDownloadMutation = useCompanyApplicationCoverLetterDownload({
+        companyId,
+        applicationId,
+    });
+
     const hasApplicationManagementAccess = canUpdateApplications(activeCompanyRole);
 
     function handleUpdateStatus() {
@@ -196,6 +202,31 @@ export default function EmployerApplicantDetailsPage() {
         }
     }
 
+    async function handleOpenCoverLetter() {
+        const application = applicationQuery.data?.application;
+
+        if (!application?.coverLetterFileName || coverLetterDownloadMutation.isPending) {
+            return;
+        }
+
+        const toastId = toast.loading("Preparing secure cover letter link...");
+
+        try {
+            const response = await coverLetterDownloadMutation.mutateAsync();
+            openSecureResume(response.downloadUrl);
+
+            toast.success("Cover letter opened securely.", {
+                id: toastId,
+                description: "The private link expires in five minutes.",
+            });
+        } catch (error) {
+            toast.error(getErrorMessage(error, "Unable to open the submitted cover letter."), {
+                id: toastId,
+                description: "Confirm your account is verified and still has access to this company.",
+            });
+        }
+    }
+
     if (applicationQuery.isLoading) {
         return (
             <div className="mx-auto w-full max-w-6xl">
@@ -232,7 +263,10 @@ export default function EmployerApplicantDetailsPage() {
         (option) => option.value !== application.status,
     );
 
-    const canUpdateStatus = hasApplicationManagementAccess && application.status !== "WITHDRAWN";
+    const canUpdateStatus =
+        hasApplicationManagementAccess &&
+        application.status !== "WITHDRAWN" &&
+        !applicant.isDeleted;
 
     return (
         <div className="mx-auto w-full max-w-6xl space-y-6">
@@ -317,9 +351,11 @@ export default function EmployerApplicantDetailsPage() {
                         </div>
                     ) : (
                         <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                            {application.status === "WITHDRAWN"
-                                ? "This application was withdrawn and can no longer be updated."
-                                : "Your company role has view-only access."}
+                            {applicant.isDeleted
+                                ? "This candidate deleted their JobsSpot account. The historical application is read-only."
+                                : application.status === "WITHDRAWN"
+                                  ? "This application was withdrawn and can no longer be updated."
+                                  : "Your company role has view-only access."}
                         </div>
                     )}
                 </div>
@@ -337,6 +373,11 @@ export default function EmployerApplicantDetailsPage() {
                         </CardHeader>
 
                         <CardContent className="space-y-5">
+                            {applicant.isDeleted && (
+                                <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+                                    This candidate deleted their JobsSpot account. Personal profile details and private submitted files were removed. The application record is retained for company history.
+                                </div>
+                            )}
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="flex gap-3">
                                     <Mail className="mt-0.5 size-4 shrink-0 text-slate-400" />
@@ -344,12 +385,16 @@ export default function EmployerApplicantDetailsPage() {
                                     <div className="min-w-0">
                                         <p className="text-xs font-medium text-slate-500">Email</p>
 
-                                        <a
-                                            href={`mailto:${applicant.email}`}
-                                            className="mt-1 block truncate text-sm font-medium text-blue-700 hover:underline"
-                                        >
-                                            {applicant.email}
-                                        </a>
+                                        {applicant.email ? (
+                                            <a
+                                                href={`mailto:${applicant.email}`}
+                                                className="mt-1 block truncate text-sm font-medium text-blue-700 hover:underline"
+                                            >
+                                                {applicant.email}
+                                            </a>
+                                        ) : (
+                                            <p className="mt-1 text-sm font-medium text-slate-500">Deleted account</p>
+                                        )}
                                     </div>
                                 </div>
 
@@ -461,6 +506,37 @@ export default function EmployerApplicantDetailsPage() {
                                 <p className="whitespace-pre-line text-sm leading-7 text-slate-700">
                                     {application.coverLetter}
                                 </p>
+                            ) : application.coverLetterFileName ? (
+                                <div className="space-y-3">
+                                    <div className="flex items-start gap-3 rounded-xl bg-slate-50 p-4">
+                                        <FileText className="mt-0.5 size-5 shrink-0 text-blue-700" />
+                                        <div className="min-w-0">
+                                            <p className="truncate font-semibold text-slate-900">
+                                                {application.coverLetterFileName}
+                                            </p>
+                                            <p className="mt-1 text-xs text-slate-500">
+                                                {application.coverLetterFileSize
+                                                    ? formatFileSize(application.coverLetterFileSize)
+                                                    : "Uploaded cover letter"}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="w-full"
+                                        disabled={coverLetterDownloadMutation.isPending}
+                                        onClick={() => void handleOpenCoverLetter()}
+                                    >
+                                        {coverLetterDownloadMutation.isPending ? (
+                                            <LoaderCircle className="animate-spin" />
+                                        ) : (
+                                            <Download />
+                                        )}
+                                        Open submitted cover letter
+                                    </Button>
+                                </div>
                             ) : (
                                 <p className="text-sm text-slate-500">
                                     The applicant did not provide a cover letter.

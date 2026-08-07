@@ -39,6 +39,12 @@ const activityMetadataLabels: Record<string, string> = {
     jobs: "Jobs affected",
     jobStatusesPreserved: "Existing job records preserved",
     verified: "Verification status",
+    jobTitle: "Job",
+    jobStatusPreserved: "Employer job status preserved",
+    reportReason: "Report reason",
+    previousStatus: "Previous report status",
+    newStatus: "New report status",
+    resolutionNote: "Resolution note",
 };
 
 const hiddenActivityMetadataKeys = new Set([
@@ -46,6 +52,9 @@ const hiddenActivityMetadataKeys = new Set([
     "companySlug",
     "userId",
     "targetUserId",
+    "jobId",
+    "jobSlug",
+    "reportId",
 ]);
 
 function isMetadataRecord(value: unknown): value is Record<string, unknown> {
@@ -113,6 +122,12 @@ function getActivityDetails(metadata: unknown): ActivityDetail[] {
         "jobs",
         "jobStatusesPreserved",
         "verified",
+        "jobTitle",
+        "jobStatusPreserved",
+        "reportReason",
+        "previousStatus",
+        "newStatus",
+        "resolutionNote",
     ];
 
     const orderedKeys = [
@@ -196,6 +211,11 @@ export default function AdminActivityPage() {
                                 <SelectItem value="COMPANY_UNVERIFIED">Company unverified</SelectItem>
                                 <SelectItem value="COMPANY_SUSPENDED">Company suspended</SelectItem>
                                 <SelectItem value="COMPANY_RESTORED">Company restored</SelectItem>
+                                <SelectItem value="JOB_HIDDEN">Job hidden</SelectItem>
+                                <SelectItem value="JOB_RESTORED">Job restored</SelectItem>
+                                <SelectItem value="JOB_REPORT_REVIEW_STARTED">Job report under review</SelectItem>
+                                <SelectItem value="JOB_REPORT_RESOLVED">Job report resolved</SelectItem>
+                                <SelectItem value="JOB_REPORT_DISMISSED">Job report dismissed</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

@@ -8,6 +8,9 @@ import type {
     ResumeDownloadResponse,
     ResumeListResponse,
     ResumeMutationResponse,
+    ResumeProfilePreviewResponse,
+    ImportResumeProfileRequest,
+    ImportResumeProfileResponse,
     UploadResumeInput,
 } from "../types/resume";
 
@@ -103,6 +106,29 @@ export async function deleteResume(
 ): Promise<DeleteResumeResponse> {
     const response = await apiClient.delete<DeleteResumeResponse>(
         `/resumes/${resumeId}`,
+    );
+
+    return response.data;
+}
+
+
+export async function getResumeProfilePreview(
+    resumeId: string,
+): Promise<ResumeProfilePreviewResponse> {
+    const response = await apiClient.get<ResumeProfilePreviewResponse>(
+        `/resumes/${resumeId}/profile-preview`,
+    );
+
+    return response.data;
+}
+
+export async function importResumeProfile(
+    resumeId: string,
+    data: ImportResumeProfileRequest,
+): Promise<ImportResumeProfileResponse> {
+    const response = await apiClient.post<ImportResumeProfileResponse>(
+        `/resumes/${resumeId}/profile-import`,
+        data,
     );
 
     return response.data;

@@ -29,6 +29,8 @@ export type CompanyJob = {
 
     publishedAt: string | null;
     expiresAt: string | null;
+    adminHiddenAt: string | null;
+    adminHiddenReason: string | null;
     isExpired: boolean;
     daysUntilExpiration: number | null;
 

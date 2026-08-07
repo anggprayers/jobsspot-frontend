@@ -8,15 +8,28 @@ import {
     ChevronRight,
     LoaderCircle,
     RefreshCw,
+    Trash2,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 import {
+    useClearReadNotifications,
     useMarkAllNotificationsRead,
     useMarkNotificationRead,
     useNotifications,
@@ -63,6 +76,8 @@ export default function NotificationsPage({
     });
     const markReadMutation = useMarkNotificationRead();
     const markAllMutation = useMarkAllNotificationsRead();
+    const clearReadMutation = useClearReadNotifications();
+    const canClearRead = audience === "JOB_SEEKER" || audience === "EMPLOYER";
 
     const notifications = notificationsQuery.data?.notifications ?? [];
     const unreadCount = notificationsQuery.data?.unreadCount ?? 0;
@@ -79,7 +94,11 @@ export default function NotificationsPage({
                 await markReadMutation.mutateAsync(notification.id);
             }
 
-            if (notification.actionUrl) {
+            const isJobSeekerReportUpdate =
+                notification.audience === "JOB_SEEKER" &&
+                notification.entityType === "JOB_REPORT";
+
+            if (!isJobSeekerReportUpdate && notification.actionUrl) {
                 router.push(notification.actionUrl);
             }
         } catch {
@@ -102,6 +121,33 @@ export default function NotificationsPage({
             );
         } catch {
             toast.error("Unable to mark notifications as read.");
+        }
+    }
+
+    async function clearRead() {
+        if (
+            (audience !== "JOB_SEEKER" && audience !== "EMPLOYER") ||
+            clearReadMutation.isPending
+        ) {
+            return;
+        }
+
+        try {
+            const response = await clearReadMutation.mutateAsync(audience);
+            setPage(1);
+
+            if (response.clearedCount === 0) {
+                toast.info("There are no read notifications to clear.");
+                return;
+            }
+
+            toast.success(
+                response.clearedCount === 1
+                    ? "1 read notification cleared."
+                    : `${response.clearedCount} read notifications cleared.`,
+            );
+        } catch {
+            toast.error("Unable to clear read notifications.");
         }
     }
 
@@ -150,6 +196,47 @@ export default function NotificationsPage({
                         )}
                         Mark all read
                     </Button>
+
+                    {canClearRead && (
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    disabled={clearReadMutation.isPending}
+                                >
+                                    {clearReadMutation.isPending ? (
+                                        <LoaderCircle className="animate-spin" />
+                                    ) : (
+                                        <Trash2 />
+                                    )}
+                                    Clear read
+                                </Button>
+                            </AlertDialogTrigger>
+
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                        Clear read notifications?
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Read notifications will be removed from
+                                        this inbox. Unread notifications will stay
+                                        visible.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        variant="destructive"
+                                        onClick={() => void clearRead()}
+                                    >
+                                        Clear read
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    )}
                 </div>
             </section>
 
@@ -352,11 +439,16 @@ function NotificationRow({
                     <span className="rounded-full border bg-background px-2 py-1 font-medium">
                         {notification.audience.replaceAll("_", " ")}
                     </span>
-                    {notification.actionUrl && (
+                    {notification.audience === "JOB_SEEKER" &&
+                    notification.entityType === "JOB_REPORT" ? (
+                        <span className="font-medium text-muted-foreground">
+                            Report review update
+                        </span>
+                    ) : notification.actionUrl ? (
                         <span className="font-medium text-primary">
                             Open related item
                         </span>
-                    )}
+                    ) : null}
                 </span>
             </span>
         </button>

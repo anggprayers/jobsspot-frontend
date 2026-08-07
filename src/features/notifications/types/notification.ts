@@ -62,3 +62,29 @@ export type MarkAllNotificationsReadResponse = {
     message: string;
     markedReadCount: number;
 };
+
+export type ClearReadNotificationsResponse = {
+    success: true;
+    message: string;
+    clearedCount: number;
+};
+
+export type NotificationPreferences = {
+    jobSeekerApplicationUpdatesEmail: boolean;
+    jobSeekerApplicationViewedEmail: boolean;
+    employerApplicationEmail: boolean;
+    employerTeamEmail: boolean;
+    employerJobEmail: boolean;
+    systemEmail: boolean;
+    updatedAt: string;
+};
+
+export type NotificationPreferencesResponse = {
+    success: true;
+    message: string;
+    preferences: NotificationPreferences;
+};
+
+export type UpdateNotificationPreferencesInput = Partial<
+    Omit<NotificationPreferences, "updatedAt">
+>;

@@ -7,8 +7,8 @@ import {
     BriefcaseBusiness,
     Building2,
     FileCheck2,
+    FileWarning,
     FolderKanban,
-    UserRoundCheck,
     Users,
 } from "lucide-react";
 
@@ -32,15 +32,8 @@ export default function AdminDashboardPage() {
         {
             label: "Users",
             value: dashboard?.users.total,
-            detail: `${dashboard?.users.suspended ?? 0} suspended · ${dashboard?.users.newLast30Days ?? 0} new in 30 days`,
+            detail: `${dashboard?.users.active ?? 0} active · ${dashboard?.users.suspended ?? 0} suspended · ${dashboard?.users.newLast30Days ?? 0} new in 30 days`,
             icon: Users,
-            href: "/admin/users",
-        },
-        {
-            label: "Active users",
-            value: dashboard?.users.active,
-            detail: "Accounts currently allowed to use JobsSpot",
-            icon: UserRoundCheck,
             href: "/admin/users",
         },
         {
@@ -53,9 +46,9 @@ export default function AdminDashboardPage() {
         {
             label: "Jobs",
             value: dashboard?.jobs.total,
-            detail: `${dashboard?.jobs.published ?? 0} currently published`,
+            detail: `${dashboard?.jobs.published ?? 0} public · ${dashboard?.jobs.hidden ?? 0} hidden by moderation`,
             icon: BriefcaseBusiness,
-            href: "/admin",
+            href: "/admin/jobs",
         },
         {
             label: "Applications",
@@ -63,6 +56,13 @@ export default function AdminDashboardPage() {
             detail: `${dashboard?.applications.newLast30Days ?? 0} submitted in 30 days`,
             icon: FileCheck2,
             href: "/admin",
+        },
+        {
+            label: "Job reports",
+            value: dashboard?.jobReports.total,
+            detail: `${dashboard?.jobReports.pending ?? 0} pending · ${dashboard?.jobReports.underReview ?? 0} under review`,
+            icon: FileWarning,
+            href: "/admin/reports",
         },
         {
             label: "Categories",

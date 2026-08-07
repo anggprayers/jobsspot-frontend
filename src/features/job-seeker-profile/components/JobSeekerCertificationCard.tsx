@@ -3,6 +3,8 @@
 import axios from "axios";
 import {
     Award,
+    ChevronDown,
+    ChevronUp,
     Building2,
     CalendarDays,
     ExternalLink,
@@ -582,6 +584,7 @@ function CertificationItem({ certification, onEdit, onDelete }: CertificationIte
 export default function JobSeekerCertificationCard() {
     const certificationsQuery = useCertifications();
 
+    const [isExpanded, setIsExpanded] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [certificationBeingEdited, setCertificationBeingEdited] = useState<Certification | null>(
         null,
@@ -617,20 +620,33 @@ export default function JobSeekerCertificationCard() {
                                 {certifications.length}/{MAX_CERTIFICATIONS}
                             </span>
 
-                            <Button
-                                type="button"
-                                disabled={hasReachedLimit}
-                                onClick={() => setIsAddDialogOpen(true)}
-                                className="w-full sm:w-auto"
-                            >
-                                <Plus />
-                                Add certification
-                            </Button>
+                            <div className="flex w-full gap-2 sm:w-auto">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    aria-expanded={isExpanded}
+                                    onClick={() => setIsExpanded((value) => !value)}
+                                    className="flex-1 sm:flex-none"
+                                >
+                                    {isExpanded ? <ChevronUp /> : <ChevronDown />}
+                                    {isExpanded ? "Hide" : "Show"}
+                                </Button>
+                                <Button
+                                    type="button"
+                                    disabled={hasReachedLimit}
+                                    onClick={() => setIsAddDialogOpen(true)}
+                                    className="flex-1 sm:flex-none"
+                                >
+                                    <Plus />
+                                    Add certification
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </CardHeader>
 
-                <CardContent>
+                {isExpanded && (
+                    <CardContent>
                     {hasReachedLimit && (
                         <p className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
                             You have reached the maximum of {MAX_CERTIFICATIONS} certifications.
@@ -689,7 +705,8 @@ export default function JobSeekerCertificationCard() {
                                 ))}
                             </div>
                         )}
-                </CardContent>
+                    </CardContent>
+                )}
             </Card>
 
             {isAddDialogOpen && (

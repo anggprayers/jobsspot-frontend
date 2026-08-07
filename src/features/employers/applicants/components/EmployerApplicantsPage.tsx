@@ -419,7 +419,7 @@ export default function EmployerApplicantsPage() {
                                                                 </p>
 
                                                                 <p className="truncate text-sm text-slate-500">
-                                                                    {application.applicant.email}
+                                                                    {application.applicant.email ?? "Deleted account"}
                                                                 </p>
 
                                                                 {profile?.headline && (
@@ -521,7 +521,7 @@ export default function EmployerApplicantsPage() {
                                                 </p>
 
                                                 <p className="truncate text-sm text-slate-500">
-                                                    {application.applicant.email}
+                                                    {application.applicant.email ?? "Deleted account"}
                                                 </p>
 
                                                 {profile?.headline && (

@@ -49,8 +49,10 @@ import { getApplicationErrorMessage } from "../utils/applicationFormatters";
 
 const MAX_COVER_LETTER_LENGTH = 5000;
 const MAX_RESUME_SIZE = 5 * 1024 * 1024;
+const MAX_COVER_LETTER_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_ACTIVE_RESUMES = 10;
 const ALLOWED_RESUME_EXTENSIONS = [".pdf", ".doc", ".docx"];
+const ALLOWED_COVER_LETTER_EXTENSIONS = [".pdf", ".doc", ".docx"];
 
 function getFileExtension(fileName: string): string {
     const lastDotIndex = fileName.lastIndexOf(".");
@@ -71,6 +73,22 @@ function validateResumeFile(file: File): string | null {
 
     if (file.size > MAX_RESUME_SIZE) {
         return "Resume files must be 5 MB or smaller.";
+    }
+
+    return null;
+}
+
+function validateCoverLetterFile(file: File): string | null {
+    if (!ALLOWED_COVER_LETTER_EXTENSIONS.includes(getFileExtension(file.name))) {
+        return "Choose a PDF, DOC, or DOCX cover letter file.";
+    }
+
+    if (file.size === 0) {
+        return "The selected cover letter file is empty.";
+    }
+
+    if (file.size > MAX_COVER_LETTER_FILE_SIZE) {
+        return "Cover letter files must be 5 MB or smaller.";
     }
 
     return null;
@@ -115,9 +133,13 @@ export default function ApplyToJobDialog({
     onOpenChange,
 }: ApplyToJobDialogProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const coverLetterFileInputRef = useRef<HTMLInputElement>(null);
 
     const [selectedResumeId, setSelectedResumeId] = useState("");
     const [coverLetter, setCoverLetter] = useState("");
+    const [coverLetterMode, setCoverLetterMode] = useState<"WRITE" | "UPLOAD">("WRITE");
+    const [selectedCoverLetterFile, setSelectedCoverLetterFile] = useState<File | null>(null);
+    const [coverLetterValidationError, setCoverLetterValidationError] = useState("");
     const [selectedUploadFile, setSelectedUploadFile] =
         useState<File | null>(null);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -171,6 +193,9 @@ export default function ApplyToJobDialog({
         if (!nextOpen) {
             setSelectedResumeId("");
             setCoverLetter("");
+            setCoverLetterMode("WRITE");
+            setSelectedCoverLetterFile(null);
+            setCoverLetterValidationError("");
             setSelectedUploadFile(null);
             setUploadProgress(0);
             setUploadValidationError("");
@@ -178,6 +203,10 @@ export default function ApplyToJobDialog({
 
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
+            }
+
+            if (coverLetterFileInputRef.current) {
+                coverLetterFileInputRef.current.value = "";
             }
         }
 
@@ -309,6 +338,43 @@ export default function ApplyToJobDialog({
         }
     }
 
+    function handleCoverLetterFileChange(
+        event: ChangeEvent<HTMLInputElement>,
+    ) {
+        const file = event.target.files?.[0] ?? null;
+        setCoverLetterValidationError("");
+
+        if (!file) {
+            setSelectedCoverLetterFile(null);
+            return;
+        }
+
+        const validationError = validateCoverLetterFile(file);
+
+        if (validationError) {
+            setSelectedCoverLetterFile(null);
+            setCoverLetterValidationError(validationError);
+            event.target.value = "";
+            return;
+        }
+
+        setSelectedCoverLetterFile(file);
+    }
+
+    function switchCoverLetterMode(mode: "WRITE" | "UPLOAD") {
+        setCoverLetterMode(mode);
+        setCoverLetterValidationError("");
+
+        if (mode === "WRITE") {
+            setSelectedCoverLetterFile(null);
+            if (coverLetterFileInputRef.current) {
+                coverLetterFileInputRef.current.value = "";
+            }
+        } else {
+            setCoverLetter("");
+        }
+    }
+
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
@@ -326,7 +392,14 @@ export default function ApplyToJobDialog({
             const response = await createMutation.mutateAsync({
                 jobId: job.id,
                 resumeId: effectiveSelectedResumeId,
-                coverLetter: coverLetter.trim() || null,
+                coverLetter:
+                    coverLetterMode === "WRITE"
+                        ? coverLetter.trim() || null
+                        : null,
+                coverLetterFile:
+                    coverLetterMode === "UPLOAD"
+                        ? selectedCoverLetterFile
+                        : null,
             });
 
             toast.success(response.message, {
@@ -696,33 +769,129 @@ export default function ApplyToJobDialog({
                         </section>
 
                         <section>
-                            <div className="flex items-center justify-between gap-4">
-                                <label
-                                    htmlFor="application-cover-letter"
-                                    className="text-sm font-semibold text-slate-900"
-                                >
-                                    Cover letter
-                                    <span className="ml-1 font-normal text-slate-500">
-                                        (Optional)
-                                    </span>
-                                </label>
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                    <p className="text-sm font-semibold text-slate-900">
+                                        Cover letter
+                                        <span className="ml-1 font-normal text-slate-500">
+                                            (Optional)
+                                        </span>
+                                    </p>
+                                    <p className="mt-1 text-xs text-slate-500">
+                                        Write a message or attach a PDF, DOC, or DOCX file.
+                                    </p>
+                                </div>
 
-                                <span className="text-xs text-slate-500">
-                                    {coverLetter.length.toLocaleString()}/
-                                    {MAX_COVER_LETTER_LENGTH.toLocaleString()}
-                                </span>
+                                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-1">
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant={coverLetterMode === "WRITE" ? "default" : "ghost"}
+                                        disabled={isBusy}
+                                        onClick={() => switchCoverLetterMode("WRITE")}
+                                    >
+                                        Write
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant={coverLetterMode === "UPLOAD" ? "default" : "ghost"}
+                                        disabled={isBusy}
+                                        onClick={() => switchCoverLetterMode("UPLOAD")}
+                                    >
+                                        Upload file
+                                    </Button>
+                                </div>
                             </div>
 
-                            <textarea
-                                id="application-cover-letter"
-                                value={coverLetter}
-                                onChange={(event) => setCoverLetter(event.target.value)}
-                                disabled={isBusy}
-                                maxLength={MAX_COVER_LETTER_LENGTH}
-                                rows={8}
-                                placeholder="Briefly explain why you are interested in this role and how your experience matches the position."
-                                className="mt-2 flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm leading-6 shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
-                            />
+                            {coverLetterMode === "WRITE" ? (
+                                <>
+                                    <div className="mt-3 flex justify-end">
+                                        <span className="text-xs text-slate-500">
+                                            {coverLetter.length.toLocaleString()}/
+                                            {MAX_COVER_LETTER_LENGTH.toLocaleString()}
+                                        </span>
+                                    </div>
+
+                                    <textarea
+                                        id="application-cover-letter"
+                                        value={coverLetter}
+                                        onChange={(event) => setCoverLetter(event.target.value)}
+                                        disabled={isBusy}
+                                        maxLength={MAX_COVER_LETTER_LENGTH}
+                                        rows={8}
+                                        placeholder="Briefly explain why you are interested in this role and how your experience matches the position."
+                                        className="mt-2 flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm leading-6 shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                                    />
+                                </>
+                            ) : (
+                                <div className="mt-3 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4">
+                                    <input
+                                        ref={coverLetterFileInputRef}
+                                        type="file"
+                                        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                        className="hidden"
+                                        disabled={isBusy}
+                                        onChange={handleCoverLetterFileChange}
+                                    />
+
+                                    {selectedCoverLetterFile ? (
+                                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                            <div className="min-w-0">
+                                                <p className="truncate text-sm font-semibold text-slate-900">
+                                                    {selectedCoverLetterFile.name}
+                                                </p>
+                                                <p className="mt-1 text-xs text-slate-500">
+                                                    {formatResumeFileSize(selectedCoverLetterFile.size)} · Attached only to this application
+                                                </p>
+                                            </div>
+
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                disabled={isBusy}
+                                                onClick={() => {
+                                                    setSelectedCoverLetterFile(null);
+                                                    setCoverLetterValidationError("");
+                                                    if (coverLetterFileInputRef.current) {
+                                                        coverLetterFileInputRef.current.value = "";
+                                                    }
+                                                }}
+                                            >
+                                                <X />
+                                                Remove
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                            <div>
+                                                <p className="text-sm font-semibold text-slate-900">
+                                                    Attach your cover letter
+                                                </p>
+                                                <p className="mt-1 text-sm text-slate-600">
+                                                    PDF, DOC, or DOCX · Maximum 5 MB
+                                                </p>
+                                            </div>
+
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                disabled={isBusy}
+                                                onClick={() => coverLetterFileInputRef.current?.click()}
+                                            >
+                                                <Upload />
+                                                Choose file
+                                            </Button>
+                                        </div>
+                                    )}
+
+                                    {coverLetterValidationError && (
+                                        <p className="mt-3 text-sm font-medium text-red-700">
+                                            {coverLetterValidationError}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
                         </section>
                     </div>
 

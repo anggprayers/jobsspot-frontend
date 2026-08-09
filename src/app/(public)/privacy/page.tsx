@@ -3,14 +3,16 @@ import type { Metadata } from "next";
 import LegalDocumentPage, {
     LegalContentLink,
 } from "@/features/legal/components/LegalDocumentPage";
+import { createPublicPageMetadata } from "@/lib/seo/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
     title: "Privacy Policy",
     description:
         "Learn how JobsSpot collects, uses, shares, protects, and retains personal information.",
-};
+    path: "/privacy",
+});
 
-const effectiveDate = "August 6, 2026";
+const effectiveDate = "August 10, 2026";
 
 const sections = [
     {
@@ -200,9 +202,19 @@ const sections = [
                     account and employer features from working correctly.
                 </p>
                 <p>
-                    If optional analytics or advertising technology is added in
-                    the future, this policy and any required consent controls
-                    will be updated before that use begins.
+                    JobsSpot may use Google Analytics to understand aggregate
+                    website traffic, page visits, and feature usage. When enabled,
+                    Google Analytics may use analytics cookies or similar
+                    technologies and process information such as browser and
+                    device details, pages viewed, interactions, and approximate
+                    location derived from network information. JobsSpot does not
+                    use analytics to expose resumes, application documents, or
+                    account passwords to other users.
+                </p>
+                <p>
+                    Where applicable, JobsSpot will maintain any consent,
+                    disclosure, or opt-out controls required for non-essential
+                    analytics technology.
                 </p>
             </>
         ),

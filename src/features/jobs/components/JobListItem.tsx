@@ -302,7 +302,7 @@ export default function JobListItem({
                                     />
 
                                     <span>
-                                        {job.location}
+                                        {job.location ?? "Location not specified"}
                                     </span>
                                 </div>
 

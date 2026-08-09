@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { US_STATE_CODES } from "@/lib/locations/usStates";
+
 export const employmentTypeValues = [
     "FULL_TIME",
     "PART_TIME",
@@ -29,6 +31,14 @@ const optionalSalarySchema = z
         "Salary must be a valid number.",
     )
     .refine((value) => value === "" || Number(value) >= 0, "Salary cannot be negative.");
+
+const stateRegionSchema = z
+    .string()
+    .trim()
+    .refine(
+        (value) => value === "" || US_STATE_CODES.some((stateCode) => stateCode === value),
+        "Please select a valid U.S. state or region.",
+    );
 
 export const jobFormSchema = z
     .object({
@@ -62,14 +72,11 @@ export const jobFormSchema = z
 
         experienceLevel: z.enum(experienceLevelValues),
 
-        location: z
-            .string()
-            .trim()
-            .refine(
-                (value) => value === "" || value.length >= 2,
-                "Location must contain at least 2 characters.",
-            )
-            .refine((value) => value.length <= 150, "Location cannot exceed 150 characters."),
+        city: z.string().trim().max(100, "City cannot exceed 100 characters."),
+
+        stateRegion: stateRegionSchema,
+
+        countryCode: z.literal("US"),
 
         salaryMin: optionalSalarySchema,
 
@@ -123,6 +130,24 @@ export const jobFormSchema = z
                 message: "Please select a salary period when providing a salary.",
                 path: ["salaryPeriod"],
             });
+        }
+
+        if (data.workplaceType !== "REMOTE") {
+            if (!data.city) {
+                context.addIssue({
+                    code: "custom",
+                    message: "City is required for an on-site or hybrid job.",
+                    path: ["city"],
+                });
+            }
+
+            if (!data.stateRegion) {
+                context.addIssue({
+                    code: "custom",
+                    message: "State or region is required for an on-site or hybrid job.",
+                    path: ["stateRegion"],
+                });
+            }
         }
     });
 

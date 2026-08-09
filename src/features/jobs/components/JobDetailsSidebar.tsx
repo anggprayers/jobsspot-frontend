@@ -149,7 +149,7 @@ export default function JobDetailsSidebar({
     const overviewItems = [
         {
             label: "Location",
-            value: job.location,
+            value: job.location ?? "Location not specified",
             icon: MapPin,
         },
         {

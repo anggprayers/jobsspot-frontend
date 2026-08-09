@@ -3,12 +3,14 @@ import type { Metadata } from "next";
 import LegalDocumentPage, {
     LegalContentLink,
 } from "@/features/legal/components/LegalDocumentPage";
+import { createPublicPageMetadata } from "@/lib/seo/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
     title: "Terms and Conditions",
     description:
         "Review the rules and responsibilities that apply when using JobsSpot.",
-};
+    path: "/terms",
+});
 
 const effectiveDate = "August 6, 2026";
 

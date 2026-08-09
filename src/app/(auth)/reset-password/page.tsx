@@ -5,7 +5,7 @@ import AuthPageShell from "@/features/auth/components/AuthPageShell";
 import ResetPasswordForm from "@/features/auth/components/ResetPasswordForm";
 
 export const metadata: Metadata = {
-    title: "Reset Password | JobsSpot",
+    title: "Reset Password",
     description:
         "Create a new secure password for your JobsSpot account.",
 };

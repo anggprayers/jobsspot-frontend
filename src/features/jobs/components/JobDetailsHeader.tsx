@@ -95,7 +95,7 @@ export default function JobDetailsHeader({ job }: JobDetailsHeaderProps) {
                     <div className="mt-7 flex flex-wrap gap-x-8 gap-y-4 text-lg text-slate-600">
                         <span className="inline-flex items-center gap-2.5">
                             <MapPin size={19} className="shrink-0 text-slate-400" />
-                            {job.location}
+                            {job.location ?? "Location not specified"}
                         </span>
 
                         <span className="inline-flex items-center gap-2.5">

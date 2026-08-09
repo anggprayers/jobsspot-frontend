@@ -3,6 +3,7 @@ export type PublicJobCompany = {
     name: string;
     slug: string;
     logoUrl: string | null;
+    websiteUrl?: string | null;
 };
 
 export type PublicJobCategory = {
@@ -18,7 +19,10 @@ export type PublicJob = {
     employmentType: string;
     workplaceType: string;
     experienceLevel: string;
-    location: string;
+    location: string | null;
+    city?: string | null;
+    stateRegion?: string | null;
+    countryCode?: string;
     salaryMin: string | null;
     salaryMax: string | null;
     salaryCurrency: string | null;
@@ -26,6 +30,7 @@ export type PublicJob = {
     applicationDeadline: string | null;
     publishedAt: string | null;
     expiresAt: string | null;
+    updatedAt?: string;
     company: PublicJobCompany;
     category: PublicJobCategory;
 };

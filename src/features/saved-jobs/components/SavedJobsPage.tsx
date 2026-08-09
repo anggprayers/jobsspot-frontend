@@ -130,7 +130,7 @@ function SavedJobCard({
                 <div className="grid gap-3 text-sm text-slate-600 sm:grid-cols-2 xl:grid-cols-3">
                     <div className="flex items-center gap-2">
                         <MapPin className="size-4 shrink-0 text-slate-400" />
-                        <span>{job.location}</span>
+                        <span>{job.location ?? "Location not specified"}</span>
                     </div>
 
                     <div className="flex items-center gap-2">

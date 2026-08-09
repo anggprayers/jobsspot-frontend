@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import EmployerGetStartedPage from "@/features/employers/onboarding/components/EmployerGetStartedPage";
 
 export const metadata: Metadata = {
-    title: "Employer Setup | JobsSpot",
+    title: "Employer Setup",
     description:
         "Create your company workspace and start hiring with JobsSpot.",
 };

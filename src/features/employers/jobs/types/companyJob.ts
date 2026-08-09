@@ -18,6 +18,9 @@ export type CompanyJob = {
     experienceLevel: "ENTRY_LEVEL" | "JUNIOR" | "MID_LEVEL" | "SENIOR" | "LEAD" | "EXECUTIVE";
 
     location: string | null;
+    city: string | null;
+    stateRegion: string | null;
+    countryCode: string;
 
     salaryMin: string | null;
     salaryMax: string | null;
@@ -105,7 +108,9 @@ export type CreateJobPayload = {
     workplaceType: JobFormValues["workplaceType"];
     experienceLevel: JobFormValues["experienceLevel"];
 
-    location?: string;
+    city?: string | null;
+    stateRegion?: string | null;
+    countryCode: string;
 
     salaryMin?: number;
     salaryMax?: number;
@@ -140,9 +145,9 @@ export function mapJobFormToPayload(values: JobFormValues): CreateJobPayload {
         workplaceType: values.workplaceType,
         experienceLevel: values.experienceLevel,
 
-        ...(values.location.trim() && {
-            location: values.location.trim(),
-        }),
+        city: values.workplaceType === "REMOTE" ? null : values.city.trim() || null,
+        stateRegion: values.stateRegion.trim() || null,
+        countryCode: values.countryCode,
 
         ...(values.salaryMin !== "" && {
             salaryMin: Number(values.salaryMin),

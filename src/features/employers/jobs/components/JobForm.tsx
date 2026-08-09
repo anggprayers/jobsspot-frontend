@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, type ControllerRenderProps, useForm } from "react-hook-form";
+import { Controller, type ControllerRenderProps, useForm, useWatch } from "react-hook-form";
 import { type KeyboardEvent, useEffect } from "react";
 
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+import { US_STATE_OPTIONS } from "@/lib/locations/usStates";
 import { defaultJobFormValues } from "../types/jobForm";
 import type { JobFormValues } from "../validations/jobFormSchema";
 import { jobFormSchema } from "../validations/jobFormSchema";
@@ -128,6 +129,8 @@ export default function JobForm({
         onDirtyChange?.(isDirty);
     }, [isDirty, onDirtyChange]);
 
+    const workplaceType = useWatch({ control, name: "workplaceType" });
+    const requiresPhysicalLocation = workplaceType !== "REMOTE";
     const submitting = isSubmitting || isPending;
 
     return (
@@ -184,18 +187,110 @@ export default function JobForm({
                 </div>
 
                 <div className="space-y-2">
-                    <OptionalLabel htmlFor="location">Location</OptionalLabel>
+                    <RequiredLabel htmlFor="countryCode">Country</RequiredLabel>
 
-                    <Input
-                        id="location"
-                        placeholder="e.g. New York, NY"
-                        aria-invalid={Boolean(errors.location)}
-                        {...register("location")}
+                    <Controller
+                        name="countryCode"
+                        control={control}
+                        render={({ field }) => (
+                            <Select value={field.value} onValueChange={field.onChange}>
+                                <SelectTrigger
+                                    id="countryCode"
+                                    className="w-full"
+                                    aria-invalid={Boolean(errors.countryCode)}
+                                >
+                                    <SelectValue />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    <SelectItem value="US">United States</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        )}
                     />
 
-                    {errors.location && (
-                        <p className="text-sm text-red-600">{errors.location.message}</p>
+                    {errors.countryCode ? (
+                        <p className="text-sm text-red-600">{errors.countryCode.message}</p>
+                    ) : (
+                        <p className="text-sm text-slate-500">
+                            JobsSpot is currently configured for U.S. job postings.
+                        </p>
                     )}
+                </div>
+
+                {requiresPhysicalLocation ? (
+                    <div className="space-y-2">
+                        <RequiredLabel htmlFor="city">City</RequiredLabel>
+
+                        <Input
+                            id="city"
+                            placeholder="e.g. New York"
+                            aria-invalid={Boolean(errors.city)}
+                            {...register("city")}
+                        />
+
+                        {errors.city && (
+                            <p className="text-sm text-red-600">{errors.city.message}</p>
+                        )}
+                    </div>
+                ) : null}
+
+                <div className="space-y-2">
+                    {requiresPhysicalLocation ? (
+                        <RequiredLabel htmlFor="stateRegion">State / region</RequiredLabel>
+                    ) : (
+                        <OptionalLabel htmlFor="stateRegion">State / region</OptionalLabel>
+                    )}
+
+                    <Controller
+                        name="stateRegion"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                                value={field.value || undefined}
+                                onValueChange={(value) =>
+                                    field.onChange(value === "__US_WIDE__" ? "" : value)
+                                }
+                            >
+                                <SelectTrigger
+                                    id="stateRegion"
+                                    className="w-full"
+                                    aria-invalid={Boolean(errors.stateRegion)}
+                                >
+                                    <SelectValue
+                                        placeholder={
+                                            requiresPhysicalLocation
+                                                ? "Select a state"
+                                                : "Select a state or leave U.S.-wide"
+                                        }
+                                    />
+                                </SelectTrigger>
+
+                                <SelectContent className="max-h-72">
+                                    {!requiresPhysicalLocation && (
+                                        <SelectItem value="__US_WIDE__">
+                                            All U.S. states
+                                        </SelectItem>
+                                    )}
+
+                                    {US_STATE_OPTIONS.map((state) => (
+                                        <SelectItem key={state.value} value={state.value}>
+                                            {state.label} ({state.value})
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        )}
+                    />
+
+                    {errors.stateRegion ? (
+                        <p className="text-sm text-red-600">{errors.stateRegion.message}</p>
+                    ) : workplaceType === "REMOTE" ? (
+                        <p className="text-sm text-slate-500">
+                            Leave blank for a U.S.-wide remote role, or select a state to restrict
+                            applicant location.
+                        </p>
+                    ) : null}
                 </div>
 
                 <div className="space-y-2">

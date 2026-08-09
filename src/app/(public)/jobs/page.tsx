@@ -4,12 +4,14 @@ import { Suspense } from "react";
 import Container from "@/components/layout/Container";
 import JobsResults from "@/features/jobs/components/JobsResults";
 import JobsSearchBar from "@/features/jobs/components/JobsSearchBar";
+import { createPublicPageMetadata } from "@/lib/seo/site";
 
-export const metadata: Metadata = {
-    title: "Find Jobs | JobsSpot",
+export const metadata: Metadata = createPublicPageMetadata({
+    title: "Find Jobs",
     description:
         "Search job opportunities by title, company, location, workplace type, and experience level.",
-};
+    path: "/jobs",
+});
 
 function JobsPageLoading() {
     return (

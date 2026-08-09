@@ -5,7 +5,7 @@ import ForgotPasswordForm from "@/features/auth/components/ForgotPasswordForm";
 import GuestOnlyAuthPage from "@/features/auth/components/GuestOnlyAuthPage";
 
 export const metadata: Metadata = {
-    title: "Forgot Password | JobsSpot",
+    title: "Forgot Password",
     description:
         "Request a secure JobsSpot password reset link.",
 };

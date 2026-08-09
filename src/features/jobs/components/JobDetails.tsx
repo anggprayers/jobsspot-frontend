@@ -14,12 +14,14 @@ import {
 import Container from "@/components/layout/Container";
 
 import { usePublicJob } from "../hooks/usePublicJob";
+import type { PublicJobDetails } from "../types/publicJobDetails";
 import JobDetailsHeader from "./JobDetailsHeader";
 import JobDetailsSidebar from "./JobDetailsSidebar";
 import SimilarJobs from "./SimilarJobs";
 
 type JobDetailsProps = Readonly<{
     slug: string;
+    initialJob?: PublicJobDetails;
 }>;
 
 type ContentSectionProps = Readonly<{
@@ -71,8 +73,8 @@ function JobDetailsSkeleton() {
     );
 }
 
-export default function JobDetails({ slug }: JobDetailsProps) {
-    const { data, isLoading, isError } = usePublicJob(slug);
+export default function JobDetails({ slug, initialJob }: JobDetailsProps) {
+    const { data, isLoading, isError } = usePublicJob(slug, initialJob);
 
     const job = data?.job;
 

@@ -5,7 +5,7 @@ import AuthPageShell from "@/features/auth/components/AuthPageShell";
 import LoginPageContent from "@/features/auth/components/LoginPageContent";
 
 export const metadata: Metadata = {
-    title: "Sign In | JobsSpot",
+    title: "Sign In",
     description:
         "Sign in to manage your JobsSpot profile, applications, saved jobs, or employer workspace.",
 };

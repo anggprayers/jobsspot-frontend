@@ -57,8 +57,13 @@ export default function AdminJobsPage() {
                     <CardTitle className="flex items-center gap-2"><Filter className="size-5 text-primary" /> Filters</CardTitle>
                     <CardDescription>Search by job, company, category, or location.</CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-                    <Input value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Job, company, category..." />
+                <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+                    <Input
+                        className="xl:col-span-2"
+                        value={search}
+                        onChange={(event) => { setSearch(event.target.value); setPage(1); }}
+                        placeholder="Job, company, category, or location..."
+                    />
                     <Select value={status} onValueChange={(value) => { setStatus(value as typeof status); setPage(1); }}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>

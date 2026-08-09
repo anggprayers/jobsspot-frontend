@@ -57,8 +57,8 @@ export default function AdminJobsPage() {
                     <CardTitle className="flex items-center gap-2"><Filter className="size-5 text-primary" /> Filters</CardTitle>
                     <CardDescription>Search by job, company, category, or location.</CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
-                    <div className="min-w-0 md:col-span-2 xl:col-span-2">
+                <CardContent className="grid gap-3 md:grid-cols-2 2xl:grid-cols-[minmax(280px,2fr)_minmax(135px,1fr)_minmax(180px,1.25fr)_minmax(150px,1fr)_minmax(130px,0.9fr)]">
+                    <div className="min-w-0 md:col-span-2 2xl:col-span-1">
                         <Input
                             value={search}
                             onChange={(event) => { setSearch(event.target.value); setPage(1); }}
@@ -66,7 +66,7 @@ export default function AdminJobsPage() {
                         />
                     </div>
                     <Select value={status} onValueChange={(value) => { setStatus(value as typeof status); setPage(1); }}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectTrigger className="w-full min-w-0"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="ALL">All job statuses</SelectItem>
                             {(["DRAFT", "PUBLISHED", "PAUSED", "CLOSED", "ARCHIVED"] as const).map((value) => (
@@ -75,7 +75,7 @@ export default function AdminJobsPage() {
                         </SelectContent>
                     </Select>
                     <Select value={moderation} onValueChange={(value) => { setModeration(value as typeof moderation); setPage(1); }}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectTrigger className="w-full min-w-0"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="ALL">All moderation states</SelectItem>
                             <SelectItem value="VISIBLE">Visible</SelectItem>
@@ -83,7 +83,7 @@ export default function AdminJobsPage() {
                         </SelectContent>
                     </Select>
                     <Select value={recordState} onValueChange={(value) => { setRecordState(value as typeof recordState); setPage(1); }}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectTrigger className="w-full min-w-0"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="ACTIVE">Active records</SelectItem>
                             <SelectItem value="DELETED">Deleted records</SelectItem>
@@ -91,7 +91,7 @@ export default function AdminJobsPage() {
                         </SelectContent>
                     </Select>
                     <Select value={sort} onValueChange={(value) => setSort(value as typeof sort)}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectTrigger className="w-full min-w-0"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="NEWEST">Newest first</SelectItem>
                             <SelectItem value="OLDEST">Oldest first</SelectItem>

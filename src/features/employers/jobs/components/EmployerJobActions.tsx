@@ -291,7 +291,7 @@ export default function EmployerJobActions({
                             <DropdownMenuSeparator />
 
                             {(job.status === "DRAFT" || job.status === "PAUSED") && (
-                                <DropdownMenuItem disabled={isMutating} onSelect={handlePublish}>
+                                <DropdownMenuItem disabled={isMutating || !job.category.isActive} onSelect={handlePublish}>
                                     <Play className="size-4" />
 
                                     {publishMutation.isPending
@@ -306,7 +306,7 @@ export default function EmployerJobActions({
 
                             {job.isExpired && (
                                 <DropdownMenuItem
-                                    disabled={isMutating}
+                                    disabled={isMutating || !job.category.isActive}
                                     onSelect={handleRenew}
                                 >
                                     <CalendarPlus className="size-4" />

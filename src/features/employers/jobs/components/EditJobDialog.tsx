@@ -60,6 +60,13 @@ export default function EditJobDialog({
         closeDialog();
     }
 
+    const formCategories = job.category.isActive
+        ? categories
+        : [
+              { id: job.category.id, name: `${job.category.name} (inactive)` },
+              ...categories.filter((category) => category.id !== job.category.id),
+          ];
+
     return (
         <Modal
             isOpen={open}
@@ -76,7 +83,7 @@ export default function EditJobDialog({
             )}
 
             <JobForm
-                categories={categories}
+                categories={formCategories}
                 submitLabel="Save Changes"
                 isPending={updateJob.isPending}
                 onDirtyChange={setHasUnsavedChanges}

@@ -89,6 +89,11 @@ export default function EmployerJobsTable({ jobs, companyId, categories }: Emplo
                                 </h2>
 
                                 <p className="mt-1 text-sm text-slate-500">{job.category.name}</p>
+                                {!job.category.isActive && (
+                                    <p className="mt-2 inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-800">
+                                        Category unavailable
+                                    </p>
+                                )}
                                 {job.adminHiddenAt && (
                                     <div className="mt-2 space-y-1">
                                         <p className="inline-flex rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700">
@@ -202,6 +207,11 @@ export default function EmployerJobsTable({ jobs, companyId, categories }: Emplo
                                         <div className="mt-1 text-sm text-slate-500">
                                             {job.category.name}
                                         </div>
+                                        {!job.category.isActive && (
+                                            <div className="mt-2 text-xs font-semibold text-amber-700">
+                                                Category unavailable · this job is not public until an active category is selected.
+                                            </div>
+                                        )}
                                         {job.adminHiddenAt && (
                                             <div className="mt-2 max-w-xl space-y-1 whitespace-normal text-xs text-red-700">
                                                 <div className="font-semibold">Hidden by JobsSpot moderation</div>

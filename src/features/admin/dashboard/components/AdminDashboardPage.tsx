@@ -69,7 +69,7 @@ export default function AdminDashboardPage() {
             value: dashboard?.categories.total,
             detail: `${dashboard?.categories.active ?? 0} active categories`,
             icon: FolderKanban,
-            href: "/admin",
+            href: "/admin/categories",
         },
     ];
 

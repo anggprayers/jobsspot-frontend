@@ -41,6 +41,7 @@ export type CompanyJob = {
         id: string;
         name: string;
         slug: string;
+        isActive: boolean;
     };
 
     createdBy: {

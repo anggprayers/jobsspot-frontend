@@ -160,7 +160,8 @@ export default function EmployerJobDetailsPage() {
 
                 {job.status === "PUBLISHED" &&
                     !job.isExpired &&
-                    !job.adminHiddenAt && (
+                    !job.adminHiddenAt &&
+                    job.category.isActive && (
                     <Button variant="outline" size="sm" asChild>
                         <Link href={`/jobs/${job.slug}`} target="_blank" rel="noreferrer">
                             <ExternalLink />
@@ -185,6 +186,20 @@ export default function EmployerJobDetailsPage() {
                                     <span className="font-semibold">Reason: </span>{job.adminHiddenReason}
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {!job.category.isActive && (
+                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-900">
+                    <div className="flex gap-3">
+                        <ShieldAlert className="mt-0.5 size-5 shrink-0" />
+                        <div>
+                            <p className="font-semibold">This job category is no longer active</p>
+                            <p className="mt-1 text-sm leading-6">
+                                The job record is preserved, but it cannot appear in public search or be republished while it uses an inactive category. Edit the job and select an active category to make it eligible again.
+                            </p>
                         </div>
                     </div>
                 </div>

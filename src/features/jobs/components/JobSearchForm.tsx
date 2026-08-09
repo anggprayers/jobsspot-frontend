@@ -109,7 +109,7 @@ export default function JobSearchForm() {
                                 event.target.value,
                             )
                         }
-                        placeholder="City, province, or remote"
+                        placeholder="City, state, or remote"
                         className="w-full bg-transparent text-base text-slate-900 outline-none placeholder:text-slate-400"
                     />
                 </label>

@@ -314,7 +314,7 @@ export default function EditCompanyDialog({
                                 value={form.location}
                                 onChange={(event) => handleChange("location", event.target.value)}
                                 disabled={isUpdatingCompany}
-                                placeholder="Makati, Philippines"
+                                placeholder="New York, NY"
                                 className="mt-2 min-h-12 w-full rounded-xl border border-slate-300 px-4 text-slate-950 outline-none transition focus:border-blue-500 focus:ring-3 focus:ring-blue-100 disabled:bg-slate-100"
                             />
                         </div>

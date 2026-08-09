@@ -241,7 +241,7 @@ function ProfileSettingsForm({ user }: ProfileFormProps) {
                                 }}
                                 disabled={updateProfileMutation.isPending}
                                 maxLength={30}
-                                placeholder="+63 912 345 6789"
+                                placeholder="+1 212 555 0123"
                                 className="pl-9"
                             />
                         </div>

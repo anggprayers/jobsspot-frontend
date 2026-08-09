@@ -393,7 +393,7 @@ function WorkExperienceFormDialog({
                                 id="experience-location"
                                 value={form.location}
                                 maxLength={150}
-                                placeholder="e.g. Pasay City, Metro Manila"
+                                placeholder="e.g. New York, NY"
                                 disabled={isPending}
                                 onChange={(event) =>
                                     updateField(

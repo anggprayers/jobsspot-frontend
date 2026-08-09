@@ -13,7 +13,28 @@ const inter = Inter({
     variable: "--font-inter",
 });
 
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+
+function getMetadataBase(): URL | undefined {
+    if (!configuredSiteUrl) {
+        return undefined;
+    }
+
+    try {
+        const url = new URL(configuredSiteUrl);
+
+        if (url.protocol !== "http:" && url.protocol !== "https:") {
+            return undefined;
+        }
+
+        return url;
+    } catch {
+        return undefined;
+    }
+}
+
 export const metadata: Metadata = {
+    metadataBase: getMetadataBase(),
     title: {
         default: "JobsSpot",
         template: "%s | JobsSpot",

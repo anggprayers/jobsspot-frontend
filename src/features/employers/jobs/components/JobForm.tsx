@@ -188,7 +188,7 @@ export default function JobForm({
 
                     <Input
                         id="location"
-                        placeholder="e.g. Makati City, Metro Manila"
+                        placeholder="e.g. New York, NY"
                         aria-invalid={Boolean(errors.location)}
                         {...register("location")}
                     />
@@ -464,7 +464,7 @@ export default function JobForm({
                         <Input
                             id="salaryCurrency"
                             maxLength={3}
-                            placeholder="PHP"
+                            placeholder="USD"
                             className="w-full"
                             aria-invalid={Boolean(errors.salaryCurrency)}
                             {...register("salaryCurrency")}

@@ -326,7 +326,7 @@ function PersonalInformationSection({ user, profile }: PersonalInformationSectio
                                     value={phone}
                                     maxLength={30}
                                     autoComplete="tel"
-                                    placeholder="+63 900 000 0000"
+                                    placeholder="+1 212 555 0123"
                                     disabled={isPending}
                                     onChange={(event) => setPhone(event.target.value)}
                                     className="mt-2"
@@ -344,7 +344,7 @@ function PersonalInformationSection({ user, profile }: PersonalInformationSectio
                                     id="profile-location"
                                     value={location}
                                     maxLength={120}
-                                    placeholder="Pasay City, Metro Manila"
+                                    placeholder="New York, NY"
                                     disabled={isPending}
                                     onChange={(event) => setLocation(event.target.value)}
                                     className="pl-9"

@@ -90,7 +90,7 @@ export const getPublicJobForSeo = cache(async function getPublicJobForSeo(
 ): Promise<PublicSeoResult<PublicJobDetails>> {
     const result = await fetchPublicResource<GetPublicJobBySlugResponse>(
         `/jobs/${encodeURIComponent(slug)}`,
-        300,
+        0,
     );
 
     if (result.status !== "ok") {

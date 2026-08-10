@@ -174,7 +174,7 @@ export default function JobsResults() {
                     )}
 
                     {isError && (
-                        <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-14 text-center">
+                        <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-14text-center">
                             <BriefcaseBusiness
                                 size={38}
                                 className="mx-auto text-red-400"
@@ -215,23 +215,27 @@ export default function JobsResults() {
                     {!isLoading &&
                         !isError &&
                         jobs.length === 0 && (
-                            <div className="rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm">
-                                <SearchX
-                                    size={42}
-                                    className="mx-auto text-slate-400"
-                                />
+                            <>
+                                <div className="rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm">
+                                    <SearchX
+                                        size={42}
+                                        className="mx-auto text-slate-400"
+                                    />
 
-                                <h3 className="mt-5 text-2xl font-semibold text-slate-950">
-                                    No matching jobs found
-                                </h3>
+                                    <h3 className="mt-5 text-2xl font-semibold text-slate-950">
+                                        No matching jobs found
+                                    </h3>
 
-                                <p className="mx-auto mt-3 max-w-md leading-7 text-slate-600">
-                                    Try changing your search
-                                    terms, location, pay
-                                    range, or selected
-                                    filters.
-                                </p>
-                            </div>
+                                    <p className="mx-auto mt-3 max-w-md leading-7 text-slate-600">
+                                        Try changing your search
+                                        terms, location, pay
+                                        range, or selected
+                                        filters.
+                                    </p>
+                                </div>
+
+                                <SaveSearchFooter />
+                            </>
                         )}
 
                     {!isLoading &&

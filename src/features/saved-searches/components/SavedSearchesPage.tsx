@@ -3,9 +3,11 @@
 import Link from "next/link";
 import {
     ArrowRight,
+    BellRing,
     CalendarDays,
     ChevronLeft,
     ChevronRight,
+    LoaderCircle,
     Pencil,
     RefreshCw,
     Search,
@@ -13,10 +15,14 @@ import {
     Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
-import { useSavedSearches } from "../hooks/useSavedSearches";
+import {
+    useSavedSearches,
+    useUpdateSavedSearch,
+} from "../hooks/useSavedSearches";
 import type { SavedSearch } from "../types/savedSearch";
 import {
     buildSavedSearchUrl,
@@ -65,6 +71,59 @@ function SavedSearchCard({
 }: SavedSearchCardProps) {
     const filterLabels =
         getSavedSearchFilterLabels(savedSearch);
+    const updateMutation = useUpdateSavedSearch();
+
+    const alertValue = savedSearch.emailAlertsEnabled
+        ? (savedSearch.alertFrequency ?? "DAILY")
+        : "OFF";
+
+    async function handleAlertChange(
+        event: React.ChangeEvent<HTMLSelectElement>,
+    ) {
+        const value = event.target.value;
+        const toastId = toast.loading(
+            value === "OFF"
+                ? "Turning off job alerts..."
+                : "Updating job alerts...",
+        );
+
+        try {
+            await updateMutation.mutateAsync({
+                savedSearchId: savedSearch.id,
+                data:
+                    value === "OFF"
+                        ? {
+                              emailAlertsEnabled: false,
+                              alertFrequency: null,
+                          }
+                        : {
+                              emailAlertsEnabled: true,
+                              alertFrequency: value as
+                                  | "DAILY"
+                                  | "WEEKLY",
+                          },
+            });
+
+            toast.success(
+                value === "OFF"
+                    ? "Job alerts turned off."
+                    : `${
+                          value === "DAILY"
+                              ? "Daily"
+                              : "Weekly"
+                      } job alerts enabled.`,
+                { id: toastId },
+            );
+        } catch (error) {
+            toast.error(
+                getSavedSearchErrorMessage(
+                    error,
+                    "Unable to update job alerts.",
+                ),
+                { id: toastId },
+            );
+        }
+    }
 
     return (
         <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
@@ -104,6 +163,43 @@ function SavedSearchCard({
                             All active jobs
                         </span>
                     )}
+                </div>
+
+                <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex min-w-0 items-start gap-3">
+                        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+                            <BellRing className="size-5" />
+                        </div>
+
+                        <div className="min-w-0">
+                            <p className="text-sm font-bold text-slate-900">
+                                Email job alerts
+                            </p>
+                            <p className="mt-1 text-sm leading-5 text-slate-600">
+                                Get newly published jobs that match this saved search.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="relative w-full sm:w-40">
+                        <select
+                            aria-label={`Email alert frequency for ${savedSearch.name}`}
+                            value={alertValue}
+                            disabled={updateMutation.isPending}
+                            onChange={(event) =>
+                                void handleAlertChange(event)
+                            }
+                            className="min-h-11 w-full appearance-none rounded-xl border border-slate-300 bg-white px-3 py-2.5 pr-9 text-sm font-semibold text-slate-700 outline-none transition-colors focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            <option value="OFF">Off</option>
+                            <option value="DAILY">Daily</option>
+                            <option value="WEEKLY">Weekly</option>
+                        </select>
+
+                        {updateMutation.isPending && (
+                            <LoaderCircle className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 animate-spin text-blue-600" />
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">

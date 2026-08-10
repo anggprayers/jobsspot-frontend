@@ -25,6 +25,10 @@ export type SavedSearchSalaryPeriod =
     | "MONTHLY"
     | "YEARLY";
 
+export type SavedSearchAlertFrequency =
+    | "DAILY"
+    | "WEEKLY";
+
 export type SavedSearchCategory = {
     id: string;
     name: string;
@@ -55,7 +59,7 @@ export type SavedSearch = {
     publishedWithinDays: number | null;
 
     emailAlertsEnabled: boolean;
-    alertFrequency: "DAILY" | "WEEKLY" | null;
+    alertFrequency: SavedSearchAlertFrequency | null;
     lastAlertSentAt: string | null;
     createdAt: string;
     updatedAt: string;
@@ -90,7 +94,10 @@ export type CreateSavedSearchRequest =
 
 export type UpdateSavedSearchRequest = Partial<
     CreateSavedSearchRequest
->;
+> & {
+    emailAlertsEnabled?: boolean;
+    alertFrequency?: SavedSearchAlertFrequency | null;
+};
 
 export type SavedSearchPagination = {
     page: number;

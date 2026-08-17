@@ -41,14 +41,14 @@ export default function Navigation({ variant = "desktop", onNavigate }: Navigati
                     </Link>
 
                     <Link
-                        href="/#how-it-works-employers"
+                        href="/post-a-job"
                         onClick={onNavigate}
                         className="block rounded-xl px-3 py-3.5 transition-colors hover:bg-slate-50"
                     >
                         <span className="block font-semibold text-slate-950">For Employers</span>
 
                         <span className="mt-1 block text-sm leading-6 text-slate-600">
-                            Publish jobs and connect with qualified talent.
+                            Send a job to JobsSpot for review — no employer account required.
                         </span>
                     </Link>
                 </div>
@@ -99,7 +99,7 @@ export default function Navigation({ variant = "desktop", onNavigate }: Navigati
                         </Link>
 
                         <Link
-                            href="/#how-it-works-employers"
+                            href="/post-a-job"
                             className="block rounded-xl px-4 py-4 transition-colors hover:bg-slate-50 focus-visible:bg-slate-50 focus-visible:outline-none"
                         >
                             <span className="block text-base font-semibold text-slate-950">
@@ -107,7 +107,7 @@ export default function Navigation({ variant = "desktop", onNavigate }: Navigati
                             </span>
 
                             <span className="mt-1.5 block text-sm leading-6 text-slate-600">
-                                Publish jobs and connect with qualified talent.
+                                Send a job to JobsSpot for review — no employer account required.
                             </span>
                         </Link>
                     </div>

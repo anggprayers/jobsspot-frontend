@@ -25,8 +25,8 @@ const jobSeekerLinks = [
 
 const employerLinks = [
     {
-        label: "Hire Talent",
-        href: "/employers",
+        label: "Post a Job",
+        href: "/post-a-job",
     },
     {
         label: "Employer Support",

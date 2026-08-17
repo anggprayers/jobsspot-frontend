@@ -16,18 +16,17 @@ export default function FinalCTA() {
                         </h2>
 
                         <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
-                            Create your company profile, publish an opportunity, and start
-                            connecting with candidates.
+                            Send JobsSpot the essentials. Our team will review the role, confirm the details with you, and handle publication.
                         </p>
                     </div>
 
                     <div className="w-full shrink-0 sm:w-auto">
                         <Link
-                            href="/employers"
+                            href="/post-a-job"
                             className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-7 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-500 sm:w-auto"
                         >
                             <Building2 size={18} />
-                            For employers
+                            Post a job
                         </Link>
                     </div>
                 </div>

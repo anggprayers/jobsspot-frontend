@@ -82,10 +82,10 @@ export default function Header() {
         setIsSignInOpen(true);
     }
 
-    const employerHref = "/employers";
+    const employerHref = isEmployer ? "/employers" : "/post-a-job";
     const employerLabel = isEmployer
         ? "Employer Dashboard"
-        : "For Employers";
+        : "Post a Job";
 
     return (
         <>

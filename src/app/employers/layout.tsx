@@ -1,24 +1,5 @@
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-import EmployersRootLayout from "@/features/employers/components/EmployersRootLayout";
-
-export const metadata: Metadata = {
-    robots: {
-        index: false,
-        follow: false,
-    },
-};
-
-type EmployersLayoutProps = Readonly<{
-    children: React.ReactNode;
-}>;
-
-export default function EmployersLayout({
-    children,
-}: EmployersLayoutProps) {
-    return (
-        <EmployersRootLayout>
-            {children}
-        </EmployersRootLayout>
-    );
+export default function EmployerLayout() {
+    redirect("/post-a-job");
 }

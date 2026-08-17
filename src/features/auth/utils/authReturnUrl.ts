@@ -38,18 +38,43 @@ export function isSafeInternalPath(
     }
 }
 
+
+export function normalizeAuthReturnPath(
+    value: string | null | undefined,
+): string | null {
+    if (!isSafeInternalPath(value)) {
+        return null;
+    }
+
+    if (
+        value === "/employers" ||
+        value.startsWith("/employers/") ||
+        value.startsWith("/invitations/accept")
+    ) {
+        return "/post-a-job";
+    }
+
+    return value;
+}
+
 export function rememberAuthReturnUrl(
     value: string | null | undefined,
 ): void {
     if (
         typeof window === "undefined" ||
-        !isSafeInternalPath(value)
+        !normalizeAuthReturnPath(value)
     ) {
         return;
     }
 
+    const normalizedPath = normalizeAuthReturnPath(value);
+
+    if (!normalizedPath) {
+        return;
+    }
+
     const storedValue: StoredAuthReturnUrl = {
-        path: value,
+        path: normalizedPath,
         createdAt: Date.now(),
     };
 
@@ -90,13 +115,13 @@ export function getRememberedAuthReturnUrl(): string | null {
 
         if (
             !isFresh ||
-            !isSafeInternalPath(parsedValue.path)
+            !normalizeAuthReturnPath(parsedValue.path)
         ) {
             clearRememberedAuthReturnUrl();
             return null;
         }
 
-        return parsedValue.path;
+        return normalizeAuthReturnPath(parsedValue.path);
     } catch {
         clearRememberedAuthReturnUrl();
         return null;
@@ -126,8 +151,10 @@ export function getAuthDestination({
     defaultPath?: string | null;
     fallbackPath: string;
 }): string {
-    if (isSafeInternalPath(returnUrl)) {
-        return returnUrl;
+    const normalizedReturnUrl = normalizeAuthReturnPath(returnUrl);
+
+    if (normalizedReturnUrl) {
+        return normalizedReturnUrl;
     }
 
     const rememberedReturnUrl =
@@ -137,8 +164,10 @@ export function getAuthDestination({
         return rememberedReturnUrl;
     }
 
-    if (isSafeInternalPath(defaultPath)) {
-        return defaultPath;
+    const normalizedDefaultPath = normalizeAuthReturnPath(defaultPath);
+
+    if (normalizedDefaultPath) {
+        return normalizedDefaultPath;
     }
 
     return fallbackPath;

@@ -45,10 +45,10 @@ export default function Navigation({ variant = "desktop", onNavigate }: Navigati
                         onClick={onNavigate}
                         className="block rounded-xl px-3 py-3.5 transition-colors hover:bg-slate-50"
                     >
-                        <span className="block font-semibold text-slate-950">For Employers</span>
+                        <span className="block font-semibold text-slate-950">Post a Job</span>
 
                         <span className="mt-1 block text-sm leading-6 text-slate-600">
-                            Send a job to JobsSpot for review — no employer account required.
+                            Send the essential job details to JobsSpot for review and publication.
                         </span>
                     </Link>
                 </div>
@@ -107,7 +107,7 @@ export default function Navigation({ variant = "desktop", onNavigate }: Navigati
                             </span>
 
                             <span className="mt-1.5 block text-sm leading-6 text-slate-600">
-                                Send a job to JobsSpot for review — no employer account required.
+                                Send the essential job details to JobsSpot for review and publication.
                             </span>
                         </Link>
                     </div>

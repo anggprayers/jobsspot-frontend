@@ -35,7 +35,6 @@ export default function Header() {
         user,
         isAuthenticated,
         isInitializing,
-        isEmployer,
         clearSession,
     } = useAuth();
 
@@ -82,10 +81,8 @@ export default function Header() {
         setIsSignInOpen(true);
     }
 
-    const employerHref = isEmployer ? "/employers" : "/post-a-job";
-    const employerLabel = isEmployer
-        ? "Employer Dashboard"
-        : "Post a Job";
+    const employerHref = "/post-a-job";
+    const employerLabel = "Post a Job";
 
     return (
         <>

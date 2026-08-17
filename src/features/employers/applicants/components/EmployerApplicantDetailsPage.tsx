@@ -54,10 +54,6 @@ const manageableStatuses: {
         label: "Under review",
     },
     {
-        value: "SHORTLISTED",
-        label: "Shortlisted",
-    },
-    {
         value: "INTERVIEW",
         label: "Interview",
     },
@@ -71,7 +67,7 @@ const manageableStatuses: {
     },
     {
         value: "REJECTED",
-        label: "Rejected",
+        label: "Not selected",
     },
 ];
 

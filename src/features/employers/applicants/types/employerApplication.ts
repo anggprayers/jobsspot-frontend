@@ -9,7 +9,7 @@ export type EmployerApplicationStatus =
     | "WITHDRAWN";
 
 export type ManageableEmployerApplicationStatus =
-    "UNDER_REVIEW" | "SHORTLISTED" | "INTERVIEW" | "OFFERED" | "HIRED" | "REJECTED";
+    "UNDER_REVIEW" | "INTERVIEW" | "OFFERED" | "HIRED" | "REJECTED";
 
 export type EmployerApplicationJobStatus = "DRAFT" | "PUBLISHED" | "PAUSED" | "CLOSED" | "ARCHIVED";
 

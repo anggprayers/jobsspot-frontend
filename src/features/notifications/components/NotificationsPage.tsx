@@ -77,7 +77,7 @@ export default function NotificationsPage({
     const markReadMutation = useMarkNotificationRead();
     const markAllMutation = useMarkAllNotificationsRead();
     const clearReadMutation = useClearReadNotifications();
-    const canClearRead = audience === "JOB_SEEKER" || audience === "EMPLOYER";
+    const canClearRead = audience !== "SYSTEM";
 
     const notifications = notificationsQuery.data?.notifications ?? [];
     const unreadCount = notificationsQuery.data?.unreadCount ?? 0;
@@ -126,8 +126,7 @@ export default function NotificationsPage({
 
     async function clearRead() {
         if (
-            (audience !== "JOB_SEEKER" && audience !== "EMPLOYER") ||
-            clearReadMutation.isPending
+            audience === "SYSTEM" || clearReadMutation.isPending
         ) {
             return;
         }

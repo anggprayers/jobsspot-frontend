@@ -316,7 +316,7 @@ export default function JobDetailsSidebar({
                                 {application.status === "WITHDRAWN"
                                     ? "Application withdrawn"
                                     : application.status === "REJECTED"
-                                      ? "Application closed"
+                                      ? "Not selected"
                                       : "Already applied"}
                             </div>
 

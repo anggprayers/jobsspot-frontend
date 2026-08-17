@@ -5,22 +5,22 @@ import type { ApplicationStatus } from "../types/application";
 const APPLICATION_STATUS_LABELS: Record<ApplicationStatus, string> = {
     SUBMITTED: "Submitted",
     UNDER_REVIEW: "Under review",
-    SHORTLISTED: "Shortlisted",
+    SHORTLISTED: "Under review",
     INTERVIEW: "Interview",
     OFFERED: "Offer received",
     HIRED: "Hired",
-    REJECTED: "Rejected",
+    REJECTED: "Not selected",
     WITHDRAWN: "Withdrawn",
 };
 
 const APPLICATION_STATUS_CLASSES: Record<ApplicationStatus, string> = {
     SUBMITTED: "border-blue-200 bg-blue-50 text-blue-700",
     UNDER_REVIEW: "border-amber-200 bg-amber-50 text-amber-700",
-    SHORTLISTED: "border-violet-200 bg-violet-50 text-violet-700",
+    SHORTLISTED: "border-amber-200 bg-amber-50 text-amber-700",
     INTERVIEW: "border-indigo-200 bg-indigo-50 text-indigo-700",
     OFFERED: "border-emerald-200 bg-emerald-50 text-emerald-700",
     HIRED: "border-green-200 bg-green-50 text-green-700",
-    REJECTED: "border-red-200 bg-red-50 text-red-700",
+    REJECTED: "border-slate-200 bg-slate-100 text-slate-700",
     WITHDRAWN: "border-slate-200 bg-slate-100 text-slate-600",
 };
 

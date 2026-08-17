@@ -58,7 +58,7 @@ export async function markAllNotificationsRead(
 }
 
 export async function clearReadNotifications(
-    audience: Extract<NotificationAudience, "JOB_SEEKER" | "EMPLOYER">,
+    audience: Extract<NotificationAudience, "JOB_SEEKER" | "EMPLOYER" | "ADMIN">,
 ): Promise<ClearReadNotificationsResponse> {
     const response = await apiClient.patch<ClearReadNotificationsResponse>(
         "/notifications/clear-read",

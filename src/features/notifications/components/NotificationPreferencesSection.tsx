@@ -42,44 +42,13 @@ const jobSeekerPreferenceRows: Array<{
         key: "jobSeekerApplicationUpdatesEmail",
         title: "Application updates",
         description:
-            "Submission confirmations and important status changes for your applications.",
-    },
-    {
-        key: "jobSeekerApplicationViewedEmail",
-        title: "Application viewed",
-        description:
-            "Email you the first time an employer views one of your applications.",
+            "Submission confirmations and meaningful status changes for your applications.",
     },
     {
         key: "systemEmail",
         title: "JobsSpot account & system notices",
         description:
             "Important account, security, moderation, and JobsSpot service notices.",
-    },
-];
-
-const employerPreferenceRows: Array<{
-    key: PreferenceKey;
-    title: string;
-    description: string;
-}> = [
-    {
-        key: "employerApplicationEmail",
-        title: "Applicant activity",
-        description:
-            "New applications and applicant withdrawals for company workspaces you manage.",
-    },
-    {
-        key: "employerTeamEmail",
-        title: "Team activity",
-        description:
-            "Important hiring-team updates such as an invitation being accepted.",
-    },
-    {
-        key: "employerJobEmail",
-        title: "Job expiration reminders",
-        description:
-            "Reminders when your published jobs are close to expiring or have expired.",
     },
 ];
 
@@ -98,22 +67,19 @@ export default function NotificationPreferencesSection({
     context = "JOB_SEEKER",
 }: NotificationPreferencesSectionProps) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const preferencesQuery = useNotificationPreferences(isEmailVerified);
+    const isEmployerContext = context === "EMPLOYER";
+    const preferencesQuery = useNotificationPreferences(
+        isEmailVerified && !isEmployerContext,
+    );
     const updateMutation = useUpdateNotificationPreferences();
 
     const preferences = preferencesQuery.data?.preferences;
-    const preferenceRows =
-        context === "EMPLOYER"
-            ? employerPreferenceRows
-            : jobSeekerPreferenceRows;
-    const sectionTitle =
-        context === "EMPLOYER"
-            ? "Employer email preferences"
-            : "Job seeker email preferences";
-    const sectionDescription =
-        context === "EMPLOYER"
-            ? "Choose which employer-workspace updates should also be delivered by email."
-            : "Choose which job-seeker and account updates should also be delivered by email.";
+    const sectionTitle = isEmployerContext
+        ? "Employer email preferences"
+        : "Email preferences";
+    const sectionDescription = isEmployerContext
+        ? "Employer-workspace alerts are being retired as JobsSpot moves hiring coordination to Platform Admin."
+        : "Choose which candidate and account updates should also be delivered by email.";
 
     async function togglePreference(
         key: PreferenceKey,
@@ -158,14 +124,19 @@ export default function NotificationPreferencesSection({
                         </span>
                     </div>
                     <p className="mt-1 text-sm leading-6 text-slate-500">
-                        {sectionDescription} In-app notifications stay available.
+                        {sectionDescription}
+                        {!isEmployerContext && " In-app notifications stay available."}
                     </p>
                 </div>
             </button>
 
             {isExpanded && (
                 <div className="border-t border-slate-200 p-5 sm:p-6">
-                    {!isEmailVerified ? (
+                    {isEmployerContext ? (
+                        <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-blue-900">
+                            New applications and withdrawals now notify JobsSpot Platform Admin instead of company members. Employer-specific application, team, and job-expiration email switches are no longer part of the admin-managed hiring model.
+                        </div>
+                    ) : !isEmailVerified ? (
                         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
                             Verify your email address before enabling notification emails.
                         </div>
@@ -187,8 +158,10 @@ export default function NotificationPreferencesSection({
                                 </p>
                             </div>
 
-                            {preferenceRows.map((row) => {
-                                const isEnabled = preferences[row.key as keyof NotificationPreferences] as boolean;
+                            {jobSeekerPreferenceRows.map((row) => {
+                                const isEnabled = preferences[
+                                    row.key as keyof NotificationPreferences
+                                ] as boolean;
 
                                 return (
                                     <div
@@ -196,8 +169,12 @@ export default function NotificationPreferencesSection({
                                         className="flex items-center justify-between gap-5 rounded-2xl border border-slate-200 p-4"
                                     >
                                         <div>
-                                            <p className="font-semibold text-slate-900">{row.title}</p>
-                                            <p className="mt-1 text-sm leading-6 text-slate-500">{row.description}</p>
+                                            <p className="font-semibold text-slate-900">
+                                                {row.title}
+                                            </p>
+                                            <p className="mt-1 text-sm leading-6 text-slate-500">
+                                                {row.description}
+                                            </p>
                                         </div>
 
                                         <button
@@ -206,14 +183,23 @@ export default function NotificationPreferencesSection({
                                             aria-checked={isEnabled}
                                             aria-label={`${row.title} email ${isEnabled ? "enabled" : "disabled"}`}
                                             disabled={updateMutation.isPending}
-                                            onClick={() => void togglePreference(row.key, isEnabled)}
+                                            onClick={() =>
+                                                void togglePreference(
+                                                    row.key,
+                                                    isEnabled,
+                                                )
+                                            }
                                             className={`relative h-7 w-12 shrink-0 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
-                                                isEnabled ? "bg-blue-600" : "bg-slate-300"
+                                                isEnabled
+                                                    ? "bg-blue-600"
+                                                    : "bg-slate-300"
                                             }`}
                                         >
                                             <span
                                                 className={`absolute top-1 size-5 rounded-full bg-white shadow-sm transition-transform ${
-                                                    isEnabled ? "translate-x-6" : "translate-x-1"
+                                                    isEnabled
+                                                        ? "translate-x-6"
+                                                        : "translate-x-1"
                                                 }`}
                                             />
                                         </button>

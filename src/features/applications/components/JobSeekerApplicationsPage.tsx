@@ -58,11 +58,10 @@ const statusOptions: Array<{
     { value: "ALL", label: "All applications" },
     { value: "SUBMITTED", label: "Submitted" },
     { value: "UNDER_REVIEW", label: "Under review" },
-    { value: "SHORTLISTED", label: "Shortlisted" },
     { value: "INTERVIEW", label: "Interview" },
     { value: "OFFERED", label: "Offer received" },
     { value: "HIRED", label: "Hired" },
-    { value: "REJECTED", label: "Rejected" },
+    { value: "REJECTED", label: "Not selected" },
     { value: "WITHDRAWN", label: "Withdrawn" },
 ];
 

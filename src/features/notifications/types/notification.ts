@@ -71,10 +71,6 @@ export type ClearReadNotificationsResponse = {
 
 export type NotificationPreferences = {
     jobSeekerApplicationUpdatesEmail: boolean;
-    jobSeekerApplicationViewedEmail: boolean;
-    employerApplicationEmail: boolean;
-    employerTeamEmail: boolean;
-    employerJobEmail: boolean;
     systemEmail: boolean;
     updatedAt: string;
 };

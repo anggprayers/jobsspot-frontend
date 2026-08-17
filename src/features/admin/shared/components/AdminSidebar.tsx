@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, Bell, BriefcaseBusiness, Building2, FileWarning, FolderKanban, LayoutDashboard, ShieldCheck, UserRound, Users } from "lucide-react";
+import { Activity, Bell, BriefcaseBusiness, Building2, ClipboardList, FileWarning, FolderKanban, LayoutDashboard, ShieldCheck, UserRound, Users } from "lucide-react";
 
 import {
     Sidebar,
@@ -34,6 +34,11 @@ const navigationItems = [
         title: "Companies",
         href: "/admin/companies",
         icon: Building2,
+    },
+    {
+        title: "Job Submissions",
+        href: "/admin/job-submissions",
+        icon: ClipboardList,
     },
     {
         title: "Jobs",

@@ -34,12 +34,12 @@ const inquiryOptions: Array<{
         label: "General inquiry",
     },
     {
-        value: "JOB_SEEKER",
-        label: "Job seeker support",
+        value: "EMPLOYER",
+        label: "Employer & hiring inquiry",
     },
     {
-        value: "EMPLOYER",
-        label: "Employer support",
+        value: "JOB_SEEKER",
+        label: "Job seeker support",
     },
     {
         value: "PARTNERSHIP",
@@ -411,7 +411,7 @@ export default function ContactForm() {
                 <textarea
                     id="contact-message"
                     rows={7}
-                    placeholder="Share the details of your question or request."
+                    placeholder="Tell us what you need help with and include any relevant details."
                     disabled={isBusy}
                     aria-invalid={Boolean(errors.message)}
                     aria-describedby={
@@ -434,7 +434,7 @@ export default function ContactForm() {
                         id="contact-message-help"
                         className="mt-2 text-sm text-slate-500"
                     >
-                        Do not include passwords, payment details, or other sensitive information.
+                        For your security, do not include passwords, verification codes, or other sensitive account information.
                     </p>
                 )}
             </div>

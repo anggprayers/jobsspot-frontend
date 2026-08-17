@@ -29,8 +29,8 @@ const employerLinks = [
         href: "/employers",
     },
     {
-        label: "Pricing",
-        href: "/#pricing",
+        label: "Employer Support",
+        href: "/#contact",
     },
     {
         label: "Employer Dashboard",

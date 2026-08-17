@@ -5,10 +5,6 @@ import { ChevronDown } from "lucide-react";
 
 const navigationLinks = [
     {
-        label: "Pricing",
-        href: "/#pricing",
-    },
-    {
         label: "Community",
         href: "/#community",
     },

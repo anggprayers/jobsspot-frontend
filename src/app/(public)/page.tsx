@@ -7,7 +7,6 @@ import CommunitySection from "@/features/home/components/CommunitySection";
 import ContactSection from "@/features/home/components/ContactSection";
 import FinalCTA from "@/features/home/components/FinalCTA";
 import HowItWorks from "@/features/home/components/HowItWorks";
-import PricingSection from "@/features/home/components/PricingSection";
 import TrustedTeams from "@/features/home/components/TrustedTeams";
 import JobSearchForm from "@/features/jobs/components/JobSearchForm";
 import LatestJobs from "@/features/jobs/components/LatestJobs";
@@ -127,8 +126,6 @@ export default function HomePage() {
             <HowItWorks />
 
             <CommunitySection />
-
-            <PricingSection />
 
             <FinalCTA />
 

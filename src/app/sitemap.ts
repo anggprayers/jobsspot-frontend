@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { getPublicJobsForSitemap } from "@/lib/seo/publicSeoApi";
 import { absoluteUrl } from "@/lib/seo/site";
 
-export const revalidate = 900;
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const jobs = await getPublicJobsForSitemap();

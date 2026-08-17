@@ -49,7 +49,7 @@ function getApiUrl(): string | null {
 
 async function fetchPublicResource<T>(
     path: string,
-    revalidateSeconds: number,
+    cachePolicy: number | "no-store",
 ): Promise<PublicSeoResult<T>> {
     const apiUrl = getApiUrl();
 
@@ -62,9 +62,9 @@ async function fetchPublicResource<T>(
             headers: {
                 Accept: "application/json",
             },
-            next: {
-                revalidate: revalidateSeconds,
-            },
+            ...(cachePolicy === "no-store"
+                ? { cache: "no-store" as const }
+                : { next: { revalidate: cachePolicy } }),
             signal: AbortSignal.timeout(requestTimeout),
         });
 
@@ -129,7 +129,7 @@ export async function getPublicJobsForSitemap(): Promise<PublicJob[]> {
     for (let page = 1; page <= maximumPages; page += 1) {
         const result = await fetchPublicResource<GetPublicJobsResponse>(
             `/jobs?page=${page}&limit=${limit}&sort=newest`,
-            900,
+            "no-store",
         );
 
         if (result.status !== "ok") {

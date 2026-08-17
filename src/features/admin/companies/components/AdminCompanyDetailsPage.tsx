@@ -14,6 +14,7 @@ import {
     FileCheck2,
     Mail,
     MapPin,
+    Pencil,
     RefreshCcw,
     ShieldBan,
     UserRound,
@@ -137,6 +138,11 @@ export default function AdminCompanyDetailsPage({ companyId }: AdminCompanyDetai
                     </div>
 
                     <div className="flex flex-wrap gap-2">
+                        {!deleted && (
+                            <Button asChild>
+                                <Link href={`/admin/companies/${company.id}/edit`}><Pencil /> Edit company</Link>
+                            </Button>
+                        )}
                         {company.websiteUrl && (
                             <Button asChild variant="outline">
                                 <a href={company.websiteUrl} target="_blank" rel="noreferrer"><ExternalLink /> Website</a>

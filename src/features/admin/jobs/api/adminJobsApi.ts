@@ -2,6 +2,10 @@ import apiClient from "@/lib/apiClient";
 
 import type {
     AdminJobListParams,
+    AdminJobMutationResponse,
+    CreateAdminJobRequest,
+    PublishAdminJobRequest,
+    UpdateAdminJobRequest,
     AdminJobResponse,
     AdminJobsResponse,
     UpdateAdminJobModerationRequest,
@@ -26,5 +30,26 @@ export async function updateAdminJobModeration(
         `/admin/jobs/${encodeURIComponent(jobId)}/moderation`,
         input,
     );
+    return response.data;
+}
+
+
+export async function createAdminJob(input: CreateAdminJobRequest): Promise<AdminJobMutationResponse> {
+    const response = await apiClient.post<AdminJobMutationResponse>("/admin/jobs", input);
+    return response.data;
+}
+
+export async function updateAdminJob(jobId: string, input: UpdateAdminJobRequest): Promise<AdminJobMutationResponse> {
+    const response = await apiClient.patch<AdminJobMutationResponse>(`/admin/jobs/${encodeURIComponent(jobId)}`, input);
+    return response.data;
+}
+
+export async function publishAdminJob(jobId: string, input: PublishAdminJobRequest): Promise<AdminJobMutationResponse> {
+    const response = await apiClient.post<AdminJobMutationResponse>(`/admin/jobs/${encodeURIComponent(jobId)}/publish`, input);
+    return response.data;
+}
+
+export async function archiveAdminJob(jobId: string): Promise<AdminJobMutationResponse> {
+    const response = await apiClient.post<AdminJobMutationResponse>(`/admin/jobs/${encodeURIComponent(jobId)}/archive`);
     return response.data;
 }

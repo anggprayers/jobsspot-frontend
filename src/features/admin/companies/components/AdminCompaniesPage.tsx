@@ -11,6 +11,7 @@ import {
     Eye,
     Filter,
     MapPin,
+    Plus,
     RefreshCcw,
     Search,
     ShieldBan,
@@ -90,15 +91,20 @@ export default function AdminCompaniesPage() {
                     </p>
                 </div>
 
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => void companiesQuery.refetch()}
-                    disabled={companiesQuery.isFetching}
-                >
-                    <RefreshCcw className={companiesQuery.isFetching ? "animate-spin" : ""} />
-                    Refresh
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                    <Button asChild>
+                        <Link href="/admin/companies/new"><Plus /> New company</Link>
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => void companiesQuery.refetch()}
+                        disabled={companiesQuery.isFetching}
+                    >
+                        <RefreshCcw className={companiesQuery.isFetching ? "animate-spin" : ""} />
+                        Refresh
+                    </Button>
+                </div>
             </section>
 
             <Card>

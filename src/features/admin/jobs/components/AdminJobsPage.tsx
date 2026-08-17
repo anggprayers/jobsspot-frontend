@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { BriefcaseBusiness, Eye, EyeOff, Filter, RefreshCcw } from "lucide-react";
+import { BriefcaseBusiness, Eye, EyeOff, Filter, Plus, RefreshCcw } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -45,11 +45,14 @@ export default function AdminJobsPage() {
                 <div>
                     <p className="text-sm font-semibold text-primary">Content moderation</p>
                     <h1 className="mt-1 text-3xl font-bold tracking-tight">Jobs</h1>
-                    <p className="mt-2 text-muted-foreground">Review job postings across the platform and control public visibility without changing the employer&apos;s job status.</p>
+                    <p className="mt-2 text-muted-foreground">Create, edit, publish, archive, and moderate JobsSpot listings directly as Platform Admin.</p>
                 </div>
-                <Button variant="outline" onClick={() => void jobsQuery.refetch()} disabled={jobsQuery.isFetching}>
-                    <RefreshCcw className={jobsQuery.isFetching ? "animate-spin" : ""} /> Refresh
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                    <Button asChild><Link href="/admin/jobs/new"><Plus /> New job</Link></Button>
+                    <Button variant="outline" onClick={() => void jobsQuery.refetch()} disabled={jobsQuery.isFetching}>
+                        <RefreshCcw className={jobsQuery.isFetching ? "animate-spin" : ""} /> Refresh
+                    </Button>
+                </div>
             </section>
 
             <Card>

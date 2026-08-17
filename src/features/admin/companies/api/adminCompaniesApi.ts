@@ -4,6 +4,9 @@ import type {
     AdminCompaniesResponse,
     AdminCompanyListParams,
     AdminCompanyResponse,
+    AdminCompanyMutationResponse,
+    CreateAdminCompanyRequest,
+    UpdateAdminCompanyRequest,
     UpdateAdminCompanyResponse,
     UpdateAdminCompanySuspensionRequest,
     UpdateAdminCompanyVerificationRequest,
@@ -50,5 +53,23 @@ export async function updateAdminCompanyVerification(
         input,
     );
 
+    return response.data;
+}
+
+export async function createAdminCompany(
+    input: CreateAdminCompanyRequest,
+): Promise<AdminCompanyMutationResponse> {
+    const response = await apiClient.post<AdminCompanyMutationResponse>("/admin/companies", input);
+    return response.data;
+}
+
+export async function updateAdminCompany(
+    companyId: string,
+    input: UpdateAdminCompanyRequest,
+): Promise<AdminCompanyMutationResponse> {
+    const response = await apiClient.patch<AdminCompanyMutationResponse>(
+        `/admin/companies/${companyId}`,
+        input,
+    );
     return response.data;
 }

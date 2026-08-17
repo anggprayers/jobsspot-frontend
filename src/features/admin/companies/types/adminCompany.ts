@@ -127,6 +127,42 @@ export type AdminCompanyResponse = {
     company: AdminCompanyDetails;
 };
 
+
+export type AdminCompanyMutationRecord = {
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    websiteUrl: string | null;
+    logoUrl: string | null;
+    bannerUrl: string | null;
+    industry: string | null;
+    companySize: string | null;
+    location: string | null;
+    isVerified: boolean;
+    suspendedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+};
+
+export type CreateAdminCompanyRequest = {
+    name: string;
+    description?: string;
+    websiteUrl?: string;
+    industry?: string;
+    companySize?: string;
+    location?: string;
+};
+
+export type UpdateAdminCompanyRequest = Partial<CreateAdminCompanyRequest>;
+
+export type AdminCompanyMutationResponse = {
+    success: true;
+    message: string;
+    company: AdminCompanyMutationRecord;
+};
+
 export type UpdateAdminCompanySuspensionRequest = {
     suspended: boolean;
     reason?: string;

@@ -1,13 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+    createAdminCompany,
     getAdminCompanies,
     getAdminCompany,
+    updateAdminCompany,
     updateAdminCompanySuspension,
     updateAdminCompanyVerification,
 } from "../api/adminCompaniesApi";
 import type {
     AdminCompanyListParams,
+    CreateAdminCompanyRequest,
+    UpdateAdminCompanyRequest,
     UpdateAdminCompanySuspensionRequest,
     UpdateAdminCompanyVerificationRequest,
 } from "../types/adminCompany";
@@ -58,6 +62,22 @@ export function useUpdateAdminCompanyVerification(companyId: string) {
     return useMutation({
         mutationFn: (input: UpdateAdminCompanyVerificationRequest) =>
             updateAdminCompanyVerification(companyId, input),
+        onSuccess: invalidate,
+    });
+}
+
+export function useCreateAdminCompany() {
+    const invalidate = useInvalidateCompanyQueries();
+    return useMutation({
+        mutationFn: (input: CreateAdminCompanyRequest) => createAdminCompany(input),
+        onSuccess: invalidate,
+    });
+}
+
+export function useUpdateAdminCompany(companyId: string) {
+    const invalidate = useInvalidateCompanyQueries();
+    return useMutation({
+        mutationFn: (input: UpdateAdminCompanyRequest) => updateAdminCompany(companyId, input),
         onSuccess: invalidate,
     });
 }

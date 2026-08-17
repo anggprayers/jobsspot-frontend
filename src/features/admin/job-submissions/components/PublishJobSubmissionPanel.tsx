@@ -19,6 +19,12 @@ import { getAdminErrorMessage } from "../../shared/utils/adminFormatters";
 import { usePublishAdminJobSubmission } from "../hooks/useAdminJobSubmissions";
 import type { AdminJobSubmissionDetails } from "../types/adminJobSubmission";
 
+function getDefaultApplicationDeadline() {
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    return date.toISOString().slice(0, 10);
+}
+
 function getInitialLocation(locationText: string, workplaceType: JobFormValues["workplaceType"]) {
     if (workplaceType === "REMOTE") {
         return { city: "", stateRegion: "" };
@@ -68,6 +74,7 @@ export default function PublishJobSubmissionPanel({ submission }: { submission: 
             workplaceType: submission.workplaceType,
             city: location.city,
             stateRegion: location.stateRegion,
+            applicationDeadline: getDefaultApplicationDeadline(),
         };
     }, [submission]);
 

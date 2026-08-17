@@ -10,6 +10,9 @@ export type AdminJobListItem = {
     workplaceType: string;
     experienceLevel: string;
     location: string | null;
+    city?: string | null;
+    stateRegion?: string | null;
+    countryCode?: string;
     publishedAt: string | null;
     expiresAt: string | null;
     adminHiddenAt: string | null;
@@ -92,4 +95,33 @@ export type UpdateAdminJobModerationResponse = {
     success: true;
     message: string;
     job: Pick<AdminJobDetails, "id" | "title" | "slug" | "status" | "adminHiddenAt" | "adminHiddenReason" | "adminHiddenById" | "updatedAt" | "moderationStatus">;
+};
+
+
+export type AdminJobPayload = {
+    categoryId: string;
+    title: string;
+    description: string;
+    requirements?: string;
+    responsibilities?: string;
+    employmentType: string;
+    workplaceType: string;
+    experienceLevel: string;
+    city?: string | null;
+    stateRegion?: string | null;
+    countryCode: string;
+    salaryMin?: number;
+    salaryMax?: number;
+    salaryCurrency: string;
+    salaryPeriod?: string;
+    applicationDeadline?: string;
+};
+
+export type CreateAdminJobRequest = { companyId: string; job: AdminJobPayload };
+export type UpdateAdminJobRequest = Partial<AdminJobPayload>;
+export type PublishAdminJobRequest = { applicationDeadline?: string };
+export type AdminJobMutationResponse = {
+    success: true;
+    message: string;
+    job: { id: string; title: string; slug: string; status: AdminJobStatus; updatedAt?: string; publishedAt?: string | null; expiresAt?: string | null };
 };

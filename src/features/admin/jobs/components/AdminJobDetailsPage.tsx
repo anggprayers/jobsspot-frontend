@@ -11,6 +11,7 @@ import {
     EyeOff,
     FileWarning,
     MapPin,
+    Pencil,
     RefreshCcw,
     UserRound,
 } from "lucide-react";
@@ -20,6 +21,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { formatAdminDate, formatAdminLabel, getAdminErrorMessage } from "../../shared/utils/adminFormatters";
 import { useAdminJob } from "../hooks/useAdminJobs";
+import AdminJobArchiveDialog from "./AdminJobArchiveDialog";
+import AdminJobPublishDialog from "./AdminJobPublishDialog";
 import JobModerationDialog from "./JobModerationDialog";
 
 type AdminJobDetailsPageProps = { jobId: string };
@@ -28,6 +31,8 @@ export default function AdminJobDetailsPage({ jobId }: AdminJobDetailsPageProps)
     const jobQuery = useAdminJob(jobId);
     const job = jobQuery.data?.job;
     const [moderationOpen, setModerationOpen] = useState(false);
+    const [publishOpen, setPublishOpen] = useState(false);
+    const [archiveOpen, setArchiveOpen] = useState(false);
 
     if (jobQuery.isLoading) {
         return <div className="mx-auto h-72 w-full max-w-7xl animate-pulse rounded-2xl bg-muted" />;
@@ -73,6 +78,15 @@ export default function AdminJobDetailsPage({ jobId }: AdminJobDetailsPageProps)
                         <p className="mt-2 text-muted-foreground">{job.company.name} · {job.category.name}</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
+                        {!job.deletedAt && (
+                            <Button asChild><Link href={`/admin/jobs/${job.id}/edit`}><Pencil /> Edit job</Link></Button>
+                        )}
+                        {(job.status === "DRAFT" || job.status === "PAUSED") && !job.deletedAt && (
+                            <Button type="button" onClick={() => setPublishOpen(true)}>Publish</Button>
+                        )}
+                        {job.status !== "ARCHIVED" && !job.deletedAt && (
+                            <Button type="button" variant="outline" onClick={() => setArchiveOpen(true)}>Archive</Button>
+                        )}
                         {job.status === "PUBLISHED" && job.moderationStatus === "VISIBLE" && !job.deletedAt && !job.company.suspendedAt && !job.company.deletedAt && (
                             <Button asChild variant="outline"><Link href={`/jobs/${job.slug}`} target="_blank"><Eye /> Public view</Link></Button>
                         )}
@@ -112,7 +126,7 @@ export default function AdminJobDetailsPage({ jobId }: AdminJobDetailsPageProps)
                     <Card><CardHeader><CardTitle>Posting details</CardTitle></CardHeader><CardContent className="space-y-4 text-sm">
                         <div className="flex gap-3"><Building2 className="mt-0.5 size-4 text-muted-foreground" /><div><p className="font-medium">Company</p><Link className="text-primary hover:underline" href={`/admin/companies/${job.company.id}`}>{job.company.name}</Link></div></div>
                         <div className="flex gap-3"><MapPin className="mt-0.5 size-4 text-muted-foreground" /><div><p className="font-medium">Location</p><p className="text-muted-foreground">{job.location ?? "Not specified"}</p></div></div>
-                        <div className="flex gap-3"><CalendarDays className="mt-0.5 size-4 text-muted-foreground" /><div><p className="font-medium">Expiration</p><p className="text-muted-foreground">{job.expiresAt ? formatAdminDate(job.expiresAt) : "Not set"}</p></div></div>
+                        <div className="flex gap-3"><CalendarDays className="mt-0.5 size-4 text-muted-foreground" /><div><p className="font-medium">Application deadline</p><p className="text-muted-foreground">{job.applicationDeadline ? formatAdminDate(job.applicationDeadline) : "Will default to 30 days when published"}</p>{job.expiresAt && <p className="mt-1 text-xs text-muted-foreground">Public expiration: {formatAdminDate(job.expiresAt)}</p>}</div></div>
                         <div className="flex gap-3"><UserRound className="mt-0.5 size-4 text-muted-foreground" /><div><p className="font-medium">Created by</p><p className="text-muted-foreground">{job.createdBy.firstName} {job.createdBy.lastName}</p></div></div>
                         <div className="flex gap-3"><BriefcaseBusiness className="mt-0.5 size-4 text-muted-foreground" /><div><p className="font-medium">Work setup</p><p className="text-muted-foreground">{formatAdminLabel(job.employmentType)} · {formatAdminLabel(job.workplaceType)} · {formatAdminLabel(job.experienceLevel)}</p></div></div>
                     </CardContent></Card>
@@ -121,6 +135,8 @@ export default function AdminJobDetailsPage({ jobId }: AdminJobDetailsPageProps)
                 </div>
             </div>
 
+            {publishOpen && <AdminJobPublishDialog job={job} open={publishOpen} onOpenChange={setPublishOpen} />}
+            {archiveOpen && <AdminJobArchiveDialog job={job} open={archiveOpen} onOpenChange={setArchiveOpen} />}
             {moderationOpen && <JobModerationDialog job={job} open={moderationOpen} onOpenChange={setModerationOpen} />}
         </div>
     );

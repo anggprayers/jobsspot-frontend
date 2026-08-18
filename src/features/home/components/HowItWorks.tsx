@@ -14,30 +14,30 @@ import {
 
 import Container from "@/components/layout/Container";
 
-type Audience = "job-seekers" | "employers";
+type Audience = "job-seekers" | "hiring";
 
 const jobSeekerSteps = [
     {
         icon: UserRound,
         title: "Create your account",
         description:
-            "Build your profile and provide the information employers need.",
+            "Build your profile and keep your resume ready for applications.",
     },
     {
         icon: Search,
         title: "Find the right opportunity",
         description:
-            "Search jobs by role, location, workplace type, and experience level.",
+            "Search by role, company, location, work setup, and experience level.",
     },
     {
         icon: Send,
         title: "Apply with confidence",
         description:
-            "Submit applications and keep track of opportunities in one place.",
+            "Apply through JobsSpot and track meaningful status updates in one place.",
     },
 ] as const;
 
-const employerSteps = [
+const hiringSteps = [
     {
         icon: FileText,
         title: "Send the job details",
@@ -54,7 +54,7 @@ const employerSteps = [
         icon: Building2,
         title: "JobsSpot publishes the role",
         description:
-            "After confirmation, Platform Admin prepares the structured listing and manages it on JobsSpot.",
+            "After confirmation, JobsSpot prepares the structured listing, publishes it, and manages it on the platform.",
     },
 ] as const;
 
@@ -65,7 +65,7 @@ export default function HowItWorks() {
     const steps =
         audience === "job-seekers"
             ? jobSeekerSteps
-            : employerSteps;
+            : hiringSteps;
 
     return (
         <section
@@ -112,20 +112,20 @@ export default function HowItWorks() {
                             </button>
 
                             <button
-                                id="how-it-works-employers"
+                                id="how-it-works-hiring"
                                 type="button"
                                 onClick={() =>
-                                    setAudience("employers")
+                                    setAudience("hiring")
                                 }
                                 className={`inline-flex min-h-11 items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors sm:px-5 ${
                                     audience ===
-                                    "employers"
+                                    "hiring"
                                         ? "bg-white text-blue-700 shadow-sm"
                                         : "text-slate-600 hover:text-slate-950"
                                 }`}
                             >
                                 <Building2 size={17} />
-                                Employers
+                                Hiring Teams
                             </button>
                         </div>
                     </div>

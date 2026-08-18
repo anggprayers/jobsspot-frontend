@@ -57,7 +57,7 @@ export default function ContactSection() {
                                         {SUPPORT_EMAIL}
                                     </p>
                                     <p className="mt-1 text-sm leading-6 text-slate-600">
-                                        For hiring needs, job posting arrangements, employer support,
+                                        For hiring needs, job posting arrangements, hiring support,
                                         partnerships, and general inquiries.
                                     </p>
                                 </div>
@@ -79,7 +79,7 @@ export default function ContactSection() {
                                         {SUPPORT_PHONE_DISPLAY}
                                     </p>
                                     <p className="mt-1 text-sm leading-6 text-slate-600">
-                                        For direct employer, hiring, partnership, or business inquiries.
+                                        For direct hiring, partnership, or business inquiries.
                                     </p>
                                 </div>
                             </a>

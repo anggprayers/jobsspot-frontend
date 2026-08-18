@@ -13,6 +13,7 @@ export const metadata: Metadata = createPublicPageMetadata({
 });
 
 const effectiveDate = "August 6, 2026";
+const lastUpdated = "August 18, 2026";
 
 const sections = [
     {
@@ -23,8 +24,8 @@ const sections = [
                 <p>
                     These Terms and Conditions govern your access to and use of
                     JobsSpot, including its public job pages, accounts,
-                    applications, resumes, company workspaces, employer tools,
-                    team invitations, email features, and related services.
+                    applications, resumes, public job-submission flow, company
+                    pages, email features, and related services.
                 </p>
                 <p>
                     By accessing or using JobsSpot, you agree to these Terms and
@@ -41,9 +42,9 @@ const sections = [
                 <p>
                     JobsSpot provides technology that helps job seekers discover
                     opportunities, prepare profiles and resumes, submit
-                    applications, and track activity. It also helps employers
-                    create company workspaces, publish jobs, receive applications,
-                    and manage recruitment workflows.
+                    applications, and track activity. It also lets hiring
+                    organizations submit jobs for review while JobsSpot administrators
+                    prepare, publish, and manage approved listings and applications.
                 </p>
                 <p>
                     Unless expressly stated otherwise, JobsSpot is not the
@@ -76,7 +77,7 @@ const sections = [
                 <ul>
                     <li>provide accurate, current, and complete information;</li>
                     <li>keep your login credentials and email account secure;</li>
-                    <li>use only accounts and company workspaces you are authorized to access;</li>
+                    <li>use only accounts and platform areas you are authorized to access;</li>
                     <li>promptly update information that becomes inaccurate;</li>
                     <li>notify JobsSpot if you suspect unauthorized access or account misuse.</li>
                 </ul>
@@ -111,21 +112,21 @@ const sections = [
         ),
     },
     {
-        id: "employers",
-        title: "Employer responsibilities",
+        id: "hiring-organizations",
+        title: "Job submitter and hiring-organization responsibilities",
         content: (
             <>
-                <p>Employers and company team members must:</p>
+                <p>Job submitters and hiring organizations must:</p>
                 <ul>
                     <li>represent a legitimate organization or authorized hiring activity;</li>
-                    <li>publish accurate job titles, descriptions, locations, workplace arrangements, qualifications, compensation information, deadlines, and status;</li>
+                    <li>provide accurate job titles, descriptions, locations, workplace arrangements, qualifications, compensation information, deadlines, and availability;</li>
                     <li>use applicant data only for lawful recruitment and related recordkeeping;</li>
                     <li>respect equal-opportunity, labor, anti-discrimination, privacy, consumer, pay-transparency, and other applicable laws;</li>
                     <li>protect resumes and applicant information from unauthorized access, sharing, or misuse;</li>
                     <li>keep company and job information current and remove or update roles that are no longer available.</li>
                 </ul>
                 <p>
-                    Employers are solely responsible for their recruitment
+                    Hiring organizations are solely responsible for their recruitment
                     decisions, communications, screening practices, interviews,
                     offers, employment relationships, and compliance obligations.
                     For job advertisements covered by New York law, this includes
@@ -136,23 +137,21 @@ const sections = [
         ),
     },
     {
-        id: "company-roles",
-        title: "Company workspaces, invitations, and roles",
+        id: "job-submission-review",
+        title: "Job submissions, review, and publication",
         content: (
             <>
                 <p>
-                    Company owners and authorized administrators may invite users
-                    and assign workspace roles such as Owner, Admin, Recruiter,
-                    or Viewer. Each role has different permissions. Users must not
-                    attempt to bypass role restrictions or exercise authority they
-                    have not been granted.
+                    Submitting a job does not guarantee publication. JobsSpot may
+                    review the role, company information, hiring contact details,
+                    and other information before approving a listing. We may contact
+                    the submitter to clarify details or confirm the posting arrangement.
                 </p>
                 <p>
-                    Invitation links are private, limited-use credentials. Do not
-                    publish, forward, sell, or intentionally expose them. A
-                    company is responsible for reviewing its active members,
-                    removing access when no longer needed, and transferring
-                    ownership carefully.
+                    Any commercial arrangement for a job posting is handled directly
+                    with JobsSpot before publication. Unless JobsSpot expressly offers
+                    an online checkout in the future, the website itself does not
+                    process job-posting payments.
                 </p>
             </>
         ),
@@ -185,17 +184,19 @@ const sections = [
         content: (
             <>
                 <p>
-                    When a job seeker submits an application, JobsSpot provides
-                    the application and selected resume to the relevant employer.
-                    Employers may update application statuses and communicate
-                    with applicants. Status labels are workflow tools and do not
-                    create a guarantee, contract, offer, or employment right.
+                    When a job seeker submits an application, JobsSpot stores the
+                    application and selected resume. Platform administrators may
+                    review the application, coordinate with the relevant hiring
+                    organization, securely share selected application documents when
+                    appropriate, and update status information. Status labels are
+                    workflow tools and do not create a guarantee, contract, offer,
+                    or employment right.
                 </p>
                 <p>
                     Users are responsible for verifying the identity and
                     legitimacy of people they communicate with. JobsSpot may send
                     transactional messages necessary to operate accounts,
-                    security, applications, invitations, and support features.
+                    security, applications, job submissions, and support features.
                 </p>
             </>
         ),
@@ -229,7 +230,7 @@ const sections = [
             <>
                 <p>You must not:</p>
                 <ul>
-                    <li>access accounts, resumes, applications, company workspaces, or systems without authorization;</li>
+                    <li>access accounts, resumes, applications, admin areas, or systems without authorization;</li>
                     <li>scrape, harvest, copy, resell, or build databases from JobsSpot content except where expressly permitted;</li>
                     <li>send spam, automate abusive requests, evade rate limits, or interfere with platform operation;</li>
                     <li>upload malicious code or attempt to test, probe, bypass, or exploit security controls without written authorization;</li>
@@ -276,22 +277,20 @@ const sections = [
         ),
     },
     {
-        id: "beta-fees",
-        title: "Beta services, pricing, and future paid features",
+        id: "job-posting-arrangements",
+        title: "Job-posting arrangements and fees",
         content: (
             <>
                 <p>
-                    JobsSpot may make some or all services available without
-                    charge during a beta or introductory period. Free access does
-                    not guarantee that every feature will remain free or available
-                    indefinitely.
+                    JobsSpot may offer free or paid job-posting arrangements. The
+                    applicable scope, price, duration, and other terms are confirmed
+                    directly with JobsSpot before an approved listing is published.
                 </p>
                 <p>
-                    If paid plans or services are introduced, the applicable
-                    price, billing period, included features, limits, renewal,
-                    cancellation, and refund terms will be displayed before you
-                    purchase. Additional billing terms may apply, and we will not
-                    charge you without an authorized transaction.
+                    JobsSpot does not currently provide an automated subscription or
+                    online checkout flow for job postings. If that changes, additional
+                    billing terms and disclosures will be provided before any online
+                    purchase is completed.
                 </p>
             </>
         ),
@@ -404,7 +403,7 @@ const sections = [
         title: "Changes to these Terms",
         content: (
             <p>
-                We may update these Terms as the platform, pricing, safety rules,
+                We may update these Terms as the platform, posting arrangements, safety rules,
                 business practices, or legal requirements change. We will update
                 the date at the top of this page and provide additional notice
                 when required. Continuing to use JobsSpot after revised Terms take
@@ -430,9 +429,9 @@ export default function TermsAndConditionsPage() {
         <LegalDocumentPage
             eyebrow="Platform rules"
             title="Terms and Conditions"
-            description="These Terms explain the responsibilities of job seekers, employers, company team members, and other users of JobsSpot."
+            description="These Terms explain the responsibilities of job seekers, job submitters, hiring organizations, and other users of JobsSpot."
             effectiveDate={effectiveDate}
-            lastUpdated={effectiveDate}
+            lastUpdated={lastUpdated}
             sections={sections}
         />
     );

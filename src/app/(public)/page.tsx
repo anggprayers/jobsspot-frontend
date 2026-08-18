@@ -20,7 +20,7 @@ import {
 
 export const metadata: Metadata = {
     title: {
-        absolute: "JobsSpot | Find Jobs and Connect with Employers",
+        absolute: "JobsSpot | Find Jobs and Apply with Confidence",
     },
     description: SITE_DESCRIPTION,
     alternates: {
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
         siteName: SITE_NAME,
         locale: "en_US",
         url: absoluteUrl("/"),
-        title: "JobsSpot | Find Jobs and Connect with Employers",
+        title: "JobsSpot | Find Jobs and Apply with Confidence",
         description: SITE_DESCRIPTION,
         images: [
             {
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary",
-        title: "JobsSpot | Find Jobs and Connect with Employers",
+        title: "JobsSpot | Find Jobs and Apply with Confidence",
         description: SITE_DESCRIPTION,
         images: [absoluteUrl("/logo.png")],
     },
@@ -99,8 +99,8 @@ export default function HomePage() {
                         </h1>
 
                         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
-                            Search meaningful job opportunities and connect with employers looking
-                            for skills like yours.
+                            Search meaningful job opportunities, apply through JobsSpot, and keep
+                            track of your applications in one place.
                         </p>
 
                         <Suspense

@@ -369,11 +369,11 @@ export default function TrustedTeams() {
             <Container>
                 <div className="mx-auto max-w-3xl text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-                        Trusted by growing teams
+                        Companies hiring on JobsSpot
                     </h2>
 
                     <p className="mt-4 text-lg leading-8 text-slate-600">
-                        Explore companies already using JobsSpot to connect with candidates.
+                        Explore organizations with active opportunities published on JobsSpot.
                     </p>
 
                     {shouldUseCarousel && (
@@ -396,7 +396,7 @@ export default function TrustedTeams() {
                             ? styles.isDragging
                             : ""
                     }`}
-                    aria-label="Companies using JobsSpot"
+                    aria-label="Companies with jobs on JobsSpot"
                     onMouseEnter={() =>
                         setIsHovered(true)
                     }

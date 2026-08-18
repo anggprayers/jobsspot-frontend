@@ -69,8 +69,8 @@ export default function LatestJobs() {
                             </h2>
 
                             <p className="mt-4 text-lg leading-8 text-slate-600">
-                                Explore recently published opportunities from employers actively
-                                looking for new talent.
+                                Explore recently published opportunities reviewed and managed
+                                through JobsSpot.
                             </p>
                         </div>
 
@@ -126,8 +126,8 @@ export default function LatestJobs() {
                                     </h3>
 
                                     <p className="mx-auto mt-3 max-w-lg text-base leading-7 text-slate-600">
-                                        New opportunities will appear here as soon as employers
-                                        begin publishing job listings.
+                                        New opportunities will appear here as soon as JobsSpot
+                                        publishes approved job listings.
                                     </p>
                                 </div>
                             )}

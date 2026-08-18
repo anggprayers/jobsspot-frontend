@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const SITE_NAME = "JobsSpot";
 export const SITE_DESCRIPTION =
-    "Search job opportunities across New York and the United States, connect with employers, and manage applications with JobsSpot.";
+    "Search job opportunities across New York and the United States, apply through JobsSpot, and track your applications in one place.";
 
 const FALLBACK_SITE_URL = "https://jobsspot.net";
 

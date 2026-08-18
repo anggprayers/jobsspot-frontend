@@ -81,8 +81,8 @@ export default function Header() {
         setIsSignInOpen(true);
     }
 
-    const employerHref = "/post-a-job";
-    const employerLabel = "Post a Job";
+    const postJobHref = "/post-a-job";
+    const postJobLabel = "Post a Job";
 
     return (
         <>
@@ -104,10 +104,15 @@ export default function Header() {
                                 )}
 
                                 {isInitializing ? (
-                                    <div
-                                        aria-hidden="true"
-                                        className="h-12 w-32 animate-pulse rounded-xl bg-slate-100"
-                                    />
+                                    <button
+                                        type="button"
+                                        disabled
+                                        aria-busy="true"
+                                        className="inline-flex min-h-12 cursor-wait items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-base font-semibold text-slate-800 shadow-sm"
+                                    >
+                                        <LogIn size={19} />
+                                        Sign In
+                                    </button>
                                 ) : isAuthenticated && user ? (
                                     <Link
                                         href="/account"
@@ -154,11 +159,11 @@ export default function Header() {
                                 )}
 
                                 <Link
-                                    href={employerHref}
+                                    href={postJobHref}
                                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-base font-semibold text-white shadow-sm shadow-blue-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md hover:shadow-blue-600/25 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200"
                                 >
                                     <Building2 size={19} />
-                                    {employerLabel}
+                                    {postJobLabel}
                                 </Link>
                             </div>
                         </div>
@@ -267,7 +272,15 @@ export default function Header() {
 
                             <div className="mt-7 space-y-3 border-t border-slate-200 pt-6">
                                 {isInitializing ? (
-                                    <div className="h-12 animate-pulse rounded-xl bg-slate-100" />
+                                    <button
+                                        type="button"
+                                        disabled
+                                        aria-busy="true"
+                                        className="flex min-h-12 w-full cursor-wait items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-800"
+                                    >
+                                        <LogIn className="size-5" />
+                                        Sign In
+                                    </button>
                                 ) : isAuthenticated ? (
                                     <>
                                         <Link
@@ -325,14 +338,14 @@ export default function Header() {
                                 )}
 
                                 <Link
-                                    href={employerHref}
+                                    href={postJobHref}
                                     onClick={() =>
                                         setIsMobileMenuOpen(false)
                                     }
                                     className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white shadow-sm shadow-blue-600/20 transition-colors hover:bg-blue-700"
                                 >
                                     <Building2 className="size-5" />
-                                    {employerLabel}
+                                    {postJobLabel}
                                 </Link>
                             </div>
                         </div>

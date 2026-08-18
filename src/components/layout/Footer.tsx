@@ -19,13 +19,17 @@ const jobSeekerLinks = [
     // },
 ] as const;
 
-const employerLinks = [
+const hiringLinks = [
     {
         label: "Post a Job",
         href: "/post-a-job",
     },
     {
-        label: "Employer Support",
+        label: "How It Works",
+        href: "/#how-it-works",
+    },
+    {
+        label: "Contact JobsSpot",
         href: "/#contact",
     },
 ] as const;
@@ -64,9 +68,9 @@ export default function Footer() {
                         <Logo textClassName="text-white" />
 
                         <p className="mt-7 max-w-lg text-base leading-8 text-slate-400">
-                            Connecting talented professionals with companies looking for their next
-                            great hire. Whether you&apos;re searching for your dream job or building
-                            your team, JobsSpot helps you get there faster.
+                            Find job opportunities, apply through JobsSpot, and keep your job search organized.
+                            Hiring teams can send us a role in minutes and JobsSpot will review, prepare, and
+                            manage the listing through publication.
                         </p>
                     </div>
 
@@ -91,11 +95,11 @@ export default function Footer() {
 
                     <div>
                         <h2 className="text-base font-bold uppercase tracking-[0.12em] text-white">
-                            Employers
+                            Hiring
                         </h2>
 
                         <ul className="mt-7 space-y-4">
-                            {employerLinks.map((link) => (
+                            {hiringLinks.map((link) => (
                                 <li key={`${link.label}-${link.href}`}>
                                     <Link
                                         href={link.href}
@@ -110,7 +114,7 @@ export default function Footer() {
 
                     <div>
                         <h2 className="text-base font-bold uppercase tracking-[0.12em] text-white">
-                            Company
+                            JobsSpot
                         </h2>
 
                         <ul className="mt-7 space-y-4">

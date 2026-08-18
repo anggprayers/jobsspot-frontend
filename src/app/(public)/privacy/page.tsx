@@ -13,6 +13,7 @@ export const metadata: Metadata = createPublicPageMetadata({
 });
 
 const effectiveDate = "August 10, 2026";
+const lastUpdated = "August 18, 2026";
 
 const sections = [
     {
@@ -23,8 +24,8 @@ const sections = [
                 <p>
                     This Privacy Policy explains how JobsSpot collects, uses,
                     stores, shares, and protects personal information when you
-                    use our website, job-seeker services, employer workspace,
-                    company pages, job listings, applications, email features,
+                    use our website, job-seeker services, public job-submission
+                    flow, company pages, job listings, applications, email features,
                     and related services.
                 </p>
                 <p>
@@ -32,8 +33,8 @@ const sections = [
                     policy, <strong>JobsSpot</strong>, <strong>we</strong>,
                     <strong> us</strong>, and <strong>our</strong> refer to the
                     JobsSpot platform. <strong>You</strong> refers to a visitor,
-                    job seeker, employer representative, company team member,
-                    applicant, or other person who interacts with JobsSpot.
+                    job seeker, job submitter, hiring representative, applicant,
+                    or other person who interacts with JobsSpot.
                 </p>
             </>
         ),
@@ -58,15 +59,15 @@ const sections = [
                         preferences, applications, and application activity.
                     </li>
                     <li>
-                        <strong>Employer and company information</strong>, such
-                        as company profile details, branding images, company
-                        memberships, assigned roles, job postings, applicant
-                        actions, and workspace activity.
+                        <strong>Job-submission and company information</strong>,
+                        such as company profile details, branding images, job
+                        submissions, job-listing details, hiring contact details,
+                        and review or publication activity.
                     </li>
                     <li>
                         <strong>Communications</strong>, including contact-form
-                        messages, email requests, support correspondence, and
-                        invitation details.
+                        messages, email requests, job-submission correspondence,
+                        and support communications.
                     </li>
                     <li>
                         <strong>Technical and usage information</strong>, such
@@ -90,8 +91,8 @@ const sections = [
             <>
                 <p>We collect information:</p>
                 <ul>
-                    <li>directly from you when you register, complete a profile, upload a resume, apply for a job, publish a job, invite a team member, or contact us;</li>
-                    <li>from employers and company team members when they manage jobs, applicants, roles, and company information;</li>
+                    <li>directly from you when you register, complete a profile, upload a resume, apply for a job, submit a job for review, or contact us;</li>
+                    <li>from job submitters and hiring organizations when they provide company, role, and contact information to JobsSpot;</li>
                     <li>from Google when you choose to sign in with Google, subject to the permissions and information shown during sign-in;</li>
                     <li>automatically through cookies, session technology, server logs, and security controls needed to operate the service.</li>
                 </ul>
@@ -106,9 +107,9 @@ const sections = [
                 <p>We use personal information to:</p>
                 <ul>
                     <li>create and secure accounts, verify email addresses, authenticate sessions, and recover account access;</li>
-                    <li>provide job search, profile, resume, saved-job, saved-search, application, employer, company, and team-management features;</li>
-                    <li>deliver submitted applications and the selected resume to the relevant employer;</li>
-                    <li>send service emails, security notices, verification messages, password-reset messages, company invitations, and contact confirmations;</li>
+                    <li>provide job search, profile, resume, saved-job, saved-search, application, public job-submission, company-listing, and admin-managed recruitment features;</li>
+                    <li>review applications and, when appropriate, securely provide relevant application documents to the hiring organization;</li>
+                    <li>send service emails, security notices, verification messages, password-reset messages, application updates, job-submission confirmations, and contact confirmations;</li>
                     <li>prevent spam, fraud, abuse, unauthorized access, and violations of our Terms;</li>
                     <li>maintain audit records, troubleshoot errors, improve reliability, and understand how core features are used;</li>
                     <li>comply with legal obligations and respond to lawful requests.</li>
@@ -123,23 +124,22 @@ const sections = [
         ),
     },
     {
-        id: "applications-employers",
-        title: "Job applications and employer access",
+        id: "applications-hiring-organizations",
+        title: "Job applications and hiring-organization access",
         content: (
             <>
                 <p>
-                    When you apply for a job, JobsSpot shares the application
-                    information and the exact resume you selected with the
-                    employer that posted the job and with authorized members of
-                    that employer&apos;s company workspace. Employers may use that
-                    information to evaluate your application, contact you, and
-                    update your application status.
+                    When you apply for a job, JobsSpot stores the application and
+                    the exact resume you selected. Platform administrators may
+                    review the application and, when needed for the hiring process,
+                    securely share selected application documents with the relevant
+                    hiring organization using controlled or time-limited access.
                 </p>
                 <p>
-                    Employers are responsible for handling applicant information
-                    lawfully and only for legitimate recruitment purposes. Their
-                    independent handling of information outside JobsSpot may be
-                    governed by their own privacy practices.
+                    Hiring organizations that receive applicant information are
+                    responsible for handling it lawfully and only for legitimate
+                    recruitment purposes. Their independent handling of information
+                    outside JobsSpot may be governed by their own privacy practices.
                 </p>
             </>
         ),
@@ -152,9 +152,9 @@ const sections = [
                 <p>We may share information with:</p>
                 <ul>
                     <li>
-                        <strong>Employers and authorized company members</strong>
-                        when you apply for a job or interact with their company
-                        workspace.
+                        <strong>Relevant hiring organizations</strong> when
+                        JobsSpot needs to coordinate an application or provide
+                        selected application documents for legitimate recruitment.
                     </li>
                     <li>
                         <strong>Service providers</strong> that support hosting,
@@ -199,7 +199,7 @@ const sections = [
                     signed in, rotate and protect sessions, remember necessary
                     preferences, preserve certain return paths, and maintain
                     platform security. Disabling essential cookies may prevent
-                    account and employer features from working correctly.
+                    account and submission features from working correctly.
                 </p>
                 <p>
                     JobsSpot may use Google Analytics to understand aggregate
@@ -369,7 +369,7 @@ export default function PrivacyPolicyPage() {
             title="Privacy Policy"
             description="This policy explains what JobsSpot collects, why we use it, when it may be shared, and the choices available to you."
             effectiveDate={effectiveDate}
-            lastUpdated={effectiveDate}
+            lastUpdated={lastUpdated}
             sections={sections}
         />
     );

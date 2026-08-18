@@ -404,7 +404,7 @@ export default function ApplyToJobDialog({
 
             toast.success(response.message, {
                 id: toastId,
-                description: `Your application to ${job.company.name} is now marked as submitted.`,
+                description: `JobsSpot received your application for ${job.title} at ${job.company.name}.`,
             });
 
             handleOpenChange(false);
@@ -548,13 +548,16 @@ export default function ApplyToJobDialog({
                             Apply for {job.title}
                         </DialogTitle>
 
-                        <DialogDescription>
-                            Submit your resume to {job.company.name}. Review your
-                            selection carefully before sending the application.
+                        <DialogDescription className="leading-6">
+                            Choose the resume you want to send and add an optional cover letter. JobsSpot receives the application and coordinates the next steps with {job.company.name}.
                         </DialogDescription>
                     </DialogHeader>
 
                     <div className="space-y-6 py-6">
+                        <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm leading-6 text-blue-800">
+                            Your selected resume is copied to this application so the exact file you submit stays attached to it. JobsSpot Platform Admin can securely review and share it with the hiring company when needed.
+                        </div>
+
                         <section>
                             <div className="flex items-center justify-between gap-4">
                                 <label
@@ -778,7 +781,7 @@ export default function ApplyToJobDialog({
                                         </span>
                                     </p>
                                     <p className="mt-1 text-xs text-slate-500">
-                                        Write a message or attach a PDF, DOC, or DOCX file.
+                                        Optional. Add a short note or attach an existing cover letter.
                                     </p>
                                 </div>
 
@@ -921,7 +924,7 @@ export default function ApplyToJobDialog({
                             ) : (
                                 <>
                                     <Send />
-                                    Submit application
+                                    Send application
                                 </>
                             )}
                         </Button>

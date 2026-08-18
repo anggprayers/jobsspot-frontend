@@ -7,6 +7,7 @@ import {
     Bookmark,
     BriefcaseBusiness,
     Building2,
+    CalendarClock,
     CheckCircle2,
     Clock3,
     LoaderCircle,
@@ -93,6 +94,26 @@ function formatSalary(job: PublicJobDetails) {
     ).toLowerCase()}`;
 }
 
+
+function formatDeadline(value: string | null) {
+    if (!value) {
+        return "No deadline specified";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "No deadline specified";
+    }
+
+    return date.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC",
+    });
+}
+
 function getCompanyInitials(companyName: string) {
     const words = companyName
         .trim()
@@ -171,6 +192,11 @@ export default function JobDetailsSidebar({
             label: "Experience",
             value: formatLabel(job.experienceLevel),
             icon: Sparkles,
+        },
+        {
+            label: "Application deadline",
+            value: formatDeadline(job.applicationDeadline),
+            icon: CalendarClock,
         },
     ];
 
@@ -432,11 +458,11 @@ export default function JobDetailsSidebar({
                                     : "Save Job"}
                     </button>
 
-                    <p className="mt-5 text-center text-base leading-7 text-slate-500">
+                    <div className="mt-5 rounded-xl bg-slate-50 px-4 py-3 text-center text-sm leading-6 text-slate-600">
                         {isAuthenticated
-                            ? "Manage your applications and saved jobs from your JobsSpot account."
-                            : "Sign in to apply, save this role, and track your application."}
-                    </p>
+                            ? "JobsSpot receives your application, keeps your status updated, and coordinates the hiring process with the company."
+                            : "Sign in to apply. JobsSpot will receive your application and keep you updated as the hiring process moves forward."}
+                    </div>
                 </section>
 
                 <section className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
@@ -472,14 +498,13 @@ export default function JobDetailsSidebar({
                             </h2>
 
                             <p className="mt-1 text-base text-slate-500">
-                                Employer on JobsSpot
+                                Company on JobsSpot
                             </p>
                         </div>
                     </Link>
 
                     <p className="mt-5 text-base leading-7 text-slate-600">
-                        View employer information and other
-                        available positions from this company.
+                        View company information and other available positions listed on JobsSpot.
                     </p>
 
                     <Link

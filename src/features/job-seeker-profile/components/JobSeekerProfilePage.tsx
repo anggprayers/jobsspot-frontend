@@ -241,7 +241,7 @@ function PersonalInformationSection({ user, profile }: PersonalInformationSectio
                         <div className="min-w-0 flex-1">
                             <CardTitle>Personal information</CardTitle>
                             <CardDescription className="mt-1">
-                                Keep your name, contact details, and location accurate for employers.
+                                Keep your name, contact details, and location accurate so JobsSpot can coordinate applications with hiring companies.
                             </CardDescription>
                         </div>
                     </div>
@@ -649,7 +649,7 @@ export default function JobSeekerProfilePage() {
                                 <div>
                                     <p className="font-semibold text-slate-950">Profile completion</p>
                                     <p className="mt-1 text-sm leading-6 text-slate-600">
-                                        Complete your personal and professional details so employers can review your background more quickly.
+                                        Complete your personal and professional details so JobsSpot and hiring companies can understand your background more quickly.
                                     </p>
                                 </div>
                             </div>

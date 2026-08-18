@@ -40,6 +40,9 @@ export default function JobSearchForm() {
             searchParams.toString(),
         );
 
+        // Category browsing has been retired from the public search experience.
+        params.delete("category");
+
         if (normalizedSearch) {
             params.set("search", normalizedSearch);
 

@@ -17,7 +17,6 @@ import {
     useSearchParams,
 } from "next/navigation";
 
-import { useJobCategories } from "../hooks/useJobCategories";
 import {
     employmentTypeFilterGroups,
     experienceLevelOptions,
@@ -60,7 +59,6 @@ type PayFilterPanelProps = Readonly<{
 }>;
 
 const ADVANCED_FILTER_KEYS = [
-    "category",
     "employmentType",
     "workplaceType",
     "experienceLevel",
@@ -398,16 +396,6 @@ export default function AdvancedJobFilters() {
     const [openFilter, setOpenFilter] =
         useState<FilterMenu | null>(null);
 
-    const {
-        data: categoriesData,
-        isLoading: isCategoriesLoading,
-    } = useJobCategories();
-
-    const categories =
-        categoriesData?.categories ?? [];
-
-    const selectedCategories =
-        getQueryValues(searchParams, "category");
     const selectedEmploymentTypes =
         getQueryValues(
             searchParams,
@@ -445,7 +433,6 @@ export default function AdvancedJobFilters() {
         hasPayFilter,
         selectedEmploymentTypes.length > 0,
         selectedWorkplaceTypes.length > 0,
-        selectedCategories.length > 0,
         selectedExperienceLevels.length > 0,
         hasListingTimeFilter,
     ].filter(Boolean).length;
@@ -479,15 +466,6 @@ export default function AdvancedJobFilters() {
                 [option.value, option.label] as const,
         ),
     );
-
-    const selectedCategoryLabels =
-        selectedCategories.map(
-            (slug) =>
-                categories.find(
-                    (category) =>
-                        category.slug === slug,
-                )?.name ?? slug,
-        );
 
     useEffect(() => {
         function handlePointerDown(
@@ -880,98 +858,6 @@ export default function AdvancedJobFilters() {
                                     ),
                                 )}
                             </div>
-                        </fieldset>
-                    </FilterDropdown>
-
-                    <FilterDropdown
-                        id="classification"
-                        label="Classification"
-                        summary={
-                            selectedCategoryLabels.length ===
-                            1
-                                ? selectedCategoryLabels[0] ??
-                                  "Classification"
-                                : selectedCategoryLabels.length >
-                                    1
-                                  ? `Classification (${selectedCategoryLabels.length})`
-                                  : "Classification"
-                        }
-                        isActive={
-                            selectedCategories.length > 0
-                        }
-                        isOpen={
-                            openFilter ===
-                            "classification"
-                        }
-                        onToggle={toggleOpenFilter}
-                        widthClassName="w-[min(28rem,calc(100vw-2rem))]"
-                    >
-                        <fieldset>
-                            <legend className="text-base font-bold text-slate-950">
-                                Classification
-                            </legend>
-
-                            {isCategoriesLoading && (
-                                <div className="mt-4 space-y-3">
-                                    {Array.from({
-                                        length: 6,
-                                    }).map(
-                                        (_, index) => (
-                                            <div
-                                                key={
-                                                    index
-                                                }
-                                                className="h-9 animate-pulse rounded-xl bg-slate-100"
-                                            />
-                                        ),
-                                    )}
-                                </div>
-                            )}
-
-                            {!isCategoriesLoading &&
-                                categories.length ===
-                                    0 && (
-                                    <p className="mt-4 text-sm text-slate-500">
-                                        No classifications
-                                        are available.
-                                    </p>
-                                )}
-
-                            {!isCategoriesLoading &&
-                                categories.length >
-                                    0 && (
-                                    <div className="mt-3 max-h-96 space-y-1 overflow-y-auto pr-1">
-                                        {categories.map(
-                                            (
-                                                category,
-                                            ) => (
-                                                <FilterCheckbox
-                                                    key={
-                                                        category.id
-                                                    }
-                                                    checked={selectedCategories.includes(
-                                                        category.slug,
-                                                    )}
-                                                    label={
-                                                        category.name
-                                                    }
-                                                    count={
-                                                        category.jobCount
-                                                    }
-                                                    onChange={() =>
-                                                        toggleValues(
-                                                            "category",
-                                                            selectedCategories,
-                                                            [
-                                                                category.slug,
-                                                            ],
-                                                        )
-                                                    }
-                                                />
-                                            ),
-                                        )}
-                                    </div>
-                                )}
                         </fieldset>
                     </FilterDropdown>
 

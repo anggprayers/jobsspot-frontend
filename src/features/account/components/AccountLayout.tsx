@@ -8,6 +8,7 @@ import {
     BriefcaseBusiness,
     ChevronDown,
     FileText,
+    LayoutDashboard,
     LoaderCircle,
     LogOut,
     SearchCheck,
@@ -26,14 +27,9 @@ type AccountLayoutProps = Readonly<{
 
 const availableLinks = [
     {
-        label: "Profile",
-        href: "/account/profile",
-        icon: UserRound,
-    },
-    {
-        label: "Resumes",
-        href: "/account/resumes",
-        icon: FileText,
+        label: "Overview",
+        href: "/account",
+        icon: LayoutDashboard,
     },
     {
         label: "Applications",
@@ -44,6 +40,16 @@ const availableLinks = [
         label: "Saved jobs",
         href: "/account/saved-jobs",
         icon: Bookmark,
+    },
+    {
+        label: "Resumes",
+        href: "/account/resumes",
+        icon: FileText,
+    },
+    {
+        label: "Profile",
+        href: "/account/profile",
+        icon: UserRound,
     },
     {
         label: "Saved searches",
@@ -230,7 +236,10 @@ function AccountNavigation({
         <nav aria-label="Job seeker account navigation" className="space-y-1">
             {availableLinks.map((link) => {
                 const Icon = link.icon;
-                const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+                const isActive =
+                    link.href === "/account"
+                        ? pathname === "/account"
+                        : pathname === link.href || pathname.startsWith(`${link.href}/`);
 
                 return (
                     <Link

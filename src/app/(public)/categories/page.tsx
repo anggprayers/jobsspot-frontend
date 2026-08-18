@@ -1,15 +1,5 @@
-import type { Metadata } from "next";
-
-import JobCategoriesPage from "@/features/categories/components/JobCategoriesPage";
-import { createPublicPageMetadata } from "@/lib/seo/site";
-
-export const metadata: Metadata = createPublicPageMetadata({
-    title: "Job Categories",
-    description:
-        "Browse active JobsSpot opportunities by job category and continue to filtered job results.",
-    path: "/categories",
-});
+import { permanentRedirect } from "next/navigation";
 
 export default function CategoriesPage() {
-    return <JobCategoriesPage />;
+    permanentRedirect("/jobs");
 }

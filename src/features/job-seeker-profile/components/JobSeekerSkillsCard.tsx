@@ -324,7 +324,7 @@ export default function JobSeekerSkillsCard() {
                                 <CardTitle>Skills</CardTitle>
 
                                 <CardDescription className="mt-1">
-                                    Add the technologies, tools, and professional skills employers
+                                    Add the technologies, tools, and professional skills hiring companies
                                     should know about.
                                 </CardDescription>
                             </div>

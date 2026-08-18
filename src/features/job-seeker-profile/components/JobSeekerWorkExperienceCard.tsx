@@ -290,7 +290,7 @@ function WorkExperienceFormDialog({
                     </DialogTitle>
 
                     <DialogDescription>
-                        Add accurate employment details that employers can
+                        Add accurate employment details that JobsSpot and hiring companies can
                         review alongside your applications.
                     </DialogDescription>
                 </DialogHeader>
@@ -772,7 +772,7 @@ export default function JobSeekerWorkExperienceCard() {
                                 <CardTitle>Work experience</CardTitle>
 
                                 <CardDescription className="mt-1">
-                                    Show employers where you have worked and
+                                    Show JobsSpot and hiring companies where you have worked and
                                     what you contributed.
                                 </CardDescription>
                             </div>

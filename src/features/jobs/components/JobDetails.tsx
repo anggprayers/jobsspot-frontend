@@ -174,7 +174,7 @@ export default function JobDetails({ slug, initialJob }: JobDetailsProps) {
                 </div>
 
                 <div className="mt-14 border-t border-slate-200 pt-12">
-                    <SimilarJobs currentJobId={job.id} categorySlug={job.category.slug} />
+                    <SimilarJobs job={job} />
                 </div>
             </Container>
         </section>

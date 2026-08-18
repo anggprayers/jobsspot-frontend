@@ -495,7 +495,7 @@ export default function ImportProfileFromResumeDialog({ user, profile }: Props) 
                             <div>
                                 <h3 className="font-bold text-slate-950">Professional profile</h3>
                                 <p className="mt-1 text-sm text-slate-500">
-                                    Your professional headline is a short role or title that quickly tells employers what you do or what kind of work you are looking for.
+                                    Your professional headline is a short role or title that quickly explains what you do or what kind of work you are looking for.
                                 </p>
                             </div>
                             {preview.professional.headline && (

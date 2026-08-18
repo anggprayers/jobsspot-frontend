@@ -10,10 +10,6 @@ const jobSeekerLinks = [
         href: "/jobs",
     },
     {
-        label: "Browse Categories",
-        href: "/categories",
-    },
-    {
         label: "Create Account",
         href: "/register",
     },

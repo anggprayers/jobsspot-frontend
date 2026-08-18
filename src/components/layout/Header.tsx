@@ -110,7 +110,7 @@ export default function Header() {
                                     />
                                 ) : isAuthenticated && user ? (
                                     <Link
-                                        href="/account/profile"
+                                        href="/account"
                                         className="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-400 hover:bg-slate-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200"
                                     >
                                         <span className="flex size-8 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
@@ -271,7 +271,7 @@ export default function Header() {
                                 ) : isAuthenticated ? (
                                     <>
                                         <Link
-                                            href="/account/profile"
+                                            href="/account"
                                             onClick={() =>
                                                 setIsMobileMenuOpen(
                                                     false,

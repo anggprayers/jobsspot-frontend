@@ -76,7 +76,6 @@ export default function JobsResults() {
         sort,
         search: searchParams.get("search") || undefined,
         location: searchParams.get("location") || undefined,
-        category: getCommaSeparatedQueryValue(searchParams, "category"),
         employmentType: getCommaSeparatedQueryValue(searchParams, "employmentType"),
         workplaceType: getCommaSeparatedQueryValue(searchParams, "workplaceType"),
         experienceLevel: getCommaSeparatedQueryValue(searchParams, "experienceLevel"),

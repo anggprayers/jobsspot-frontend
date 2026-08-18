@@ -92,6 +92,7 @@ export default function EditJobDialog({
                     title: job.title,
                     description: job.description,
                     requirements: job.requirements ?? "",
+                    preferredQualifications: job.preferredQualifications ?? "",
                     responsibilities: job.responsibilities ?? "",
                     employmentType: job.employmentType,
                     workplaceType: job.workplaceType,

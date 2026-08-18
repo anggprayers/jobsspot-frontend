@@ -35,7 +35,7 @@ type JobFormProps = {
     onDirtyChange?: (isDirty: boolean) => void;
 };
 
-type BulletFieldName = "responsibilities" | "requirements";
+type BulletFieldName = "responsibilities" | "requirements" | "preferredQualifications";
 
 type BulletField = ControllerRenderProps<JobFormValues, BulletFieldName>;
 
@@ -224,7 +224,7 @@ export default function JobForm({
 
                 {requiresPhysicalLocation ? (
                     <div className="space-y-2">
-                        <RequiredLabel htmlFor="city">City</RequiredLabel>
+                        <OptionalLabel htmlFor="city">City</OptionalLabel>
 
                         <Input
                             id="city"
@@ -240,11 +240,7 @@ export default function JobForm({
                 ) : null}
 
                 <div className="space-y-2">
-                    {requiresPhysicalLocation ? (
-                        <RequiredLabel htmlFor="stateRegion">State / region</RequiredLabel>
-                    ) : (
-                        <OptionalLabel htmlFor="stateRegion">State / region</OptionalLabel>
-                    )}
+                    <OptionalLabel htmlFor="stateRegion">State / region</OptionalLabel>
 
                     <Controller
                         name="stateRegion"
@@ -264,7 +260,7 @@ export default function JobForm({
                                     <SelectValue
                                         placeholder={
                                             requiresPhysicalLocation
-                                                ? "Select a state"
+                                                ? "Select a state or leave blank while drafting"
                                                 : "Select a state or leave U.S.-wide"
                                         }
                                     />
@@ -294,7 +290,11 @@ export default function JobForm({
                             Leave blank for a U.S.-wide remote role, or select a state to restrict
                             applicant location.
                         </p>
-                    ) : null}
+                    ) : (
+                        <p className="text-sm text-slate-500">
+                            Optional while drafting. City and state are required before publishing an on-site or hybrid job.
+                        </p>
+                    )}
                 </div>
 
                 <div className="space-y-2">
@@ -499,7 +499,7 @@ export default function JobForm({
             </div>
 
             <div className="space-y-2">
-                <OptionalLabel htmlFor="requirements">Requirements</OptionalLabel>
+                <OptionalLabel htmlFor="requirements">Required Qualifications</OptionalLabel>
 
                 <Controller
                     name="requirements"
@@ -509,7 +509,7 @@ export default function JobForm({
                             id="requirements"
                             rows={6}
                             placeholder={
-                                "• Excellent communication skills\n• Basic technical knowledge\n• Ability to work independently"
+                                "• 3+ years of relevant experience\n• Strong communication skills\n• Ability to work independently"
                             }
                             value={field.value ?? ""}
                             onBlur={field.onBlur}
@@ -530,6 +530,41 @@ export default function JobForm({
                     <p className="text-sm text-slate-500">
                         Press Enter to automatically add another bullet. Use Shift + Enter for a
                         normal line break.
+                    </p>
+                )}
+            </div>
+
+            <div className="space-y-2">
+                <OptionalLabel htmlFor="preferredQualifications">Preferred Qualifications</OptionalLabel>
+
+                <Controller
+                    name="preferredQualifications"
+                    control={control}
+                    render={({ field }) => (
+                        <Textarea
+                            id="preferredQualifications"
+                            rows={6}
+                            placeholder={
+                                "• Industry-specific experience\n• Relevant certification\n• Experience with similar tools or systems"
+                            }
+                            value={field.value ?? ""}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            ref={field.ref}
+                            onChange={(event) => {
+                                field.onChange(formatBulletValue(event.target.value));
+                            }}
+                            onKeyDown={(event) => handleBulletKeyDown(event, field)}
+                            aria-invalid={Boolean(errors.preferredQualifications)}
+                        />
+                    )}
+                />
+
+                {errors.preferredQualifications ? (
+                    <p className="text-sm text-red-600">{errors.preferredQualifications.message}</p>
+                ) : (
+                    <p className="text-sm text-slate-500">
+                        Nice-to-have qualifications only. Leave blank when the source does not specify any.
                     </p>
                 )}
             </div>

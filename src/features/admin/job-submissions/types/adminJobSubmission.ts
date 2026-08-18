@@ -126,6 +126,7 @@ export type PublishJobSubmissionRequest = {
         title: string;
         description: string;
         requirements?: string;
+        preferredQualifications?: string;
         responsibilities?: string;
         employmentType: JobFormValues["employmentType"];
         workplaceType: JobFormValues["workplaceType"];

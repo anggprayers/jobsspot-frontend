@@ -41,6 +41,7 @@ export type AdminJobDetails = Omit<AdminJobListItem, "counts"> & {
     createdById: string;
     description: string;
     requirements: string | null;
+    preferredQualifications: string | null;
     responsibilities: string | null;
     salaryMin: string | null;
     salaryMax: string | null;
@@ -104,6 +105,7 @@ export type AdminJobPayload = {
     title: string;
     description: string;
     requirements?: string;
+    preferredQualifications?: string;
     responsibilities?: string;
     employmentType: string;
     workplaceType: string;

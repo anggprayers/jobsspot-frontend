@@ -108,10 +108,13 @@ function getStructuredDescription(job: PublicJobDetails): string {
         ? `<p>Responsibilities:</p>${textBlockToHtml(job.responsibilities)}`
         : "";
     const requirements = job.requirements?.trim()
-        ? `<p>Requirements:</p>${textBlockToHtml(job.requirements)}`
+        ? `<p>Required Qualifications:</p>${textBlockToHtml(job.requirements)}`
+        : "";
+    const preferredQualifications = job.preferredQualifications?.trim()
+        ? `<p>Preferred Qualifications:</p>${textBlockToHtml(job.preferredQualifications)}`
         : "";
 
-    return `${details}${description}${responsibilities}${requirements}`;
+    return `${details}${description}${responsibilities}${requirements}${preferredQualifications}`;
 }
 
 function getBaseSalary(job: PublicJobDetails) {

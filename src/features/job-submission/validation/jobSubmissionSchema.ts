@@ -33,7 +33,6 @@ export const jobSubmissionSchema = z.object({
     location: z
         .string()
         .trim()
-        .min(2, "Enter the job location.")
         .max(160, "Location must not exceed 160 characters."),
     workplaceType: z.enum(workplaceTypes, {
         error: "Select a work arrangement.",

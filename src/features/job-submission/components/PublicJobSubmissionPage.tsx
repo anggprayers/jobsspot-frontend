@@ -373,7 +373,7 @@ export default function PublicJobSubmissionPage() {
                                 </label>
 
                                 <label className="sm:col-span-2">
-                                    <span className="text-sm font-semibold text-slate-800">Location *</span>
+                                    <span className="text-sm font-semibold text-slate-800">Location <span className="font-normal text-slate-500">(optional)</span></span>
                                     <div className="relative mt-2">
                                         <MapPin className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-slate-400" />
                                         <input
@@ -382,6 +382,9 @@ export default function PublicJobSubmissionPage() {
                                             className="min-h-12 w-full rounded-xl border border-slate-300 bg-white pl-12 pr-4 text-base text-slate-950 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                                         />
                                     </div>
+                                    <p className="mt-1.5 text-xs leading-5 text-slate-500">
+                                        Leave blank if the location is not confirmed yet. JobsSpot can complete it during review.
+                                    </p>
                                     <FieldError message={errors.location?.message} />
                                 </label>
 
@@ -534,7 +537,7 @@ export default function PublicJobSubmissionPage() {
                             <dl className="mt-7 grid gap-x-8 gap-y-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:grid-cols-2 sm:p-6">
                                 <PreviewItem label="Job title" value={previewValues.jobTitle} />
                                 <PreviewItem label="Company" value={previewValues.companyName} />
-                                <PreviewItem label="Location" value={previewValues.location} />
+                                <PreviewItem label="Location" value={previewValues.location || "Not provided"} />
                                 <PreviewItem
                                     label="Work arrangement"
                                     value={formatEnumLabel(previewValues.workplaceType, workplaceOptions)}

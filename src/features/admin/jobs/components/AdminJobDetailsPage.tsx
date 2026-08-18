@@ -109,7 +109,8 @@ export default function AdminJobDetailsPage({ jobId }: AdminJobDetailsPageProps)
                     <Card><CardHeader><CardTitle>Job content</CardTitle><CardDescription>Employer-provided posting content.</CardDescription></CardHeader><CardContent className="space-y-6 text-sm leading-7">
                         <div><p className="mb-2 font-semibold">Description</p><p className="whitespace-pre-line text-muted-foreground">{job.description}</p></div>
                         {job.responsibilities && <div><p className="mb-2 font-semibold">Responsibilities</p><p className="whitespace-pre-line text-muted-foreground">{job.responsibilities}</p></div>}
-                        {job.requirements && <div><p className="mb-2 font-semibold">Requirements</p><p className="whitespace-pre-line text-muted-foreground">{job.requirements}</p></div>}
+                        {job.requirements && <div><p className="mb-2 font-semibold">Required Qualifications</p><p className="whitespace-pre-line text-muted-foreground">{job.requirements}</p></div>}
+                        {job.preferredQualifications && <div><p className="mb-2 font-semibold">Preferred Qualifications</p><p className="whitespace-pre-line text-muted-foreground">{job.preferredQualifications}</p></div>}
                     </CardContent></Card>
 
                     <Card><CardHeader><CardTitle className="flex items-center gap-2"><FileWarning className="size-5 text-primary" /> Recent reports</CardTitle><CardDescription>Latest reports connected to this posting.</CardDescription></CardHeader><CardContent>

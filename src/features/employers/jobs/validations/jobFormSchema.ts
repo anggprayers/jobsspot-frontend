@@ -59,7 +59,12 @@ export const jobFormSchema = z
         requirements: z
             .string()
             .trim()
-            .max(5000, "Job requirements cannot exceed 5,000 characters."),
+            .max(5000, "Required qualifications cannot exceed 5,000 characters."),
+
+        preferredQualifications: z
+            .string()
+            .trim()
+            .max(5000, "Preferred qualifications cannot exceed 5,000 characters."),
 
         responsibilities: z
             .string()
@@ -141,23 +146,6 @@ export const jobFormSchema = z
             });
         }
 
-        if (data.workplaceType !== "REMOTE") {
-            if (!data.city) {
-                context.addIssue({
-                    code: "custom",
-                    message: "City is required for an on-site or hybrid job.",
-                    path: ["city"],
-                });
-            }
-
-            if (!data.stateRegion) {
-                context.addIssue({
-                    code: "custom",
-                    message: "State or region is required for an on-site or hybrid job.",
-                    path: ["stateRegion"],
-                });
-            }
-        }
     });
 
 export type JobFormValues = z.input<typeof jobFormSchema>;

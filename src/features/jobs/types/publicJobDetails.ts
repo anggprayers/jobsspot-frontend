@@ -6,6 +6,7 @@ export type PublicJobDetails = {
     slug: string;
     description: string;
     requirements: string | null;
+    preferredQualifications: string | null;
     responsibilities: string | null;
     employmentType: string;
     workplaceType: string;

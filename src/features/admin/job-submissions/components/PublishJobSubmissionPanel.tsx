@@ -202,7 +202,7 @@ export default function PublishJobSubmissionPanel({ submission }: { submission: 
 
                 <div className="rounded-xl border border-blue-200 bg-blue-50/60 p-4 text-sm text-blue-900">
                     <p className="font-semibold">Original submission context</p>
-                    <p className="mt-1">Location: {submission.locationText}</p>
+                    <p className="mt-1">Location: {submission.locationText || "Not provided"}</p>
                     {submission.salaryText && <p>Submitted pay: {submission.salaryText}</p>}
                     <p className="mt-1 text-blue-800">Confirm the structured job fields below before publishing.</p>
                 </div>

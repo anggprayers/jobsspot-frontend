@@ -163,8 +163,16 @@ export default function JobDetails({ slug, initialJob }: JobDetailsProps) {
 
                         {job.requirements?.trim() && (
                             <ContentSection
-                                title="Requirements"
+                                title="Required Qualifications"
                                 content={job.requirements}
+                                icon={CheckCircle2}
+                            />
+                        )}
+
+                        {job.preferredQualifications?.trim() && (
+                            <ContentSection
+                                title="Preferred Qualifications"
+                                content={job.preferredQualifications}
                                 icon={CheckCircle2}
                             />
                         )}

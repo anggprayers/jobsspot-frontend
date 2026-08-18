@@ -9,10 +9,12 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toJobsSpotDateInput } from "@/lib/jobsSpotDateTime";
 import { useAdminCategories } from "@/features/admin/categories/hooks/useAdminCategories";
-import { useAdminCompanies } from "@/features/admin/companies/hooks/useAdminCompanies";
+import { useAdminCompanies, useCreateAdminCompany } from "@/features/admin/companies/hooks/useAdminCompanies";
 import JobForm from "@/features/employers/jobs/components/JobForm";
 import { defaultJobFormValues } from "@/features/employers/jobs/types/jobForm";
 import { mapJobFormToPayload } from "@/features/employers/jobs/types/companyJob";
@@ -34,10 +36,17 @@ function toDateInput(value: string | null | undefined) {
 export default function AdminJobFormPage({ mode, jobId = "" }: AdminJobFormPageProps) {
     const router = useRouter();
     const isEdit = mode === "edit";
+    const [companyMode, setCompanyMode] = useState<"EXISTING" | "NEW">("EXISTING");
     const [companyId, setCompanyId] = useState("");
+    const [newCompanyName, setNewCompanyName] = useState("");
+    const [newCompanyWebsite, setNewCompanyWebsite] = useState("");
+    const [newCompanyLocation, setNewCompanyLocation] = useState("");
+    const [newCompanyIndustry, setNewCompanyIndustry] = useState("");
+    const [newCompanyDescription, setNewCompanyDescription] = useState("");
     const jobQuery = useAdminJob(isEdit ? jobId : "");
     const createMutation = useCreateAdminJob();
     const updateMutation = useUpdateAdminJob(jobId);
+    const createCompanyMutation = useCreateAdminCompany();
 
     const companiesQuery = useAdminCompanies({ page: 1, limit: 100, status: "ACTIVE", verification: "ALL", sort: "NAME_ASC" });
     const categoriesQuery = useAdminCategories({ page: 1, limit: 100, status: "ACTIVE", sort: "ORDER_ASC" });
@@ -51,6 +60,7 @@ export default function AdminJobFormPage({ mode, jobId = "" }: AdminJobFormPageP
             title: job.title,
             description: job.description,
             requirements: job.requirements ?? "",
+            preferredQualifications: job.preferredQualifications ?? "",
             responsibilities: job.responsibilities ?? "",
             employmentType: job.employmentType as JobFormValues["employmentType"],
             workplaceType: job.workplaceType as JobFormValues["workplaceType"],
@@ -75,9 +85,33 @@ export default function AdminJobFormPage({ mode, jobId = "" }: AdminJobFormPageP
         const toastId = toast.loading(isEdit ? "Saving job..." : "Creating job draft...");
 
         try {
+            let resolvedCompanyId = companyId;
+
+            if (!isEdit && companyMode === "NEW") {
+                if (newCompanyName.trim().length < 2) {
+                    toast.error("Enter a company name containing at least 2 characters.", { id: toastId });
+                    return;
+                }
+
+                const companyResponse = await createCompanyMutation.mutateAsync({
+                    name: newCompanyName.trim(),
+                    ...(newCompanyWebsite.trim() && { websiteUrl: newCompanyWebsite.trim() }),
+                    ...(newCompanyLocation.trim() && { location: newCompanyLocation.trim() }),
+                    ...(newCompanyIndustry.trim() && { industry: newCompanyIndustry.trim() }),
+                    ...(newCompanyDescription.trim() && { description: newCompanyDescription.trim() }),
+                });
+
+                resolvedCompanyId = companyResponse.company.id;
+            }
+
+            if (!isEdit && !resolvedCompanyId) {
+                toast.error("Select an existing company or create a new one.", { id: toastId });
+                return;
+            }
+
             const response = isEdit
                 ? await updateMutation.mutateAsync(payload)
-                : await createMutation.mutateAsync({ companyId, job: payload });
+                : await createMutation.mutateAsync({ companyId: resolvedCompanyId, job: payload });
 
             toast.success(response.message, { id: toastId });
             router.push(`/admin/jobs/${response.job.id}`);
@@ -113,15 +147,57 @@ export default function AdminJobFormPage({ mode, jobId = "" }: AdminJobFormPageP
                 </CardHeader>
                 <CardContent className="space-y-6">
                     {!isEdit && (
-                        <div className="space-y-2 rounded-xl border bg-muted/20 p-4">
-                            <Label htmlFor="admin-job-company">Company *</Label>
-                            <Select value={companyId || undefined} onValueChange={setCompanyId}>
-                                <SelectTrigger id="admin-job-company" className="w-full"><SelectValue placeholder={companiesQuery.isLoading ? "Loading companies..." : "Select company"} /></SelectTrigger>
-                                <SelectContent className="max-h-72">
-                                    {companies.map((company) => <SelectItem key={company.id} value={company.id}>{company.name}{company.location ? ` · ${company.location}` : ""}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
-                            {!companiesQuery.isLoading && companies.length === 0 && <p className="text-sm text-muted-foreground">No active companies exist. Create a company first.</p>}
+                        <div className="space-y-4 rounded-xl border bg-muted/20 p-4">
+                            <div className="space-y-2">
+                                <Label>Company *</Label>
+                                <Select value={companyMode} onValueChange={(value) => setCompanyMode(value as "EXISTING" | "NEW")}>
+                                    <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="EXISTING">Use an existing company</SelectItem>
+                                        <SelectItem value="NEW">Create a new company here</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <p className="text-xs text-muted-foreground">
+                                    The final job still belongs to a company record. Create one here when the employer is new or confidential.
+                                </p>
+                            </div>
+
+                            {companyMode === "EXISTING" ? (
+                                <div className="space-y-2">
+                                    <Label htmlFor="admin-job-company">Existing company</Label>
+                                    <Select value={companyId || undefined} onValueChange={setCompanyId}>
+                                        <SelectTrigger id="admin-job-company" className="w-full"><SelectValue placeholder={companiesQuery.isLoading ? "Loading companies..." : "Select company"} /></SelectTrigger>
+                                        <SelectContent className="max-h-72">
+                                            {companies.map((company) => <SelectItem key={company.id} value={company.id}>{company.name}{company.location ? ` · ${company.location}` : ""}</SelectItem>)}
+                                        </SelectContent>
+                                    </Select>
+                                    {!companiesQuery.isLoading && companies.length === 0 && <p className="text-sm text-muted-foreground">No active companies exist. Switch to Create a new company here.</p>}
+                                </div>
+                            ) : (
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label htmlFor="admin-job-new-company-name">Company name *</Label>
+                                        <Input id="admin-job-new-company-name" value={newCompanyName} onChange={(event) => setNewCompanyName(event.target.value)} maxLength={100} placeholder="e.g. Confidential Healthcare Organization" />
+                                        <p className="text-xs text-muted-foreground">Normal punctuation and symbols in company names are supported; the public slug is generated separately.</p>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="admin-job-new-company-website">Website</Label>
+                                        <Input id="admin-job-new-company-website" value={newCompanyWebsite} onChange={(event) => setNewCompanyWebsite(event.target.value)} placeholder="https://company.com" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="admin-job-new-company-location">Company location</Label>
+                                        <Input id="admin-job-new-company-location" value={newCompanyLocation} onChange={(event) => setNewCompanyLocation(event.target.value)} maxLength={150} placeholder="New York, NY" />
+                                    </div>
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label htmlFor="admin-job-new-company-industry">Industry</Label>
+                                        <Input id="admin-job-new-company-industry" value={newCompanyIndustry} onChange={(event) => setNewCompanyIndustry(event.target.value)} maxLength={100} placeholder="Healthcare" />
+                                    </div>
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label htmlFor="admin-job-new-company-description">Company description</Label>
+                                        <Textarea id="admin-job-new-company-description" value={newCompanyDescription} onChange={(event) => setNewCompanyDescription(event.target.value)} rows={4} maxLength={2000} placeholder="Short public description of the organization." />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -139,14 +215,8 @@ export default function AdminJobFormPage({ mode, jobId = "" }: AdminJobFormPageP
                             categories={categories}
                             defaultValues={initialValues}
                             submitLabel={isEdit ? "Save Job" : "Create Draft"}
-                            isPending={createMutation.isPending || updateMutation.isPending}
-                            onSubmit={async (values) => {
-                                if (!isEdit && !companyId) {
-                                    toast.error("Select a company before creating the job.");
-                                    return;
-                                }
-                                await handleSubmit(values);
-                            }}
+                            isPending={createMutation.isPending || updateMutation.isPending || createCompanyMutation.isPending}
+                            onSubmit={handleSubmit}
                             onCancel={() => router.push(isEdit ? `/admin/jobs/${jobId}` : "/admin/jobs")}
                         />
                     )}

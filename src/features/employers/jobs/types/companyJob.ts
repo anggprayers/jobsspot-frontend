@@ -9,6 +9,7 @@ export type CompanyJob = {
 
     description: string;
     requirements: string | null;
+    preferredQualifications: string | null;
     responsibilities: string | null;
 
     status: "DRAFT" | "PUBLISHED" | "PAUSED" | "CLOSED" | "ARCHIVED";
@@ -105,6 +106,7 @@ export type CreateJobPayload = {
     description: string;
 
     requirements?: string;
+    preferredQualifications?: string;
     responsibilities?: string;
 
     employmentType: JobFormValues["employmentType"];
@@ -137,9 +139,8 @@ export function mapJobFormToPayload(values: JobFormValues): CreateJobPayload {
         title: values.title.trim(),
         description: values.description.trim(),
 
-        ...(values.requirements.trim() && {
-            requirements: values.requirements.trim(),
-        }),
+        requirements: values.requirements.trim(),
+        preferredQualifications: values.preferredQualifications.trim(),
 
         ...(values.responsibilities.trim() && {
             responsibilities: values.responsibilities.trim(),

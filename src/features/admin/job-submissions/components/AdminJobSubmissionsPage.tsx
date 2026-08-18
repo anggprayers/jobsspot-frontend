@@ -168,7 +168,7 @@ export default function AdminJobSubmissionsPage() {
                                             </td>
                                             <td className="px-5 py-4">
                                                 <p className="font-medium">{submission.companyName || "Not provided"}</p>
-                                                <p className="mt-1 text-xs text-muted-foreground">{submission.locationText}</p>
+                                                <p className="mt-1 text-xs text-muted-foreground">{submission.locationText || "Not provided"}</p>
                                             </td>
                                             <td className="px-5 py-4">
                                                 <p>{submission.contactName || "No contact name"}</p>

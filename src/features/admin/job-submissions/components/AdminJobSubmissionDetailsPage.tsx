@@ -89,7 +89,7 @@ export default function AdminJobSubmissionDetailsPage({ submissionId }: { submis
                     <CardContent className="space-y-5">
                         <div className="grid gap-4 sm:grid-cols-2">
                             <div><p className="text-xs font-semibold uppercase text-muted-foreground">Company</p><p className="mt-1 font-semibold">{submission.companyName || "Not provided"}</p></div>
-                            <div><p className="text-xs font-semibold uppercase text-muted-foreground">Location</p><p className="mt-1">{submission.locationText}</p></div>
+                            <div><p className="text-xs font-semibold uppercase text-muted-foreground">Location</p><p className="mt-1">{submission.locationText || "Not provided"}</p></div>
                             <div><p className="text-xs font-semibold uppercase text-muted-foreground">Work arrangement</p><p className="mt-1">{formatAdminLabel(submission.workplaceType)}</p></div>
                             <div><p className="text-xs font-semibold uppercase text-muted-foreground">Job type</p><p className="mt-1">{formatAdminLabel(submission.employmentType)}</p></div>
                             <div><p className="text-xs font-semibold uppercase text-muted-foreground">Salary / pay rate</p><p className="mt-1">{submission.salaryText || "Not provided"}</p></div>

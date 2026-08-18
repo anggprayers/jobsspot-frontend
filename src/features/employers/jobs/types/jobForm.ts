@@ -5,6 +5,7 @@ export const defaultJobFormValues: JobFormValues = {
     title: "",
     description: "",
     requirements: "",
+    preferredQualifications: "",
     responsibilities: "",
     employmentType: "FULL_TIME",
     workplaceType: "ONSITE",

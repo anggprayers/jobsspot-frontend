@@ -85,19 +85,10 @@ export default function LoginForm({
 
             clearRememberedAuthReturnUrl();
 
-            const isEmployerDestination =
-                destination === "/employers" ||
-                destination.startsWith(
-                    "/employers/",
-                );
-
             toast.success(
                 `Welcome back, ${currentUserResponse.user.firstName}!`,
                 {
-                    description:
-                        isEmployerDestination
-                            ? "Opening your employer workspace."
-                            : "You’re signed in and ready to continue.",
+                    description: "You’re signed in and ready to continue.",
                 },
             );
 

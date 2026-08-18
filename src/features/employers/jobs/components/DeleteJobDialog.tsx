@@ -77,8 +77,9 @@ export default function DeleteJobDialog({
                     <p className="font-medium text-red-900">Delete “{job.title}”?</p>
 
                     <p className="mt-2 text-sm text-red-700">
-                        The job will disappear from your active listings. It can potentially be
-                        restored later because JobsSpot uses soft deletion.
+                        The job will disappear from your active listings. A record is retained for
+                        platform history and auditing, but it cannot be restored from the Employer
+                        Portal.
                     </p>
                 </div>
 

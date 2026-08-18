@@ -12,11 +12,15 @@ export type PublicCompanyJob = {
     workplaceType: string;
     experienceLevel: string;
     location: string | null;
+    city: string | null;
+    stateRegion: string | null;
+    countryCode: string;
     salaryMin: string | null;
     salaryMax: string | null;
     salaryCurrency: string | null;
     salaryPeriod: string | null;
     publishedAt: string | null;
+    updatedAt: string;
     createdAt: string;
     category: PublicCompanyJobCategory;
 };

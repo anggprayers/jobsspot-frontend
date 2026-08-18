@@ -11,7 +11,6 @@ import {
     Eye,
     FileSearch,
     Search,
-    Star,
     UserCheck,
     UsersRound,
 } from "lucide-react";
@@ -146,13 +145,8 @@ export default function EmployerApplicantsPage() {
         },
         {
             label: "Under review",
-            value: summary.underReview,
+            value: summary.underReview + summary.shortlisted,
             icon: Clock3,
-        },
-        {
-            label: "Shortlisted",
-            value: summary.shortlisted,
-            icon: Star,
         },
         {
             label: "Interviews",
@@ -257,15 +251,13 @@ export default function EmployerApplicantsPage() {
 
                             <SelectItem value="UNDER_REVIEW">Under review</SelectItem>
 
-                            <SelectItem value="SHORTLISTED">Shortlisted</SelectItem>
-
                             <SelectItem value="INTERVIEW">Interview</SelectItem>
 
                             <SelectItem value="OFFERED">Offered</SelectItem>
 
                             <SelectItem value="HIRED">Hired</SelectItem>
 
-                            <SelectItem value="REJECTED">Rejected</SelectItem>
+                            <SelectItem value="REJECTED">Not selected</SelectItem>
 
                             <SelectItem value="WITHDRAWN">Withdrawn</SelectItem>
                         </SelectContent>
@@ -419,7 +411,7 @@ export default function EmployerApplicantsPage() {
                                                                 </p>
 
                                                                 <p className="truncate text-sm text-slate-500">
-                                                                    {application.applicant.email}
+                                                                    {application.applicant.email ?? "Deleted account"}
                                                                 </p>
 
                                                                 {profile?.headline && (
@@ -521,7 +513,7 @@ export default function EmployerApplicantsPage() {
                                                 </p>
 
                                                 <p className="truncate text-sm text-slate-500">
-                                                    {application.applicant.email}
+                                                    {application.applicant.email ?? "Deleted account"}
                                                 </p>
 
                                                 {profile?.headline && (

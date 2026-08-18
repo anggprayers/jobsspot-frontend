@@ -88,13 +88,7 @@ export default function RenameSavedSearchDialog({
 
     return (
         <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
-            <button
-                type="button"
-                aria-label="Close rename search dialog"
-                disabled={updateMutation.isPending}
-                onClick={handleClose}
-                className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm disabled:cursor-not-allowed"
-            />
+            <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" aria-hidden="true" />
 
             <div
                 role="dialog"

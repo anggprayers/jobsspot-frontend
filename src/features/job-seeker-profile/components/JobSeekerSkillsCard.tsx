@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { LoaderCircle, PencilLine, Plus, Save, Sparkles, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, LoaderCircle, PencilLine, Plus, Save, Sparkles, Trash2 } from "lucide-react";
 import { useState, type SubmitEvent } from "react";
 import { toast } from "sonner";
 
@@ -255,6 +255,7 @@ export default function JobSeekerSkillsCard() {
     const skillsQuery = useJobSeekerSkills();
     const addMutation = useAddJobSeekerSkill();
 
+    const [isExpanded, setIsExpanded] = useState(false);
     const [skillName, setSkillName] = useState("");
     const [yearsOfExperience, setYearsOfExperience] = useState("");
     const [skillBeingRemoved, setSkillBeingRemoved] = useState<JobSeekerSkill | null>(null);
@@ -323,19 +324,31 @@ export default function JobSeekerSkillsCard() {
                                 <CardTitle>Skills</CardTitle>
 
                                 <CardDescription className="mt-1">
-                                    Add the technologies, tools, and professional skills employers
+                                    Add the technologies, tools, and professional skills hiring companies
                                     should know about.
                                 </CardDescription>
                             </div>
                         </div>
 
-                        <span className="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                            {skills.length}/{MAX_SKILLS} skills
-                        </span>
+                        <div className="flex items-center gap-2">
+                            <span className="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                {skills.length}/{MAX_SKILLS} skills
+                            </span>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                aria-expanded={isExpanded}
+                                onClick={() => setIsExpanded((value) => !value)}
+                            >
+                                {isExpanded ? <ChevronUp /> : <ChevronDown />}
+                                {isExpanded ? "Hide" : "Show"}
+                            </Button>
+                        </div>
                     </div>
                 </CardHeader>
 
-                <CardContent className="space-y-6">
+                {isExpanded && (
+                    <CardContent className="space-y-6">
                     <form
                         onSubmit={handleAdd}
                         className="rounded-2xl border border-blue-100 bg-blue-50/50 p-4"
@@ -482,7 +495,8 @@ export default function JobSeekerSkillsCard() {
                             ))}
                         </div>
                     )}
-                </CardContent>
+                    </CardContent>
+                )}
             </Card>
 
             {skillBeingRemoved && (

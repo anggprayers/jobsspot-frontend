@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+    Bell,
     BriefcaseBusiness,
     Building2,
     History,
@@ -70,6 +71,12 @@ const activityNavigationItem = {
     icon: History,
 };
 
+const notificationsNavigationItem = {
+    title: "Notifications",
+    href: "/employers/notifications",
+    icon: Bell,
+};
+
 const settingsNavigationItem = {
     title: "Settings",
     href: "/employers/settings",
@@ -105,17 +112,18 @@ export default function EmployerSidebar() {
 
         ...(hasActivityAccess ? [activityNavigationItem] : []),
 
+        notificationsNavigationItem,
         settingsNavigationItem,
     ];
 
     return (
-        <Sidebar collapsible="icon">
-            <SidebarHeader className="border-b">
+        <Sidebar collapsible="icon" className="border-slate-800">
+            <SidebarHeader className="border-b border-slate-800 bg-slate-950 text-white">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild size="lg" tooltip="JobsSpot">
                             <Link href="/employers">
-                                <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary/10">
+                                <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white/10">
                                     <Image
                                         src="/logo.png"
                                         alt="JobsSpot"
@@ -131,7 +139,7 @@ export default function EmployerSidebar() {
                                         JobsSpot
                                     </span>
 
-                                    <span className="truncate text-xs text-muted-foreground">
+                                    <span className="truncate text-xs text-slate-400">
                                         Employer Portal
                                     </span>
                                 </div>
@@ -141,9 +149,9 @@ export default function EmployerSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="bg-slate-950 text-slate-200">
                 <SidebarGroup>
-                    <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+                    <SidebarGroupLabel className="text-slate-500">Workspace</SidebarGroupLabel>
 
                     <SidebarGroupContent>
                         <SidebarMenu>
@@ -159,7 +167,7 @@ export default function EmployerSidebar() {
                                             asChild
                                             isActive={isActive}
                                             tooltip={item.title}
-                                            className="data-[active=true]:bg-primary data-[active=true]:text-primary-foreground data-[active=true]:shadow-sm"
+                                            className="text-slate-300 hover:bg-slate-900 hover:text-white data-[active=true]:bg-blue-600 data-[active=true]:text-white data-[active=true]:shadow-sm"
                                         >
                                             <Link href={item.href}>
                                                 <item.icon />
@@ -174,12 +182,13 @@ export default function EmployerSidebar() {
                 </SidebarGroup>
             </SidebarContent>
 
-            <SidebarFooter className="border-t">
+            <SidebarFooter className="border-t border-slate-800 bg-slate-950 text-slate-300">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             asChild
                             tooltip="Job seeker account"
+                            className="text-slate-300 hover:bg-slate-900 hover:text-white"
                         >
                             <Link href="/account/profile">
                                 <UserRound />
@@ -189,7 +198,7 @@ export default function EmployerSidebar() {
                     </SidebarMenuItem>
                 </SidebarMenu>
 
-                <p className="px-2 text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
+                <p className="px-2 text-xs text-slate-500 group-data-[collapsible=icon]:hidden">
                     JobsSpot Employer Portal
                 </p>
             </SidebarFooter>

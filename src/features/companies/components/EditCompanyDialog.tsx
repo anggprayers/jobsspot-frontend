@@ -159,15 +159,9 @@ export default function EditCompanyDialog({
             role="dialog"
             aria-modal="true"
             aria-labelledby="edit-company-title"
-            onMouseDown={() => {
-                if (!isUpdatingCompany) {
-                    onClose();
-                }
-            }}
         >
             <div
                 className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white shadow-2xl"
-                onMouseDown={(event) => event.stopPropagation()}
             >
                 <div className="flex items-start justify-between border-b border-slate-200 px-6 py-5 sm:px-8">
                     <div>
@@ -320,7 +314,7 @@ export default function EditCompanyDialog({
                                 value={form.location}
                                 onChange={(event) => handleChange("location", event.target.value)}
                                 disabled={isUpdatingCompany}
-                                placeholder="Makati, Philippines"
+                                placeholder="New York, NY"
                                 className="mt-2 min-h-12 w-full rounded-xl border border-slate-300 px-4 text-slate-950 outline-none transition focus:border-blue-500 focus:ring-3 focus:ring-blue-100 disabled:bg-slate-100"
                             />
                         </div>

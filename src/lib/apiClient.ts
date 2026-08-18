@@ -1,16 +1,37 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 
+import type { RefreshSessionResponse } from "@/features/auth/types/auth";
 import { useAuthStore } from "@/features/auth/store/authStore";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
 
-if (!apiUrl) {
+if (!rawApiUrl) {
     throw new Error("NEXT_PUBLIC_API_URL is not defined.");
 }
 
+let apiUrl: string;
+
+try {
+    const parsedApiUrl = new URL(rawApiUrl);
+
+    if (parsedApiUrl.protocol !== "http:" && parsedApiUrl.protocol !== "https:") {
+        throw new Error("Unsupported API URL protocol.");
+    }
+
+    apiUrl = rawApiUrl.replace(/\/+$/, "");
+} catch {
+    throw new Error("NEXT_PUBLIC_API_URL must be a valid http(s) URL.");
+}
+
+const configuredTimeout = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS ?? "75000");
+const apiTimeout =
+    Number.isFinite(configuredTimeout) && configuredTimeout >= 5_000 && configuredTimeout <= 120_000
+        ? configuredTimeout
+        : 75_000;
+
 export const authClient = axios.create({
     baseURL: apiUrl,
-    timeout: 10000,
+    timeout: apiTimeout,
     headers: {
         "Content-Type": "application/json",
     },
@@ -19,7 +40,7 @@ export const authClient = axios.create({
 
 const apiClient = axios.create({
     baseURL: apiUrl,
-    timeout: 10000,
+    timeout: apiTimeout,
     headers: {
         "Content-Type": "application/json",
     },
@@ -30,19 +51,17 @@ type RetryableRequestConfig = InternalAxiosRequestConfig & {
     _retry?: boolean;
 };
 
-type RefreshResponse = {
-    success: boolean;
-    message: string;
-    accessToken: string;
-};
-
 let refreshPromise: Promise<string> | null = null;
 
 async function requestNewAccessToken(): Promise<string> {
     if (!refreshPromise) {
         refreshPromise = authClient
-            .post<RefreshResponse>("/auth/refresh")
+            .post<RefreshSessionResponse>("/auth/refresh")
             .then((response) => {
+                if (!response.data.authenticated) {
+                    throw new Error("No active refresh session.");
+                }
+
                 const accessToken = response.data.accessToken;
 
                 useAuthStore.getState().setAccessToken(accessToken);

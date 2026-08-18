@@ -7,6 +7,7 @@ import {
     Bookmark,
     BriefcaseBusiness,
     Building2,
+    CalendarClock,
     CheckCircle2,
     Clock3,
     LoaderCircle,
@@ -18,6 +19,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
 import ApplyToJobDialog from "@/features/applications/components/ApplyToJobDialog";
 import { useApplicationForJob } from "@/features/applications/hooks/useApplications";
 import {
@@ -93,6 +95,26 @@ function formatSalary(job: PublicJobDetails) {
     ).toLowerCase()}`;
 }
 
+
+function formatDeadline(value: string | null) {
+    if (!value) {
+        return "No deadline specified";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "No deadline specified";
+    }
+
+    return date.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        timeZone: JOBS_SPOT_TIME_ZONE,
+    });
+}
+
 function getCompanyInitials(companyName: string) {
     const words = companyName
         .trim()
@@ -141,13 +163,15 @@ export default function JobDetailsSidebar({
 
     const application =
         applicationQuery.data?.application ?? null;
+    const reapplication = applicationQuery.data?.reapplication ?? null;
+    const canApply = reapplication?.canApply ?? !application;
     const isSaved =
         savedJobStatusQuery.data?.isSaved ?? false;
 
     const overviewItems = [
         {
             label: "Location",
-            value: job.location,
+            value: job.location ?? "Location not specified",
             icon: MapPin,
         },
         {
@@ -170,6 +194,11 @@ export default function JobDetailsSidebar({
             value: formatLabel(job.experienceLevel),
             icon: Sparkles,
         },
+        {
+            label: "Application deadline",
+            value: formatDeadline(job.applicationDeadline),
+            icon: CalendarClock,
+        },
     ];
 
     function handleApplyClick() {
@@ -187,7 +216,7 @@ export default function JobDetailsSidebar({
             return;
         }
 
-        if (!application) {
+        if (canApply) {
             setIsApplyDialogOpen(true);
         }
     }
@@ -298,36 +327,46 @@ export default function JobDetailsSidebar({
                 </section>
 
                 <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                    {application ? (
+                    {application && !canApply ? (
                         <>
                             <div
                                 className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3.5 text-center font-semibold ${getApplicationStatusClasses(
                                     application.status,
                                 )}`}
                             >
-                                {application.status ===
-                                "WITHDRAWN" ? (
+                                {application.status === "WITHDRAWN" || application.status === "REJECTED" ? (
                                     <Clock3 size={19} />
                                 ) : (
-                                    <CheckCircle2
-                                        size={19}
-                                    />
+                                    <CheckCircle2 size={19} />
                                 )}
 
-                                {application.status ===
-                                "WITHDRAWN"
+                                {application.status === "WITHDRAWN"
                                     ? "Application withdrawn"
-                                    : "Already applied"}
+                                    : application.status === "REJECTED"
+                                      ? "Not selected"
+                                      : "Already applied"}
                             </div>
 
                             <p className="mt-4 text-center text-sm leading-6 text-slate-500">
                                 Current status:{" "}
                                 <span className="font-semibold text-slate-700">
-                                    {formatApplicationStatus(
-                                        application.status,
-                                    )}
+                                    {formatApplicationStatus(application.status)}
                                 </span>
                             </p>
+
+                            {reapplication?.nextEligibleAt && (
+                                <p className="mt-2 text-center text-sm leading-6 text-slate-500">
+                                    You can apply for this same job again on{" "}
+                                    <span className="font-semibold text-slate-700">
+                                        {new Intl.DateTimeFormat("en-US", {
+                                            month: "long",
+                                            day: "numeric",
+                                            year: "numeric",
+                                            timeZone: JOBS_SPOT_TIME_ZONE,
+                                        }).format(new Date(reapplication.nextEligibleAt))}
+                                    </span>.
+                                </p>
+                            )}
 
                             <Link
                                 href="/account/applications"
@@ -337,36 +376,40 @@ export default function JobDetailsSidebar({
                             </Link>
                         </>
                     ) : (
-                        <button
-                            type="button"
-                            disabled={
-                                isInitializing ||
-                                isCheckingApplication
-                            }
-                            onClick={handleApplyClick}
-                            className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
-                        >
-                            {isCheckingApplication ? (
-                                <>
-                                    <LoaderCircle
-                                        size={19}
-                                        className="animate-spin"
-                                    />
-                                    Checking application...
-                                </>
-                            ) : applicationQuery.isError &&
-                              isAuthenticated ? (
-                                <>
-                                    <RefreshCw size={19} />
-                                    Try again
-                                </>
-                            ) : (
-                                <>
-                                    <Send size={19} />
-                                    Apply Now
-                                </>
+                        <>
+                            {application && canApply && (
+                                <p className="mb-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-center text-sm leading-6 text-blue-700">
+                                    Your previous application is closed. You are eligible to apply for this job again.
+                                </p>
                             )}
-                        </button>
+
+                            <button
+                                type="button"
+                                disabled={
+                                    isInitializing ||
+                                    isCheckingApplication
+                                }
+                                onClick={handleApplyClick}
+                                className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+                            >
+                                {isCheckingApplication ? (
+                                    <>
+                                        <LoaderCircle size={19} className="animate-spin" />
+                                        Checking application...
+                                    </>
+                                ) : applicationQuery.isError && isAuthenticated ? (
+                                    <>
+                                        <RefreshCw size={19} />
+                                        Try again
+                                    </>
+                                ) : (
+                                    <>
+                                        <Send size={19} />
+                                        {application ? "Apply Again" : "Apply Now"}
+                                    </>
+                                )}
+                            </button>
+                        </>
                     )}
 
                     <button
@@ -416,11 +459,11 @@ export default function JobDetailsSidebar({
                                     : "Save Job"}
                     </button>
 
-                    <p className="mt-5 text-center text-base leading-7 text-slate-500">
+                    <div className="mt-5 rounded-xl bg-slate-50 px-4 py-3 text-center text-sm leading-6 text-slate-600">
                         {isAuthenticated
-                            ? "Manage your applications and saved jobs from your JobsSpot account."
-                            : "Sign in to apply, save this role, and track your application."}
-                    </p>
+                            ? "JobsSpot receives your application, keeps your status updated, and coordinates the hiring process with the company."
+                            : "Sign in to apply. JobsSpot will receive your application and keep you updated as the hiring process moves forward."}
+                    </div>
                 </section>
 
                 <section className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
@@ -456,14 +499,13 @@ export default function JobDetailsSidebar({
                             </h2>
 
                             <p className="mt-1 text-base text-slate-500">
-                                Employer on JobsSpot
+                                Company on JobsSpot
                             </p>
                         </div>
                     </Link>
 
                     <p className="mt-5 text-base leading-7 text-slate-600">
-                        View employer information and other
-                        available positions from this company.
+                        View company information and other available positions listed on JobsSpot.
                     </p>
 
                     <Link

@@ -25,12 +25,12 @@ export type GetJobSeekerProfileResponse = {
 };
 
 export type UpdateJobSeekerProfileRequest = {
-    headline: string | null;
-    summary: string | null;
-    location: string | null;
-    websiteUrl: string | null;
-    linkedInUrl: string | null;
-    yearsOfExperience: number | null;
+    headline?: string | null;
+    summary?: string | null;
+    location?: string | null;
+    websiteUrl?: string | null;
+    linkedInUrl?: string | null;
+    yearsOfExperience?: number | null;
 };
 
 export type UpdateJobSeekerProfileResponse = {

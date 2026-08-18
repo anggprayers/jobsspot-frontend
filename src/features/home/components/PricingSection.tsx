@@ -16,7 +16,7 @@ const plans = [
             "Basic applicant management",
         ],
         action: "Start Hiring",
-        href: "/employers",
+        href: "/post-a-job",
         featured: false,
     },
     {

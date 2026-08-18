@@ -4,9 +4,13 @@ import { Suspense } from "react";
 import VerifyEmailPage from "@/features/auth/components/VerifyEmailPage";
 
 export const metadata: Metadata = {
-    title: "Verify Email | JobsSpot",
+    title: "Verify Email",
     description:
         "Confirm the email address connected to your JobsSpot account.",
+    robots: {
+        index: false,
+        follow: false,
+    },
 };
 
 function VerifyEmailLoading() {

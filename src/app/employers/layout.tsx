@@ -1,15 +1,5 @@
-import EmployersRootLayout from "@/features/employers/components/EmployersRootLayout";
+import { permanentRedirect } from "next/navigation";
 
-type EmployersLayoutProps = Readonly<{
-    children: React.ReactNode;
-}>;
-
-export default function EmployersLayout({
-    children,
-}: EmployersLayoutProps) {
-    return (
-        <EmployersRootLayout>
-            {children}
-        </EmployersRootLayout>
-    );
+export default function EmployerLayout() {
+    permanentRedirect("/post-a-job");
 }

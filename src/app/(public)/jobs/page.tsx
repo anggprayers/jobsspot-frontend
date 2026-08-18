@@ -4,16 +4,18 @@ import { Suspense } from "react";
 import Container from "@/components/layout/Container";
 import JobsResults from "@/features/jobs/components/JobsResults";
 import JobsSearchBar from "@/features/jobs/components/JobsSearchBar";
+import { createPublicPageMetadata } from "@/lib/seo/site";
 
-export const metadata: Metadata = {
-    title: "Find Jobs | JobsSpot",
+export const metadata: Metadata = createPublicPageMetadata({
+    title: "Find Jobs",
     description:
-        "Search job opportunities by title, company, location, workplace type, and experience level.",
-};
+        "Search JobsSpot opportunities by keyword, location, work arrangement, job type, and experience level.",
+    path: "/jobs",
+});
 
 function JobsPageLoading() {
     return (
-        <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="grid gap-7 lg:grid-cols-[260px_minmax(0,1fr)]">
             <div className="hidden h-150 animate-pulse rounded-2xl bg-slate-100 lg:block" />
 
             <div>
@@ -36,8 +38,7 @@ export default function JobsPage() {
                         </h1>
 
                         <p className="mt-4 text-lg leading-8 text-slate-600">
-                            Search available roles from employers across New York and the United
-                            States.
+                            Search current openings with simple filters for location, work setup, job type, and experience.
                         </p>
                     </div>
 

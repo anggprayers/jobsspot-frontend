@@ -76,13 +76,9 @@ export default function ShareJobButton({ jobTitle }: ShareJobButtonProps) {
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby="share-job-title"
-                    onMouseDown={() => setIsOpen(false)}
                 >
                     <div
                         className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
-                        onMouseDown={(event) => {
-                            event.stopPropagation();
-                        }}
                     >
                         <button
                             type="button"

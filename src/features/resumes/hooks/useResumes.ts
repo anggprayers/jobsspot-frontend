@@ -7,11 +7,14 @@ import {
 import {
     deleteResume,
     getResumeDownload,
+    getResumeProfilePreview,
     getResumes,
+    importResumeProfile,
     renameResume,
     setDefaultResume,
     uploadResume,
-} from "../api/resumeApi";
+ } from "../api/resumeApi";
+import type { ImportResumeProfileRequest } from "../types/resume";
 
 export const resumesQueryKey = ["account", "resumes"] as const;
 
@@ -77,6 +80,28 @@ export function useDeleteResume() {
             await queryClient.invalidateQueries({
                 queryKey: resumesQueryKey,
             });
+        },
+    });
+}
+
+
+export function useResumeProfilePreview() {
+    return useMutation({
+        mutationFn: getResumeProfilePreview,
+    });
+}
+
+export function useImportResumeProfile() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ resumeId, data }: { resumeId: string; data: ImportResumeProfileRequest }) =>
+            importResumeProfile(resumeId, data),
+        onSuccess: async () => {
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["job-seeker-profile"] }),
+                queryClient.invalidateQueries({ queryKey: resumesQueryKey }),
+            ]);
         },
     });
 }

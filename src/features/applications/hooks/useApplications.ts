@@ -8,6 +8,7 @@ import {
 
 import {
     createApplication,
+    getApplicationCoverLetterDownload,
     getApplicationById,
     getApplicationForJob,
     getApplicationResumeDownload,
@@ -81,6 +82,12 @@ export function useApplicationForJob(jobId: string, enabled = true) {
 export function useApplicationResumeDownload() {
     return useMutation({
         mutationFn: getApplicationResumeDownload,
+    });
+}
+
+export function useApplicationCoverLetterDownload() {
+    return useMutation({
+        mutationFn: getApplicationCoverLetterDownload,
     });
 }
 

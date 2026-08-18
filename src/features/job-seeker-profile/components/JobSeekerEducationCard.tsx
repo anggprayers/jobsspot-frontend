@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { BookOpenText, CalendarDays, GraduationCap, LoaderCircle, Pencil, Plus, School, Trash2 } from "lucide-react";
+import { BookOpenText, CalendarDays, ChevronDown, ChevronUp, GraduationCap, LoaderCircle, Pencil, Plus, School, Trash2 } from "lucide-react";
 import { useState, type SubmitEvent } from "react";
 import { toast } from "sonner";
 
@@ -196,6 +196,7 @@ function EducationItem({ education, onEdit, onDelete }: ItemProps) {
 
 export default function JobSeekerEducationCard() {
     const query = useEducation();
+    const [isExpanded, setIsExpanded] = useState(false);
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [editing, setEditing] = useState<Education | null>(null);
     const [deleting, setDeleting] = useState<Education | null>(null);
@@ -206,15 +207,15 @@ export default function JobSeekerEducationCard() {
                 <CardHeader>
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div className="flex items-start gap-4"><div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><GraduationCap className="size-6" /></div><div><CardTitle>Education</CardTitle><CardDescription className="mt-1">Add your academic background, training, and relevant areas of study.</CardDescription></div></div>
-                        <Button type="button" onClick={() => setIsAddOpen(true)} className="w-full sm:w-auto"><Plus />Add education</Button>
+                        <div className="flex w-full gap-2 sm:w-auto"><Button type="button" variant="outline" aria-expanded={isExpanded} onClick={() => setIsExpanded((value) => !value)} className="flex-1 sm:flex-none">{isExpanded ? <ChevronUp /> : <ChevronDown />}{isExpanded ? "Hide" : "Show"}</Button><Button type="button" onClick={() => setIsAddOpen(true)} className="flex-1 sm:flex-none"><Plus />Add education</Button></div>
                     </div>
                 </CardHeader>
-                <CardContent>
+                {isExpanded && <CardContent>
                     {query.isPending && <div className="space-y-3"><div className="h-40 animate-pulse rounded-2xl bg-slate-100" /><div className="h-40 animate-pulse rounded-2xl bg-slate-100" /></div>}
                     {query.isError && <div className="rounded-xl border border-red-200 bg-red-50 p-5 text-center"><p className="font-semibold text-red-700">Unable to load your education.</p><Button type="button" variant="outline" className="mt-3" onClick={() => void query.refetch()}>Try again</Button></div>}
                     {!query.isPending && !query.isError && education.length === 0 && <div className="rounded-xl border border-dashed border-slate-300 px-5 py-10 text-center"><p className="font-semibold text-slate-900">No education added yet</p><p className="mt-2 text-sm text-slate-600">Add your school, degree, training, or academic background.</p></div>}
                     {!query.isPending && !query.isError && education.length > 0 && <div className="space-y-4">{education.map((item) => <EducationItem key={item.id} education={item} onEdit={setEditing} onDelete={setDeleting} />)}</div>}
-                </CardContent>
+                </CardContent>}
             </Card>
             {isAddOpen && <EducationFormDialog key="add-education" education={null} open onOpenChange={setIsAddOpen} />}
             {editing && <EducationFormDialog key={editing.id} education={editing} open onOpenChange={(open) => { if (!open) setEditing(null); }} />}

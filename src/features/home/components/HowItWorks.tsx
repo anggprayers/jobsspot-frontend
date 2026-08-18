@@ -9,52 +9,52 @@ import {
     Search,
     Send,
     UserRound,
-    Users,
+    ClipboardCheck,
 } from "lucide-react";
 
 import Container from "@/components/layout/Container";
 
-type Audience = "job-seekers" | "employers";
+type Audience = "job-seekers" | "hiring";
 
 const jobSeekerSteps = [
     {
         icon: UserRound,
         title: "Create your account",
         description:
-            "Build your profile and provide the information employers need.",
+            "Build your profile and keep your resume ready for applications.",
     },
     {
         icon: Search,
         title: "Find the right opportunity",
         description:
-            "Search jobs by role, location, workplace type, and experience level.",
+            "Search by role, company, location, work setup, and experience level.",
     },
     {
         icon: Send,
         title: "Apply with confidence",
         description:
-            "Submit applications and keep track of opportunities in one place.",
+            "Apply through JobsSpot and track meaningful status updates in one place.",
     },
 ] as const;
 
-const employerSteps = [
-    {
-        icon: Building2,
-        title: "Create your company",
-        description:
-            "Set up a professional company profile and invite your hiring team.",
-    },
+const hiringSteps = [
     {
         icon: FileText,
-        title: "Publish your opportunity",
+        title: "Send the job details",
         description:
-            "Create detailed job listings that clearly explain the role.",
+            "Share the role, company, location, pay information, and contact details in one simple form.",
     },
     {
-        icon: Users,
-        title: "Connect with candidates",
+        icon: ClipboardCheck,
+        title: "Confirm the arrangement",
         description:
-            "Review applicants and manage your hiring process efficiently.",
+            "JobsSpot reviews the submission and contacts you to confirm the posting details and next steps.",
+    },
+    {
+        icon: Building2,
+        title: "JobsSpot publishes the role",
+        description:
+            "After confirmation, JobsSpot prepares the structured listing, publishes it, and manages it on the platform.",
     },
 ] as const;
 
@@ -65,7 +65,7 @@ export default function HowItWorks() {
     const steps =
         audience === "job-seekers"
             ? jobSeekerSteps
-            : employerSteps;
+            : hiringSteps;
 
     return (
         <section
@@ -85,7 +85,7 @@ export default function HowItWorks() {
                             </h2>
 
                             <p className="mt-4 text-lg leading-8 text-slate-600">
-                                A straightforward experience for job seekers and growing employers.
+                                A straightforward experience for job seekers and organizations looking to hire.
                             </p>
                         </div>
 
@@ -112,20 +112,20 @@ export default function HowItWorks() {
                             </button>
 
                             <button
-                                id="how-it-works-employers"
+                                id="how-it-works-hiring"
                                 type="button"
                                 onClick={() =>
-                                    setAudience("employers")
+                                    setAudience("hiring")
                                 }
                                 className={`inline-flex min-h-11 items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors sm:px-5 ${
                                     audience ===
-                                    "employers"
+                                    "hiring"
                                         ? "bg-white text-blue-700 shadow-sm"
                                         : "text-slate-600 hover:text-slate-950"
                                 }`}
                             >
                                 <Building2 size={17} />
-                                Employers
+                                Hiring Teams
                             </button>
                         </div>
                     </div>

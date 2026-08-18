@@ -40,6 +40,9 @@ export default function JobSearchForm() {
             searchParams.toString(),
         );
 
+        // Category browsing has been retired from the public search experience.
+        params.delete("category");
+
         if (normalizedSearch) {
             params.set("search", normalizedSearch);
 
@@ -109,7 +112,7 @@ export default function JobSearchForm() {
                                 event.target.value,
                             )
                         }
-                        placeholder="City, province, or remote"
+                        placeholder="City, state, or remote"
                         className="w-full bg-transparent text-base text-slate-900 outline-none placeholder:text-slate-400"
                     />
                 </label>

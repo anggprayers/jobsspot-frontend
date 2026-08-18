@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
+
 import type { SavedJobRecord } from "../types/savedJob";
 
 export function formatSavedJobLabel(value: string): string {
@@ -58,6 +60,7 @@ export function formatSavedJobSalary(
 
 export function formatSavedDate(value: string): string {
     return new Intl.DateTimeFormat("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "short",
         day: "numeric",
         year: "numeric",

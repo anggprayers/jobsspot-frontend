@@ -5,7 +5,7 @@ import AuthPageShell from "@/features/auth/components/AuthPageShell";
 import RegisterPageContent from "@/features/auth/components/RegisterPageContent";
 
 export const metadata: Metadata = {
-    title: "Create Account | JobsSpot",
+    title: "Create Account",
     description:
         "Create your JobsSpot account to build a job seeker profile, save opportunities, and apply for jobs.",
 };

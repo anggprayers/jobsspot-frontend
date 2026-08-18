@@ -9,7 +9,7 @@ export type EmployerApplicationStatus =
     | "WITHDRAWN";
 
 export type ManageableEmployerApplicationStatus =
-    "UNDER_REVIEW" | "SHORTLISTED" | "INTERVIEW" | "OFFERED" | "HIRED" | "REJECTED";
+    "UNDER_REVIEW" | "INTERVIEW" | "OFFERED" | "HIRED" | "REJECTED";
 
 export type EmployerApplicationJobStatus = "DRAFT" | "PUBLISHED" | "PAUSED" | "CLOSED" | "ARCHIVED";
 
@@ -26,7 +26,8 @@ export type EmployerApplication = {
         id: string;
         firstName: string;
         lastName: string;
-        email: string;
+        email: string | null;
+        isDeleted: boolean;
         phone: string | null;
         avatarUrl: string | null;
 
@@ -55,6 +56,9 @@ export type EmployerApplication = {
 export type EmployerApplicationDetails = {
     id: string;
     coverLetter: string | null;
+    coverLetterFileName: string | null;
+    coverLetterFileMimeType: string | null;
+    coverLetterFileSize: number | null;
     status: EmployerApplicationStatus;
 
     appliedAt: string;
@@ -67,7 +71,8 @@ export type EmployerApplicationDetails = {
         id: string;
         firstName: string;
         lastName: string;
-        email: string;
+        email: string | null;
+        isDeleted: boolean;
         phone: string | null;
         avatarUrl: string | null;
         createdAt: string;
@@ -106,11 +111,23 @@ export type EmployerApplicationDetails = {
     resume: {
         id: string;
         name: string;
-        fileUrl: string | null;
         mimeType: string;
         fileSize: number;
         createdAt: string;
     } | null;
+};
+
+export type GetCompanyApplicationResumeDownloadResponse = {
+    success: true;
+    message: string;
+    resume: {
+        id: string;
+        name: string;
+        mimeType: string;
+        fileSize: number;
+    };
+    downloadUrl: string;
+    expiresInSeconds: number;
 };
 
 export type EmployerApplicationsQueryParams = {
@@ -171,4 +188,16 @@ export type UpdateCompanyApplicationStatusResponse = {
     success: boolean;
     message: string;
     application: EmployerApplication;
+};
+
+export type GetCompanyApplicationCoverLetterDownloadResponse = {
+    success: true;
+    message: string;
+    coverLetterFile: {
+        name: string;
+        mimeType: string;
+        fileSize: number;
+    };
+    downloadUrl: string;
+    expiresInSeconds: number;
 };

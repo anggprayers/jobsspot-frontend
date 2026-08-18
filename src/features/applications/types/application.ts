@@ -48,6 +48,9 @@ export type ApplicationResume = {
 export type JobSeekerApplication = {
     id: string;
     coverLetter: string | null;
+    coverLetterFileName: string | null;
+    coverLetterFileMimeType: string | null;
+    coverLetterFileSize: number | null;
     status: ApplicationStatus;
     appliedAt: string;
     reviewedAt: string | null;
@@ -99,10 +102,22 @@ export type GetApplicationResponse = {
     application: JobSeekerApplication | null;
 };
 
+export type GetApplicationForJobResponse = {
+    success: true;
+    application: JobSeekerApplication | null;
+    reapplication: {
+        canApply: boolean;
+        cooldownDays: number;
+        nextEligibleAt: string | null;
+        previousStatus: ApplicationStatus | null;
+    };
+};
+
 export type CreateApplicationInput = {
     jobId: string;
     resumeId: string;
     coverLetter: string | null;
+    coverLetterFile?: File | null;
 };
 
 export type ApplicationMutationResponse = {
@@ -113,6 +128,17 @@ export type ApplicationMutationResponse = {
 export type ApplicationResumeDownloadResponse = {
     success: true;
     resume: Pick<ApplicationResume, "id" | "name" | "mimeType">;
+    downloadUrl: string;
+    expiresInSeconds: number;
+};
+
+export type ApplicationCoverLetterDownloadResponse = {
+    success: true;
+    coverLetterFile: {
+        name: string;
+        mimeType: string;
+        fileSize: number;
+    };
     downloadUrl: string;
     expiresInSeconds: number;
 };

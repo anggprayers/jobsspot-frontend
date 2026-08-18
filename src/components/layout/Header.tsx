@@ -8,6 +8,7 @@ import {
     LogIn,
     LogOut,
     Menu,
+    ShieldCheck,
     UserRound,
     X,
 } from "lucide-react";
@@ -18,6 +19,7 @@ import Logo from "@/components/common/Logo";
 import { logout } from "@/features/auth/api/logout";
 import SignInModal from "@/features/auth/components/SignInModal";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import NotificationBell from "@/features/notifications/components/NotificationBell";
 
 import Container from "./Container";
 import Navigation from "./Navigation";
@@ -33,7 +35,6 @@ export default function Header() {
         user,
         isAuthenticated,
         isInitializing,
-        isEmployer,
         clearSession,
     } = useAuth();
 
@@ -80,10 +81,8 @@ export default function Header() {
         setIsSignInOpen(true);
     }
 
-    const employerHref = "/employers";
-    const employerLabel = isEmployer
-        ? "Employer Dashboard"
-        : "For Employers";
+    const postJobHref = "/post-a-job";
+    const postJobLabel = "Post a Job";
 
     return (
         <>
@@ -96,14 +95,27 @@ export default function Header() {
                             <Navigation />
 
                             <div className="flex items-center gap-3">
-                                {isInitializing ? (
-                                    <div
-                                        aria-hidden="true"
-                                        className="h-12 w-32 animate-pulse rounded-xl bg-slate-100"
+                                {isAuthenticated && user && (
+                                    <NotificationBell
+                                        audience="JOB_SEEKER"
+                                        viewAllHref="/notifications"
+                                        visualStyle="public"
                                     />
+                                )}
+
+                                {isInitializing ? (
+                                    <button
+                                        type="button"
+                                        disabled
+                                        aria-busy="true"
+                                        className="inline-flex min-h-12 cursor-wait items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-base font-semibold text-slate-800 shadow-sm"
+                                    >
+                                        <LogIn size={19} />
+                                        Sign In
+                                    </button>
                                 ) : isAuthenticated && user ? (
                                     <Link
-                                        href="/account/profile"
+                                        href="/account"
                                         className="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-400 hover:bg-slate-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200"
                                     >
                                         <span className="flex size-8 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
@@ -136,38 +148,59 @@ export default function Header() {
                                     </button>
                                 )}
 
+                                {user?.isAdmin && (
+                                    <Link
+                                        href="/admin"
+                                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-100 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200"
+                                    >
+                                        <ShieldCheck size={18} />
+                                        Admin
+                                    </Link>
+                                )}
+
                                 <Link
-                                    href={employerHref}
+                                    href={postJobHref}
                                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-base font-semibold text-white shadow-sm shadow-blue-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md hover:shadow-blue-600/25 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200"
                                 >
                                     <Building2 size={19} />
-                                    {employerLabel}
+                                    {postJobLabel}
                                 </Link>
                             </div>
                         </div>
 
-                        <button
-                            type="button"
-                            aria-label={
-                                isMobileMenuOpen
-                                    ? "Close navigation menu"
-                                    : "Open navigation menu"
-                            }
-                            aria-expanded={isMobileMenuOpen}
-                            aria-controls="mobile-navigation"
-                            onClick={() =>
-                                setIsMobileMenuOpen(
-                                    (current) => !current,
-                                )
-                            }
-                            className="inline-flex size-11 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-800 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200 lg:hidden"
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="size-5" />
-                            ) : (
-                                <Menu className="size-5" />
+                        <div className="flex items-center gap-2 lg:hidden">
+                            {isAuthenticated && user && (
+                                <NotificationBell
+                                    audience="JOB_SEEKER"
+                                    viewAllHref="/notifications"
+                                    visualStyle="public"
+                                    className="size-11"
+                                />
                             )}
-                        </button>
+
+                            <button
+                                type="button"
+                                aria-label={
+                                    isMobileMenuOpen
+                                        ? "Close navigation menu"
+                                        : "Open navigation menu"
+                                }
+                                aria-expanded={isMobileMenuOpen}
+                                aria-controls="mobile-navigation"
+                                onClick={() =>
+                                    setIsMobileMenuOpen(
+                                        (current) => !current,
+                                    )
+                                }
+                                className="inline-flex size-11 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-800 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200"
+                            >
+                                {isMobileMenuOpen ? (
+                                    <X className="size-5" />
+                                ) : (
+                                    <Menu className="size-5" />
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </Container>
             </header>
@@ -239,11 +272,19 @@ export default function Header() {
 
                             <div className="mt-7 space-y-3 border-t border-slate-200 pt-6">
                                 {isInitializing ? (
-                                    <div className="h-12 animate-pulse rounded-xl bg-slate-100" />
+                                    <button
+                                        type="button"
+                                        disabled
+                                        aria-busy="true"
+                                        className="flex min-h-12 w-full cursor-wait items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-800"
+                                    >
+                                        <LogIn className="size-5" />
+                                        Sign In
+                                    </button>
                                 ) : isAuthenticated ? (
                                     <>
                                         <Link
-                                            href="/account/profile"
+                                            href="/account"
                                             onClick={() =>
                                                 setIsMobileMenuOpen(
                                                     false,
@@ -254,6 +295,17 @@ export default function Header() {
                                             <UserRound className="size-5" />
                                             My account
                                         </Link>
+
+                                        {user?.isAdmin && (
+                                            <Link
+                                                href="/admin"
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+                                            >
+                                                <ShieldCheck className="size-5" />
+                                                Platform admin
+                                            </Link>
+                                        )}
 
                                         <button
                                             type="button"
@@ -286,14 +338,14 @@ export default function Header() {
                                 )}
 
                                 <Link
-                                    href={employerHref}
+                                    href={postJobHref}
                                     onClick={() =>
                                         setIsMobileMenuOpen(false)
                                     }
                                     className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white shadow-sm shadow-blue-600/20 transition-colors hover:bg-blue-700"
                                 >
                                     <Building2 className="size-5" />
-                                    {employerLabel}
+                                    {postJobLabel}
                                 </Link>
                             </div>
                         </div>

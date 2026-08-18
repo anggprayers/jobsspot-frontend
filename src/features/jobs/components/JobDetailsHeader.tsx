@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BriefcaseBusiness, Building2, Clock3, MapPin } from "lucide-react";
+import { BriefcaseBusiness, Building2, CalendarClock, Clock3, MapPin } from "lucide-react";
+
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
 
 import type { PublicJobDetails } from "../types/publicJobDetails";
 
@@ -16,22 +18,23 @@ function formatLabel(value: string) {
         .join(" ");
 }
 
-function formatPublishedDate(value: string | null) {
+function formatDate(value: string | null, fallback: string) {
     if (!value) {
-        return "Recently posted";
+        return fallback;
     }
 
     const date = new Date(value);
 
     if (Number.isNaN(date.getTime())) {
-        return "Recently posted";
+        return fallback;
     }
 
-    return `Posted ${date.toLocaleDateString("en-US", {
-        month: "long",
+    return date.toLocaleDateString("en-US", {
+        month: "short",
         day: "numeric",
         year: "numeric",
-    })}`;
+        timeZone: JOBS_SPOT_TIME_ZONE,
+    });
 }
 
 function getCompanyInitials(companyName: string) {
@@ -77,9 +80,7 @@ export default function JobDetailsHeader({ job }: JobDetailsHeaderProps) {
                 </Link>
 
                 <div className="min-w-0 flex-1">
-                    <p className="text-base font-bold text-blue-600">{job.category.name}</p>
-
-                    <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight text-slate-950 sm:text-5xl">
+                    <h1 className="text-4xl font-bold leading-tight tracking-tight text-slate-950 sm:text-5xl">
                         {job.title}
                     </h1>
 
@@ -95,7 +96,7 @@ export default function JobDetailsHeader({ job }: JobDetailsHeaderProps) {
                     <div className="mt-7 flex flex-wrap gap-x-8 gap-y-4 text-lg text-slate-600">
                         <span className="inline-flex items-center gap-2.5">
                             <MapPin size={19} className="shrink-0 text-slate-400" />
-                            {job.location}
+                            {job.location ?? "Location not specified"}
                         </span>
 
                         <span className="inline-flex items-center gap-2.5">
@@ -105,8 +106,15 @@ export default function JobDetailsHeader({ job }: JobDetailsHeaderProps) {
 
                         <span className="inline-flex items-center gap-2.5">
                             <Clock3 size={19} className="shrink-0 text-slate-400" />
-                            {formatPublishedDate(job.publishedAt)}
+                            Posted {formatDate(job.publishedAt, "recently")}
                         </span>
+
+                        {job.applicationDeadline && (
+                            <span className="inline-flex items-center gap-2.5 font-medium text-slate-700">
+                                <CalendarClock size={19} className="shrink-0 text-blue-500" />
+                                Apply by {formatDate(job.applicationDeadline, "the listed deadline")}
+                            </span>
+                        )}
                     </div>
 
                     <div className="mt-7 flex flex-wrap gap-2.5">

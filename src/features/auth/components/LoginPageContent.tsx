@@ -5,24 +5,12 @@ import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import {
-    isSafeInternalPath,
+    normalizeAuthReturnPath,
     rememberAuthReturnUrl,
 } from "../utils/authReturnUrl";
 import AuthPageShell from "./AuthPageShell";
 import GuestOnlyAuthPage from "./GuestOnlyAuthPage";
 import LoginForm from "./LoginForm";
-
-function isEmployerDestination(
-    value: string | null,
-): boolean {
-    return Boolean(
-        value &&
-            (value === "/employers" ||
-                value.startsWith(
-                    "/employers/",
-                )),
-    );
-}
 
 export default function LoginPageContent() {
     const searchParams =
@@ -30,13 +18,7 @@ export default function LoginPageContent() {
 
     const rawReturnUrl =
         searchParams.get("returnUrl");
-    const returnUrl = isSafeInternalPath(
-        rawReturnUrl,
-    )
-        ? rawReturnUrl
-        : null;
-    const isEmployerLogin =
-        isEmployerDestination(returnUrl);
+    const returnUrl = normalizeAuthReturnPath(rawReturnUrl);
 
     useEffect(() => {
         rememberAuthReturnUrl(returnUrl);
@@ -53,34 +35,12 @@ export default function LoginPageContent() {
             }
         >
             <AuthPageShell
-                audience={
-                    isEmployerLogin
-                        ? "employer"
-                        : "job-seeker"
-                }
-                eyebrow={
-                    isEmployerLogin
-                        ? "Employer access"
-                        : "Welcome back"
-                }
-                title={
-                    isEmployerLogin
-                        ? "Sign in to your employer workspace"
-                        : "Sign in to JobsSpot"
-                }
-                description={
-                    isEmployerLogin
-                        ? "Manage your company, job postings, applicants, and hiring team."
-                        : "Continue your job search, manage applications, and keep your career profile up to date."
-                }
+                audience="job-seeker"
+                eyebrow="Welcome back"
+                title="Sign in to JobsSpot"
+                description="Continue your job search, manage applications, and keep your career profile up to date."
             >
-                <LoginForm
-                    defaultRedirectPath={
-                        isEmployerLogin
-                            ? "/employers"
-                            : "/jobs"
-                    }
-                />
+                <LoginForm defaultRedirectPath="/jobs" />
 
                 <div className="mt-6 flex items-center justify-between gap-4 text-sm">
                     <Link

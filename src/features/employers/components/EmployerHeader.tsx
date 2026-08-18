@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Check, ChevronDown, ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
+import { Check, ChevronDown, ChevronsUpDown, LogOut, Settings, ShieldCheck, User } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -28,6 +28,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 
 import { logout } from "@/features/auth/api/logout";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import NotificationBell from "@/features/notifications/components/NotificationBell";
 
 import type { AuthMembership, CompanyMemberRole } from "@/features/auth/types/auth";
 
@@ -38,6 +39,7 @@ const routeLabels: Record<string, string> = {
     "/employers/applicants": "Applicants",
     "/employers/team": "Team",
     "/employers/activity": "Activity",
+    "/employers/notifications": "Notifications",
     "/employers/settings": "Settings",
 };
 
@@ -277,6 +279,11 @@ export default function EmployerHeader() {
                             </div>
                         ))}
 
+                    <NotificationBell
+                        audience="EMPLOYER"
+                        viewAllHref="/employers/notifications"
+                    />
+
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -325,6 +332,15 @@ export default function EmployerHeader() {
                                     Settings
                                 </Link>
                             </DropdownMenuItem>
+
+                            {user?.isAdmin && (
+                                <DropdownMenuItem asChild>
+                                    <Link href="/admin">
+                                        <ShieldCheck />
+                                        Platform admin
+                                    </Link>
+                                </DropdownMenuItem>
+                            )}
 
                             <DropdownMenuSeparator />
 

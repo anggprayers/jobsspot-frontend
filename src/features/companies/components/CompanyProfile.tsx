@@ -6,6 +6,7 @@ import { AlertCircle, ArrowLeft, ChevronRight } from "lucide-react";
 import Container from "@/components/layout/Container";
 
 import { usePublicCompany } from "../hooks/usePublicCompany";
+import type { PublicCompany } from "../types/publicCompany";
 import CompanyHeader from "./CompanyHeader";
 import CompanyJobs from "./CompanyJobs";
 import CompanyOverview from "./CompanyOverview";
@@ -13,6 +14,7 @@ import CompanyStats from "./CompanyStats";
 
 type CompanyProfileProps = Readonly<{
     slug: string;
+    initialCompany?: PublicCompany;
 }>;
 
 function CompanyProfileSkeleton() {
@@ -44,8 +46,8 @@ function CompanyProfileSkeleton() {
     );
 }
 
-export default function CompanyProfile({ slug }: CompanyProfileProps) {
-    const { data, isLoading, isError } = usePublicCompany(slug);
+export default function CompanyProfile({ slug, initialCompany }: CompanyProfileProps) {
+    const { data, isLoading, isError } = usePublicCompany(slug, initialCompany);
 
     const company = data?.company;
 

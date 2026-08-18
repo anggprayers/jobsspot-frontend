@@ -289,13 +289,6 @@ export default function GoogleSignInButton({
 
                     clearRememberedAuthReturnUrl();
 
-                    const isEmployerDestination =
-                        destination ===
-                            "/employers" ||
-                        destination.startsWith(
-                            "/employers/",
-                        );
-
                     const title =
                         loginResponse.isNewUser
                             ? `Welcome to JobsSpot, ${loginResponse.user.firstName}!`
@@ -304,11 +297,9 @@ export default function GoogleSignInButton({
                               : `Welcome back, ${loginResponse.user.firstName}!`;
 
                     const description =
-                        isEmployerDestination
-                            ? "Opening your employer workspace."
-                            : loginResponse.accountLinked
-                              ? "Google is now connected to your JobsSpot account."
-                              : "You’re signed in and ready to continue.";
+                        loginResponse.accountLinked
+                            ? "Google is now connected to your JobsSpot account."
+                            : "You’re signed in and ready to continue.";
 
                     toast.success(title, {
                         description,

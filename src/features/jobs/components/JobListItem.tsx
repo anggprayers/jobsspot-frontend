@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
 import SignInModal from "@/features/auth/components/SignInModal";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import {
@@ -119,6 +120,7 @@ function formatPublishedDate(
     }
 
     return publishedDate.toLocaleDateString("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -302,7 +304,7 @@ export default function JobListItem({
                                     />
 
                                     <span>
-                                        {job.location}
+                                        {job.location ?? "Location not specified"}
                                     </span>
                                 </div>
 
@@ -337,9 +339,6 @@ export default function JobListItem({
                                     )}
                                 </span>
 
-                                <span className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-base font-semibold text-slate-700">
-                                    {job.category.name}
-                                </span>
                             </div>
                         </div>
                     </div>

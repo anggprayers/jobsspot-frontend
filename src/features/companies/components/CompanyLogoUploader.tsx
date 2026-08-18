@@ -215,15 +215,9 @@ export default function CompanyLogoUploader({
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby="delete-company-logo-title"
-                    onMouseDown={() => {
-                        if (!deleteLogoMutation.isPending) {
-                            setIsDeleteConfirmationOpen(false);
-                        }
-                    }}
                 >
                     <div
                         className="w-full max-w-md rounded-3xl bg-white shadow-2xl"
-                        onMouseDown={(event) => event.stopPropagation()}
                     >
                         <div className="flex items-start justify-between border-b border-slate-200 px-6 py-5">
                             <div>

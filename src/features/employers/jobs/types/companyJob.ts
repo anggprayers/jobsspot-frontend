@@ -1,3 +1,5 @@
+import { jobsSpotEndOfDayToIso } from "@/lib/jobsSpotDateTime";
+
 import type { JobFormValues } from "../validations/jobFormSchema";
 
 export type CompanyJob = {
@@ -18,6 +20,9 @@ export type CompanyJob = {
     experienceLevel: "ENTRY_LEVEL" | "JUNIOR" | "MID_LEVEL" | "SENIOR" | "LEAD" | "EXECUTIVE";
 
     location: string | null;
+    city: string | null;
+    stateRegion: string | null;
+    countryCode: string;
 
     salaryMin: string | null;
     salaryMax: string | null;
@@ -29,6 +34,8 @@ export type CompanyJob = {
 
     publishedAt: string | null;
     expiresAt: string | null;
+    adminHiddenAt: string | null;
+    adminHiddenReason: string | null;
     isExpired: boolean;
     daysUntilExpiration: number | null;
 
@@ -39,6 +46,7 @@ export type CompanyJob = {
         id: string;
         name: string;
         slug: string;
+        isActive: boolean;
     };
 
     createdBy: {
@@ -102,7 +110,9 @@ export type CreateJobPayload = {
     workplaceType: JobFormValues["workplaceType"];
     experienceLevel: JobFormValues["experienceLevel"];
 
-    location?: string;
+    city?: string | null;
+    stateRegion?: string | null;
+    countryCode: string;
 
     salaryMin?: number;
     salaryMax?: number;
@@ -137,9 +147,9 @@ export function mapJobFormToPayload(values: JobFormValues): CreateJobPayload {
         workplaceType: values.workplaceType,
         experienceLevel: values.experienceLevel,
 
-        ...(values.location.trim() && {
-            location: values.location.trim(),
-        }),
+        city: values.workplaceType === "REMOTE" ? null : values.city.trim() || null,
+        stateRegion: values.stateRegion.trim() || null,
+        countryCode: values.countryCode,
 
         ...(values.salaryMin !== "" && {
             salaryMin: Number(values.salaryMin),
@@ -156,7 +166,7 @@ export function mapJobFormToPayload(values: JobFormValues): CreateJobPayload {
         }),
 
         ...(values.applicationDeadline && {
-            applicationDeadline: new Date(`${values.applicationDeadline}T23:59:59`).toISOString(),
+            applicationDeadline: jobsSpotEndOfDayToIso(values.applicationDeadline),
         }),
     };
 }

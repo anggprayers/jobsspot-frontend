@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { Toaster } from "@/components/ui/sonner";
+import {
+    SITE_DESCRIPTION,
+    SITE_NAME,
+    absoluteUrl,
+    getSiteUrl,
+} from "@/lib/seo/site";
 
 import Providers from "./providers";
 
@@ -14,11 +21,35 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+    metadataBase: new URL(getSiteUrl()),
+    applicationName: SITE_NAME,
     title: {
-        default: "JobsSpot",
-        template: "%s | JobsSpot",
+        default: SITE_NAME,
+        template: `%s | ${SITE_NAME}`,
     },
-    description: "Discover job opportunities and connect with employers through JobsSpot.",
+    description: SITE_DESCRIPTION,
+    openGraph: {
+        type: "website",
+        siteName: SITE_NAME,
+        locale: "en_US",
+        url: absoluteUrl("/"),
+        title: SITE_NAME,
+        description: SITE_DESCRIPTION,
+        images: [
+            {
+                url: absoluteUrl("/logo.png"),
+                width: 1125,
+                height: 1175,
+                alt: `${SITE_NAME} logo`,
+            },
+        ],
+    },
+    twitter: {
+        card: "summary",
+        title: SITE_NAME,
+        description: SITE_DESCRIPTION,
+        images: [absoluteUrl("/logo.png")],
+    },
 };
 
 type RootLayoutProps = Readonly<{
@@ -34,6 +65,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
                     <Toaster position="bottom-right" richColors closeButton />
                 </Providers>
+
+                <GoogleAnalytics />
             </body>
         </html>
     );

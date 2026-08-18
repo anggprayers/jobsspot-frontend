@@ -104,6 +104,7 @@ export default function EditJobDialog({
                     salaryCurrency: job.salaryCurrency ?? "",
                     salaryPeriod: job.salaryPeriod ?? "",
                     applicationDeadline: job.applicationDeadline?.slice(0, 10) ?? "",
+                    publicContactEmail: job.publicContactEmail ?? "",
                 }}
                 onCancel={requestClose}
                 onSubmit={async (values) => {

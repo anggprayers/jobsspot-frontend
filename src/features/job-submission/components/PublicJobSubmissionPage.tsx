@@ -256,7 +256,7 @@ export default function PublicJobSubmissionPage() {
                             JobsSpot will review your job.
                         </h1>
                         <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
-                            We sent a confirmation to your contact email. Our team will review the details and contact you about the next steps before anything is published.
+                            Our team will review the details and contact you only if follow-up is needed before anything is published.
                         </p>
 
                         <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
@@ -452,7 +452,7 @@ export default function PublicJobSubmissionPage() {
                                 <div>
                                     <h2 className="text-xl font-bold text-slate-950">Contact details</h2>
                                     <p className="mt-1 text-sm leading-6 text-slate-600">
-                                        JobsSpot will use these details to follow up about review, arrangements, and publication.
+                                        JobsSpot keeps these details for review and follow-up. Submitting this form does not automatically email the contact address.
                                     </p>
                                 </div>
                             </div>
@@ -467,6 +467,9 @@ export default function PublicJobSubmissionPage() {
                                         placeholder="recruiter@company.com"
                                         className="mt-2 min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-950 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                                     />
+                                    <p className="mt-1.5 text-xs leading-5 text-slate-500">
+                                        Used for JobsSpot review/source contact only. No automatic submission confirmation is sent.
+                                    </p>
                                     <FieldError message={errors.contactEmail?.message} />
                                 </label>
 

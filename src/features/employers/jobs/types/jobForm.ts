@@ -17,4 +17,5 @@ export const defaultJobFormValues: JobFormValues = {
     salaryCurrency: "USD",
     salaryPeriod: "",
     applicationDeadline: "",
+    publicContactEmail: "",
 };

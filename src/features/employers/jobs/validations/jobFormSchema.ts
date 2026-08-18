@@ -96,6 +96,15 @@ export const jobFormSchema = z
                 (value) => value === "" || !Number.isNaN(new Date(value).getTime()),
                 "Application deadline must be a valid date.",
             ),
+
+        publicContactEmail: z.union([
+            z
+                .string()
+                .trim()
+                .email("Enter a valid public contact email address.")
+                .max(254, "Public contact email address is too long."),
+            z.literal(""),
+        ]),
     })
     .superRefine((data, context) => {
         const salaryMin = data.salaryMin === "" ? undefined : Number(data.salaryMin);

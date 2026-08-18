@@ -155,7 +155,7 @@ export default function JobForm({
                 </div>
 
                 <div className="space-y-2">
-                    <RequiredLabel htmlFor="categoryId">Category</RequiredLabel>
+                    <RequiredLabel htmlFor="categoryId">Internal category</RequiredLabel>
 
                     <Controller
                         name="categoryId"
@@ -181,8 +181,12 @@ export default function JobForm({
                         )}
                     />
 
-                    {errors.categoryId && (
+                    {errors.categoryId ? (
                         <p className="text-sm text-red-600">{errors.categoryId.message}</p>
+                    ) : (
+                        <p className="text-xs text-muted-foreground">
+                            Used internally for classification and job metadata. It is not shown as a public JobsSpot filter.
+                        </p>
                     )}
                 </div>
 
@@ -413,6 +417,29 @@ export default function JobForm({
 
                     {errors.applicationDeadline && (
                         <p className="text-sm text-red-600">{errors.applicationDeadline.message}</p>
+                    )}
+                </div>
+
+                <div className="space-y-2 sm:col-span-2">
+                    <OptionalLabel htmlFor="publicContactEmail">
+                        Public contact email
+                    </OptionalLabel>
+
+                    <Input
+                        id="publicContactEmail"
+                        type="email"
+                        autoComplete="off"
+                        placeholder="e.g. recruiter@company.com"
+                        aria-invalid={Boolean(errors.publicContactEmail)}
+                        {...register("publicContactEmail")}
+                    />
+
+                    {errors.publicContactEmail ? (
+                        <p className="text-sm text-red-600">{errors.publicContactEmail.message}</p>
+                    ) : (
+                        <p className="text-sm text-slate-500">
+                            Optional. Shown on the public job page only when you explicitly enter it here.
+                        </p>
                     )}
                 </div>
             </div>

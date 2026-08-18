@@ -19,6 +19,7 @@ export type PublicJobDetails = {
     salaryCurrency: string | null;
     salaryPeriod: string | null;
     applicationDeadline: string | null;
+    publicContactEmail: string | null;
     publishedAt: string | null;
     expiresAt: string | null;
     updatedAt: string;

@@ -12,6 +12,7 @@ import {
     Clock3,
     LoaderCircle,
     MapPin,
+    Mail,
     RefreshCw,
     Send,
     Sparkles,
@@ -325,6 +326,26 @@ export default function JobDetailsSidebar({
                         })}
                     </dl>
                 </section>
+
+                {job.publicContactEmail && (
+                    <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">
+                            Contact
+                        </p>
+
+                        <a
+                            href={`mailto:${job.publicContactEmail}`}
+                            className="mt-4 flex items-center gap-3 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+                        >
+                            <Mail className="size-5 shrink-0" />
+                            <span className="min-w-0 break-all">{job.publicContactEmail}</span>
+                        </a>
+
+                        <p className="mt-3 text-sm leading-6 text-slate-500">
+                            Public recruiter or hiring contact provided for this listing.
+                        </p>
+                    </section>
+                )}
 
                 <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                     {application && !canApply ? (

@@ -31,6 +31,7 @@ export type CompanyJob = {
     salaryPeriod: "HOURLY" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY" | null;
 
     applicationDeadline: string | null;
+    publicContactEmail: string | null;
 
     publishedAt: string | null;
     expiresAt: string | null;
@@ -121,6 +122,7 @@ export type CreateJobPayload = {
     salaryPeriod?: Exclude<JobFormValues["salaryPeriod"], "">;
 
     applicationDeadline?: string;
+    publicContactEmail?: string | null;
 };
 
 export type CreateJobResponse = {
@@ -168,5 +170,9 @@ export function mapJobFormToPayload(values: JobFormValues): CreateJobPayload {
         ...(values.applicationDeadline && {
             applicationDeadline: jobsSpotEndOfDayToIso(values.applicationDeadline),
         }),
+
+        publicContactEmail: values.publicContactEmail.trim()
+            ? values.publicContactEmail.trim().toLowerCase()
+            : null,
     };
 }

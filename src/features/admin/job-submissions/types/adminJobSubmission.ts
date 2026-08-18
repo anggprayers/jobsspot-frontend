@@ -138,6 +138,7 @@ export type PublishJobSubmissionRequest = {
         salaryCurrency: string;
         salaryPeriod?: Exclude<JobFormValues["salaryPeriod"], "">;
         applicationDeadline?: string;
+        publicContactEmail?: string | null;
     };
     internalNotes?: string;
 };

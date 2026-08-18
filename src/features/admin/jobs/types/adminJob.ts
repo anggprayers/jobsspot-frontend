@@ -47,6 +47,7 @@ export type AdminJobDetails = Omit<AdminJobListItem, "counts"> & {
     salaryCurrency: string | null;
     salaryPeriod: string | null;
     applicationDeadline: string | null;
+    publicContactEmail: string | null;
     adminHiddenBy: { id: string; firstName: string; lastName: string; email: string } | null;
     reports: Array<{
         id: string;
@@ -115,6 +116,7 @@ export type AdminJobPayload = {
     salaryCurrency: string;
     salaryPeriod?: string;
     applicationDeadline?: string;
+    publicContactEmail?: string | null;
 };
 
 export type CreateAdminJobRequest = { companyId: string; job: AdminJobPayload };

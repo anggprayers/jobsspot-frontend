@@ -63,6 +63,7 @@ export default function AdminJobFormPage({ mode, jobId = "" }: AdminJobFormPageP
             salaryCurrency: job.salaryCurrency ?? "USD",
             salaryPeriod: (job.salaryPeriod ?? "") as JobFormValues["salaryPeriod"],
             applicationDeadline: toDateInput(job.applicationDeadline),
+            publicContactEmail: job.publicContactEmail ?? "",
         };
     }, [isEdit, job]);
 

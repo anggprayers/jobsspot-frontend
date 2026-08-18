@@ -167,7 +167,7 @@ export default function AdminJobSubmissionsPage() {
                                                 <p className="mt-1 text-xs text-muted-foreground">{submission.referenceCode}</p>
                                             </td>
                                             <td className="px-5 py-4">
-                                                <p className="font-medium">{submission.companyName}</p>
+                                                <p className="font-medium">{submission.companyName || "Not provided"}</p>
                                                 <p className="mt-1 text-xs text-muted-foreground">{submission.locationText}</p>
                                             </td>
                                             <td className="px-5 py-4">

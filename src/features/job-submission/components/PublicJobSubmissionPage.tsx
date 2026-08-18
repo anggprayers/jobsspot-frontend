@@ -349,12 +349,15 @@ export default function PublicJobSubmissionPage() {
                                 </label>
 
                                 <label>
-                                    <span className="text-sm font-semibold text-slate-800">Company name *</span>
+                                    <span className="text-sm font-semibold text-slate-800">Company name <span className="font-normal text-slate-500">(optional)</span></span>
                                     <input
                                         {...register("companyName")}
                                         placeholder="e.g. ABC Logistics"
                                         className="mt-2 min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-950 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                                     />
+                                    <p className="mt-1.5 text-xs leading-5 text-slate-500">
+                                        Leave blank if the employer is confidential or not disclosed.
+                                    </p>
                                     <FieldError message={errors.companyName?.message} />
                                 </label>
 

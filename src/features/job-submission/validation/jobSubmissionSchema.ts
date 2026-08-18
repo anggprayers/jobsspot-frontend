@@ -19,7 +19,6 @@ export const jobSubmissionSchema = z.object({
     companyName: z
         .string()
         .trim()
-        .min(2, "Enter the company name.")
         .max(120, "Company name must not exceed 120 characters."),
     companyWebsite: z
         .string()

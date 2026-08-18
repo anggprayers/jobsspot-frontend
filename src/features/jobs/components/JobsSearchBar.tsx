@@ -20,7 +20,6 @@ import {
 import { trackPopularSearch } from "@/features/popular-searches/api/popularSearchApi";
 
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
-import AdvancedJobFilters from "./AdvancedJobFilters";
 
 type JobsSearchBarFormProps = Readonly<{
     initialSearch: string;
@@ -227,7 +226,6 @@ function JobsSearchBarForm({
                 </button>
             </form>
 
-            <AdvancedJobFilters />
         </div>
     );
 }

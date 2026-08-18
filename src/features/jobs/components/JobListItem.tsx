@@ -337,9 +337,6 @@ export default function JobListItem({
                                     )}
                                 </span>
 
-                                <span className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-base font-semibold text-slate-700">
-                                    {job.category.name}
-                                </span>
                             </div>
                         </div>
                     </div>

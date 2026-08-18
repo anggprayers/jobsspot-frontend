@@ -3,10 +3,10 @@
 import { RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { useJobCategories } from "../hooks/useJobCategories";
 import {
     employmentTypeOptions,
     experienceLevelOptions,
+    listingTimeOptions,
     workplaceTypeOptions,
 } from "../types/jobFilters";
 
@@ -17,17 +17,34 @@ type JobsFiltersProps = Readonly<{
 
 type FilterSectionProps = Readonly<{
     title: string;
+    description?: string;
     children: React.ReactNode;
 }>;
 
-function FilterSection({ title, children }: FilterSectionProps) {
+function FilterSection({ title, description, children }: FilterSectionProps) {
     return (
         <fieldset className="border-b border-slate-200 pb-6 last:border-b-0 last:pb-0">
             <legend className="text-base font-semibold text-slate-950">{title}</legend>
 
+            {description && (
+                <p className="mt-1 text-xs leading-5 text-slate-500">{description}</p>
+            )}
+
             <div className="mt-4 space-y-3">{children}</div>
         </fieldset>
     );
+}
+
+function getQueryValues(searchParams: ReturnType<typeof useSearchParams>, name: string) {
+    return [
+        ...new Set(
+            searchParams
+                .getAll(name)
+                .flatMap((value) => value.split(","))
+                .map((value) => value.trim())
+                .filter(Boolean),
+        ),
+    ];
 }
 
 export default function JobsFilters({ isMobileOpen = false, onMobileClose }: JobsFiltersProps) {
@@ -35,11 +52,33 @@ export default function JobsFilters({ isMobileOpen = false, onMobileClose }: Job
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const { data: categoriesData, isLoading: isCategoriesLoading } = useJobCategories();
+    const selectedEmploymentTypes = getQueryValues(searchParams, "employmentType");
+    const selectedWorkplaceTypes = getQueryValues(searchParams, "workplaceType");
+    const selectedExperienceLevels = getQueryValues(searchParams, "experienceLevel");
+    const publishedWithinDays = searchParams.get("publishedWithinDays") ?? "";
 
-    const categories = categoriesData?.categories ?? [];
+    function pushParams(params: URLSearchParams) {
+        params.set("page", "1");
+        const query = params.toString();
+        router.push(query ? `${pathname}?${query}` : pathname);
+    }
 
-    function updateFilter(name: string, value: string) {
+    function toggleFilter(name: string, currentValues: string[], value: string) {
+        const params = new URLSearchParams(searchParams.toString());
+        const nextValues = currentValues.includes(value)
+            ? currentValues.filter((item) => item !== value)
+            : [...currentValues, value];
+
+        if (nextValues.length > 0) {
+            params.set(name, nextValues.join(","));
+        } else {
+            params.delete(name);
+        }
+
+        pushParams(params);
+    }
+
+    function updateSingleFilter(name: string, value: string) {
         const params = new URLSearchParams(searchParams.toString());
 
         if (value) {
@@ -48,32 +87,20 @@ export default function JobsFilters({ isMobileOpen = false, onMobileClose }: Job
             params.delete(name);
         }
 
-        params.set("page", "1");
-
-        router.push(`${pathname}?${params.toString()}`);
+        pushParams(params);
     }
 
     function clearFilters() {
         const params = new URLSearchParams();
-
         const search = searchParams.get("search");
         const location = searchParams.get("location");
         const sort = searchParams.get("sort");
 
-        if (search) {
-            params.set("search", search);
-        }
-
-        if (location) {
-            params.set("location", location);
-        }
-
-        if (sort) {
-            params.set("sort", sort);
-        }
+        if (search) params.set("search", search);
+        if (location) params.set("location", location);
+        if (sort) params.set("sort", sort);
 
         params.set("page", "1");
-
         router.push(`${pathname}?${params.toString()}`);
     }
 
@@ -82,7 +109,6 @@ export default function JobsFilters({ isMobileOpen = false, onMobileClose }: Job
             <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                     <SlidersHorizontal size={19} className="text-blue-600" />
-
                     <h2 className="text-lg font-semibold text-slate-950">Filters</h2>
                 </div>
 
@@ -109,97 +135,65 @@ export default function JobsFilters({ isMobileOpen = false, onMobileClose }: Job
                 </div>
             </div>
 
-            <FilterSection title="Category">
-                {isCategoriesLoading && (
-                    <div className="space-y-3">
-                        {Array.from({ length: 4 }).map((_, index) => (
-                            <div key={index} className="h-5 animate-pulse rounded bg-slate-100" />
-                        ))}
-                    </div>
-                )}
-
-                {!isCategoriesLoading && categories.length === 0 && (
-                    <p className="text-sm text-slate-500">No categories available.</p>
-                )}
-
-                {categories.map((category) => (
-                    <label
-                        key={category.id}
-                        className="flex cursor-pointer items-center justify-between gap-3 text-sm text-slate-700"
-                    >
-                        <span className="flex items-center gap-3">
-                            <input
-                                type="radio"
-                                name="category"
-                                value={category.slug}
-                                checked={searchParams.get("category") === category.slug}
-                                onChange={() => updateFilter("category", category.slug)}
-                                className="h-4 w-4 border-slate-300 text-blue-600 accent-blue-600"
-                            />
-
-                            <span>{category.name}</span>
-                        </span>
-
-                        <span className="text-xs text-slate-400">{category.jobCount}</span>
-                    </label>
-                ))}
-            </FilterSection>
-
-            <FilterSection title="Employment Type">
-                {employmentTypeOptions.map((option) => (
-                    <label
-                        key={option.value}
-                        className="flex cursor-pointer items-center gap-3 text-sm text-slate-700"
-                    >
-                        <input
-                            type="radio"
-                            name="employmentType"
-                            value={option.value}
-                            checked={searchParams.get("employmentType") === option.value}
-                            onChange={() => updateFilter("employmentType", option.value)}
-                            className="h-4 w-4 border-slate-300 accent-blue-600"
-                        />
-
-                        {option.label}
-                    </label>
-                ))}
-            </FilterSection>
-
-            <FilterSection title="Workplace Type">
+            <FilterSection title="Work arrangement">
                 {workplaceTypeOptions.map((option) => (
-                    <label
-                        key={option.value}
-                        className="flex cursor-pointer items-center gap-3 text-sm text-slate-700"
-                    >
+                    <label key={option.value} className="flex cursor-pointer items-center gap-3 text-sm text-slate-700">
                         <input
-                            type="radio"
-                            name="workplaceType"
+                            type="checkbox"
                             value={option.value}
-                            checked={searchParams.get("workplaceType") === option.value}
-                            onChange={() => updateFilter("workplaceType", option.value)}
-                            className="h-4 w-4 border-slate-300 accent-blue-600"
+                            checked={selectedWorkplaceTypes.includes(option.value)}
+                            onChange={() => toggleFilter("workplaceType", selectedWorkplaceTypes, option.value)}
+                            className="h-4 w-4 rounded border-slate-300 accent-blue-600"
                         />
-
                         {option.label}
                     </label>
                 ))}
             </FilterSection>
 
-            <FilterSection title="Experience Level">
+            <FilterSection title="Job type">
+                {employmentTypeOptions.map((option) => (
+                    <label key={option.value} className="flex cursor-pointer items-center gap-3 text-sm text-slate-700">
+                        <input
+                            type="checkbox"
+                            value={option.value}
+                            checked={selectedEmploymentTypes.includes(option.value)}
+                            onChange={() => toggleFilter("employmentType", selectedEmploymentTypes, option.value)}
+                            className="h-4 w-4 rounded border-slate-300 accent-blue-600"
+                        />
+                        {option.label}
+                    </label>
+                ))}
+            </FilterSection>
+
+            <FilterSection
+                title="Experience"
+                description="Choose one or more levels that fit your search."
+            >
                 {experienceLevelOptions.map((option) => (
-                    <label
-                        key={option.value}
-                        className="flex cursor-pointer items-center gap-3 text-sm text-slate-700"
-                    >
+                    <label key={option.value} className="flex cursor-pointer items-center gap-3 text-sm text-slate-700">
+                        <input
+                            type="checkbox"
+                            value={option.value}
+                            checked={selectedExperienceLevels.includes(option.value)}
+                            onChange={() => toggleFilter("experienceLevel", selectedExperienceLevels, option.value)}
+                            className="h-4 w-4 rounded border-slate-300 accent-blue-600"
+                        />
+                        {option.label}
+                    </label>
+                ))}
+            </FilterSection>
+
+            <FilterSection title="Date posted">
+                {listingTimeOptions.map((option) => (
+                    <label key={option.label} className="flex cursor-pointer items-center gap-3 text-sm text-slate-700">
                         <input
                             type="radio"
-                            name="experienceLevel"
+                            name="publishedWithinDays"
                             value={option.value}
-                            checked={searchParams.get("experienceLevel") === option.value}
-                            onChange={() => updateFilter("experienceLevel", option.value)}
+                            checked={publishedWithinDays === option.value}
+                            onChange={() => updateSingleFilter("publishedWithinDays", option.value)}
                             className="h-4 w-4 border-slate-300 accent-blue-600"
                         />
-
                         {option.label}
                     </label>
                 ))}

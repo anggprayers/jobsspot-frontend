@@ -1,4 +1,6 @@
 import type { LucideIcon } from "lucide-react";
+
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
 import {
     Bell,
     BriefcaseBusiness,
@@ -19,11 +21,13 @@ export function formatNotificationDate(value: string): string {
     }
 
     return new Intl.DateTimeFormat("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "short",
         day: "numeric",
         year: "numeric",
         hour: "numeric",
         minute: "2-digit",
+        timeZoneName: "short",
     }).format(date);
 }
 

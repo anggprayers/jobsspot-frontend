@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
+
 import type {
     SavedSearch,
     SavedSearchFiltersInput,
@@ -48,6 +50,7 @@ export function formatSavedSearchDate(
     value: string,
 ): string {
     return new Intl.DateTimeFormat("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "short",
         day: "numeric",
         year: "numeric",

@@ -4,12 +4,21 @@ import Link from "next/link";
 import { BriefcaseBusiness, Clock3, Download, FileText, ShieldCheck, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAdminErrorMessage } from "@/features/admin/shared/utils/adminFormatters";
 import { useSharedApplication, useSharedCoverLetterDownload, useSharedResumeDownload } from "../hooks/useApplicationShare";
 
 function formatDate(value: string) {
-    return new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
+    return new Intl.DateTimeFormat("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+    }).format(new Date(value));
 }
 
 function formatFileSize(bytes: number | null) {

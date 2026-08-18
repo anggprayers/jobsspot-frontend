@@ -14,6 +14,8 @@ import {
     type FieldPath,
 } from "react-hook-form";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
+
 import { useSubmitContactMessage } from "../hooks/useSubmitContactMessage";
 import type {
     ContactApiErrorResponse,
@@ -100,9 +102,14 @@ function formatReceivedAt(value: string): string {
         return value;
     }
 
-    return new Intl.DateTimeFormat("en-PH", {
-        dateStyle: "medium",
-        timeStyle: "short",
+    return new Intl.DateTimeFormat("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
     }).format(date);
 }
 

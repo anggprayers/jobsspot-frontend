@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { addDaysToDateInput, getJobsSpotTodayDateInput } from "@/lib/jobsSpotDateTime";
 import { useAdminCategories } from "@/features/admin/categories/hooks/useAdminCategories";
 import { useAdminCompanies } from "@/features/admin/companies/hooks/useAdminCompanies";
 import JobForm from "@/features/employers/jobs/components/JobForm";
@@ -20,9 +21,7 @@ import { usePublishAdminJobSubmission } from "../hooks/useAdminJobSubmissions";
 import type { AdminJobSubmissionDetails } from "../types/adminJobSubmission";
 
 function getDefaultApplicationDeadline() {
-    const date = new Date();
-    date.setDate(date.getDate() + 30);
-    return date.toISOString().slice(0, 10);
+    return addDaysToDateInput(getJobsSpotTodayDateInput(), 30);
 }
 
 function getInitialLocation(locationText: string, workplaceType: JobFormValues["workplaceType"]) {

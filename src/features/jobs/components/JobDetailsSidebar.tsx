@@ -19,6 +19,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
 import ApplyToJobDialog from "@/features/applications/components/ApplyToJobDialog";
 import { useApplicationForJob } from "@/features/applications/hooks/useApplications";
 import {
@@ -110,7 +111,7 @@ function formatDeadline(value: string | null) {
         month: "long",
         day: "numeric",
         year: "numeric",
-        timeZone: "UTC",
+        timeZone: JOBS_SPOT_TIME_ZONE,
     });
 }
 
@@ -361,7 +362,7 @@ export default function JobDetailsSidebar({
                                             month: "long",
                                             day: "numeric",
                                             year: "numeric",
-                                            timeZone: "UTC",
+                                            timeZone: JOBS_SPOT_TIME_ZONE,
                                         }).format(new Date(reapplication.nextEligibleAt))}
                                     </span>.
                                 </p>

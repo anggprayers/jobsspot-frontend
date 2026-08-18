@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useState, type SubmitEvent } from "react";
 import { toast } from "sonner";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useChangePassword } from "@/features/auth/hooks/useChangePassword";
 import { useSendVerificationEmail } from "@/features/auth/hooks/useEmailVerification";
@@ -60,6 +61,7 @@ function getErrorMessage(error: unknown, fallback: string): string {
 
 function formatMemberSince(value: string): string {
     return new Intl.DateTimeFormat("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "long",
         year: "numeric",
     }).format(new Date(value));

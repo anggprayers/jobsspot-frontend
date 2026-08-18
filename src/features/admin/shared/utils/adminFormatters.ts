@@ -1,13 +1,20 @@
 import axios from "axios";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
+
 export function formatAdminDate(value: string | null | undefined): string {
     if (!value) {
         return "—";
     }
 
     return new Intl.DateTimeFormat("en-US", {
-        dateStyle: "medium",
-        timeStyle: "short",
+        timeZone: JOBS_SPOT_TIME_ZONE,
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
     }).format(new Date(value));
 }
 

@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { BriefcaseBusiness, Building2, CalendarClock, Clock3, MapPin } from "lucide-react";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
+
 import type { PublicJobDetails } from "../types/publicJobDetails";
 
 type JobDetailsHeaderProps = Readonly<{
@@ -31,7 +33,7 @@ function formatDate(value: string | null, fallback: string) {
         month: "short",
         day: "numeric",
         year: "numeric",
-        timeZone: "UTC",
+        timeZone: JOBS_SPOT_TIME_ZONE,
     });
 }
 

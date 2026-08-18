@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toJobsSpotDateInput } from "@/lib/jobsSpotDateTime";
 import { useAdminCategories } from "@/features/admin/categories/hooks/useAdminCategories";
 import { useAdminCompanies } from "@/features/admin/companies/hooks/useAdminCompanies";
 import JobForm from "@/features/employers/jobs/components/JobForm";
@@ -27,9 +28,7 @@ type AdminJobFormPageProps = {
 
 function toDateInput(value: string | null | undefined) {
     if (!value) return "";
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return "";
-    return date.toISOString().slice(0, 10);
+    return toJobsSpotDateInput(value);
 }
 
 export default function AdminJobFormPage({ mode, jobId = "" }: AdminJobFormPageProps) {

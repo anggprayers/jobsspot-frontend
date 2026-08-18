@@ -1,3 +1,5 @@
+import { jobsSpotEndOfDayToIso } from "@/lib/jobsSpotDateTime";
+
 import type { JobFormValues } from "../validations/jobFormSchema";
 
 export type CompanyJob = {
@@ -164,7 +166,7 @@ export function mapJobFormToPayload(values: JobFormValues): CreateJobPayload {
         }),
 
         ...(values.applicationDeadline && {
-            applicationDeadline: new Date(`${values.applicationDeadline}T23:59:59`).toISOString(),
+            applicationDeadline: jobsSpotEndOfDayToIso(values.applicationDeadline),
         }),
     };
 }

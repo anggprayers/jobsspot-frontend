@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 export default function EmployerLayout() {
-    redirect("/post-a-job");
+    permanentRedirect("/post-a-job");
 }

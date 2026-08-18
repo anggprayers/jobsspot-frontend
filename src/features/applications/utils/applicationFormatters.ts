@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
+
 import type { ApplicationStatus } from "../types/application";
 
 const APPLICATION_STATUS_LABELS: Record<ApplicationStatus, string> = {
@@ -34,6 +36,7 @@ export function getApplicationStatusClasses(status: ApplicationStatus): string {
 
 export function formatApplicationDate(value: string): string {
     return new Intl.DateTimeFormat("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -42,11 +45,13 @@ export function formatApplicationDate(value: string): string {
 
 export function formatApplicationDateTime(value: string): string {
     return new Intl.DateTimeFormat("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "short",
         day: "numeric",
         year: "numeric",
         hour: "numeric",
         minute: "2-digit",
+        timeZoneName: "short",
     }).format(new Date(value));
 }
 

@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
 import SignInModal from "@/features/auth/components/SignInModal";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import {
@@ -119,6 +120,7 @@ function formatPublishedDate(
     }
 
     return publishedDate.toLocaleDateString("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "short",
         day: "numeric",
         year: "numeric",

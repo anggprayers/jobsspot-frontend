@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Banknote, BriefcaseBusiness, Clock3, MapPin } from "lucide-react";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
+
 import type { PublicCompany, PublicCompanyJob } from "../types/publicCompany";
 
 type CompanyJobsProps = Readonly<{
@@ -78,6 +80,7 @@ function formatPublishedDate(value: string | null) {
     }
 
     return `Posted ${publishedDate.toLocaleDateString("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "short",
         day: "numeric",
         year: "numeric",

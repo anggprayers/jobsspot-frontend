@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { JOBS_SPOT_TIME_ZONE } from "@/lib/jobsSpotDateTime";
+
 const MIME_TYPE_LABELS: Record<string, string> = {
     "application/pdf": "PDF",
     "application/msword": "DOC",
@@ -30,6 +32,7 @@ export function formatResumeFileSize(bytes: number): string {
 
 export function formatResumeDate(value: string): string {
     return new Intl.DateTimeFormat("en-US", {
+        timeZone: JOBS_SPOT_TIME_ZONE,
         month: "short",
         day: "numeric",
         year: "numeric",
